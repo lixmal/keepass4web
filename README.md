@@ -1,6 +1,6 @@
 # KeePass4Web
 
-A application which serves KeePass database entries on a web frontend.
+An application which serves KeePass database entries on a web frontend.
 
 Databases can be fetched from a configureable location (Filesystem, Seafile, Dropbox, ...).
 
@@ -8,7 +8,7 @@ Frontend authenticates users (LDAP, SQL, ...) before any database access is gran
 
 Written in Perl and JavaScript.
 
-This will probably only run under some flavor of Linux. The instructions assume a Linux environment.
+This will probably only run under some flavour of Linux. The instructions assume a Linux environment.
 
 
 ## PREREQUISITES
@@ -74,11 +74,11 @@ Most modules can be taken from the disto, e.g. for Ubuntu 14.04:
 - libnet-ldap-perl
 - libfile-type-perl
 
-Reaminaing modules need to be installed from CPAN: `Rest::Client`, `Crypt::Mode::CBC`, `Crypt::Cipher::AES`.
+Remaining modules need to be installed from CPAN: `Rest::Client`, `Crypt::Mode::CBC`, `Crypt::Cipher::AES`.
 Alternatively you can get all modules in the most recent version from CPAN, although this will take quite some time to install.
 
 
-For building the JavaScript part you will also need npm (version 3+ recommendend, else your node_modules directory will explode!) and therefore `Node.js`
+For building the JavaScript part you will also need npm (version 3+ recommended, else your node_modules directory will explode!) and therefore `Node.js`
 
 
 ## INSTALL
@@ -151,7 +151,7 @@ E.g. for Ubuntu 14.04 with mod_perl2:
 - Copy or rename `config.yml.dist` to `config.yml`
     > cp config.yml.dist config.yml
 
-- Change `session_cookie_key` to a **long**, **random** value if using `Cookie` in `session`, e.g.
+- Change `session_cookie_key` to a **long** and **random** value if using `Cookie` in `session`, e.g.
     > pwgen -ysN1 128
 
 
@@ -331,7 +331,7 @@ Logging into some service on behalf of the user is an anti-pattern, therefore it
 
     > sudo cat /proc/sys/kernel/shmall
 - Limits of kernel keyring apply
-- Because right now all cached databases are seralized and deserialzed together, more *simultaneously active* users will make fetching the database from IPC slower for every user. A better approach would be using one shared segment per user, which would make one roundtrip perpetual
+- Because right now all cached databases are seralised and deserialised together, more *simultaneously active* users will make fetching the database from IPC slower for every user. A better approach would be using one shared segment per user, which would make one roundtrip perpetual
 
 ## BUGS / CAVEATS / TODO
 
