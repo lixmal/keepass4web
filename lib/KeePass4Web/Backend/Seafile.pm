@@ -99,7 +99,7 @@ sub _get {
     };
     if ($@) {
         error $seafile->code, $seafile->error;
-        
+
         debug 'Database URL to download from Seafile: ', $seafile->location;
         # clear session token if library decryption expired, so user gets redirected to backend login screen
         session SESSION_SF_TOKEN, undef if $seafile->code == BAD_REQUEST;
@@ -219,7 +219,7 @@ sub credentials_init {
     debug 'Token received: ', !!$seafile->token;
 
     session SESSION_SF_TOKEN, $seafile->token;
-    
+
     return $self;
 }
 

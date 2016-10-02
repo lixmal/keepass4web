@@ -65,7 +65,7 @@ sub _bind {
 sub error {
     return shift->{error}
 }
- 
+
 sub auth {
     my ($self, $username, $password) = @_;
 
@@ -109,7 +109,7 @@ sub users {
     my $ldap = $self->_bind;
 
     my $result;
-    
+
     eval {
         $result = $ldap->search(
             base   => $self->{base_dn},

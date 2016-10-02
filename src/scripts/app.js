@@ -35,7 +35,7 @@ KeePass4Web.checkAuth = function(nextState, replace) {
     })
 
 
-    if (!auth) return 
+    if (!auth) return
 
     if (auth.data) {
         KeePass4Web.setCN(auth.data.cn)

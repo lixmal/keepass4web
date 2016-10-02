@@ -21,20 +21,20 @@ our @EXPORT = qw/
 /;
 
 my %keyrings = (
-    '@t'  => -1,  # KEY_SPEC_THREAD__key      
-    '@p'  => -2,  # KEY_SPEC_PROCESS__key     
-    '@s'  => -3,  # KEY_SPEC_SESSION__key     
-    '@u'  => -4,  # KEY_SPEC_USER__key        
+    '@t'  => -1,  # KEY_SPEC_THREAD__key
+    '@p'  => -2,  # KEY_SPEC_PROCESS__key
+    '@s'  => -3,  # KEY_SPEC_SESSION__key
+    '@u'  => -4,  # KEY_SPEC_USER__key
     '@us' => -5,  # KEY_SPEC_USER_SESSION__key
-    '@g'  => -6,  # KEY_SPEC_GROUP__key       
-    '@a'  => -7,  # KEY_SPEC_REQKEY_AUTH_KEY     
+    '@g'  => -6,  # KEY_SPEC_GROUP__key
+    '@a'  => -7,  # KEY_SPEC_REQKEY_AUTH_KEY
 );
 
 
 sub key_add {
     if (@_ != 4) {
         die "Wrong number of parameters\n";
-    } 
+    }
     my $keyring = $keyrings{$_[3]} or die "Unknown keyring: $_[3]\n";
     my $id = _key_add($_[0], $_[1], $_[2], $keyring);
     if ($id < 0) {
@@ -57,7 +57,7 @@ sub key_get_by_id {
 sub key_timeout {
     if (@_ != 2) {
         die "Wrong number of parameters\n";
-    } 
+    }
     my $ret = _key_timeout(@_);
     if ($ret < 0) {
         die "Error setting timeout: $!\n"
@@ -68,7 +68,7 @@ sub key_timeout {
 sub key_unlink {
     if (@_ != 2) {
         die "Wrong number of parameters\n";
-    } 
+    }
     my $keyring = $keyrings{$_[1]} or die "Unknown _key: $_[1]\n";
     my $ret = _key_unlink($_[0], $keyring);
     if ($ret < 0) {
@@ -88,7 +88,7 @@ sub key_session {
 sub key_perm {
     if (@_ != 2) {
         die "Wrong number of parameters\n";
-    } 
+    }
     my $ret = _key_perm(@_);
     if ($ret < 0) {
         die "Error setting permissions: $!\n"
@@ -99,7 +99,7 @@ sub key_perm {
 sub key_revoke {
     if (@_ != 1) {
         die "Wrong number of parameters\n";
-    } 
+    }
     my $ret = _key_revoke(@_);
     if ($ret < 0) {
         die "Error revoking key: $!\n"

@@ -20,8 +20,8 @@ BEGIN {
     our @EXPORT = qw/
         BAD_REQUEST
         UNAUTHORIZED
-        NOT_FOUND 
-        MTHD_NOT_ALLOWED 
+        NOT_FOUND
+        MTHD_NOT_ALLOWED
         NOT_ACCEPTABLE
         SERVER_ERROR
 

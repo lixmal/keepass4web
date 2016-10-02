@@ -107,7 +107,7 @@ sub auth {
     my ($self, $username, $password) = @_;
     my $hash_algo = config->{Htpasswd}->{hash};
     my $path = config->{Htpasswd}->{filepath};
-   
+
     my $pwhash;
     my $storedhash;
 
@@ -122,7 +122,7 @@ sub auth {
     die "Failed to generate hash for supplied password\n" if !defined $pwhash;
     die "Failed to get stored hash\n" if !defined $storedhash;
 
-    # in case hash lengths don't match, which would be odd 
+    # in case hash lengths don't match, which would be odd
     die "Password length does not match\n" if length $pwhash != length $storedhash;
 
     die "Passwords do not match\n" if !equal $pwhash, $storedhash;

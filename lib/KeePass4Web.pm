@@ -38,7 +38,7 @@ ajax '/user_login' => sub {
 
     my $username = param 'username';
     my $password = param 'password';
-    
+
     if (!defined $username or !defined $password) {
         return failure 'Username or password not supplied', UNAUTHORIZED;
     }
@@ -57,7 +57,7 @@ ajax '/user_login' => sub {
 
     debug 'User info: ', $userinfo;
 
-    if (config->{auth_reuse_cred}) { 
+    if (config->{auth_reuse_cred}) {
         eval {
             KeePass4Web::Backend::credentials_init(scalar params);
         };
@@ -73,7 +73,7 @@ ajax '/user_login' => sub {
 
     # set a CN to display on the web interface
     my $cn = ref $userinfo eq 'HASH' && $userinfo->{CN} ? $userinfo->{CN}->[0] : lc $username;
-    $cn //= lc $username; 
+    $cn //= lc $username;
 
     session SESSION_CN, $cn;
 
@@ -111,7 +111,7 @@ ajax '/db_login' => sub {
     return failure 'DB already open', MTHD_NOT_ALLOWED if eval { KeePass4Web::KeePass::opened };
 
     my $password = param 'password';
-    # grabbing the hidden base64 encoded input field 
+    # grabbing the hidden base64 encoded input field
     my $keyfile  = param 'key';
 
 
@@ -165,7 +165,7 @@ ajax '/authenticated' => sub {
 
     $auth{backend} = 1 if eval { KeePass4Web::Backend::authenticated };
     $auth{db}      = 1 if eval { KeePass4Web::KeePass::opened };
-    
+
 
     $auth{data} = {
         cn              => session(SESSION_CN),

@@ -22,7 +22,7 @@ sub _location {
 sub get_db {
     open my $fh, '<', _location or die $!;
     local $/ = undef;
-    
+
     my $db = <$fh>;
     close $fh or warn $!;
 
@@ -32,7 +32,7 @@ sub get_db {
 sub put_db {
     my ($self, $db);
     open my $fh, '>', _location or die $!;
-    
+
     print $fh $$db or die $!;
     close $fh or warn $!;
 

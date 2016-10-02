@@ -64,7 +64,7 @@ sub new {
         token        => $token,
         error        => undef,
         code         => undef,
-        location     => undef, 
+        location     => undef,
         json         => JSON->new->allow_nonref,
     }, $class;
 }
@@ -107,7 +107,7 @@ sub _errhandler {
         $self->{error} =
             ($content->{error_msg} ? " $content->{error_msg}" : '')
             . ($content->{detail} ? " $content->{detail}" : '');
-        
+
         die $content->{error_msg} || $content->{detail} || 'Request failed', "\n";
     }
     $self->{error} = undef;
@@ -140,7 +140,7 @@ sub init {
 
     $self->{client}->addHeader('Authorization', "Token $content->{token}");
     $self->{token} = $content->{token};
-   
+
     return $self;
 }
 

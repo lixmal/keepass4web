@@ -15,7 +15,7 @@ my $backend = $type->new;
 if (!$backend->DOES(__PACKAGE__ . '::Abstract')) {
     die "$type does not inherit from " . __PACKAGE__ . '::Abstract';
 }
- 
+
 # returns KeePass database from configured backend as ref to scalar
 # MUST die on error
 sub get_db { defined($backend) and $backend->get_db(@_) }
