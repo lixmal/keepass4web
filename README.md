@@ -84,9 +84,9 @@ For building the JavaScript part you will also need npm (version 3+ recommendend
 ## INSTALL
 
 - Clone the repo to some dir
-> git clone https://github.com/lixmal/keepass4web.git /opt/keepass4web/
+    > git clone https://github.com/lixmal/keepass4web.git /opt/keepass4web/
 
-> cd /opt/keepass4web/
+    > cd /opt/keepass4web/
 
 - Follow `BUILDING`, `MODULE INSTALLATION`, `CONFIGURATION`, `DEPLOYMENT` in that order
 
@@ -96,32 +96,32 @@ For building the JavaScript part you will also need npm (version 3+ recommendend
 The minified, bundled file will be written to public/scripts/bundle.js
 
 - Install Node/npm, e.g. for Ubuntu
-> sudo apt-get install npm
+    > sudo apt-get install npm
 
 - Install js modules
-> npm install
+    > npm install
 
 - Copy bootstrap font files
-> node_modules/.bin/gulp fonts
+    > node_modules/.bin/gulp fonts
 
 - Build js bundle
-> npm run build
+    > npm run build
 
 - For a non-uglified version you can run
-> npm run dev
+    > npm run dev
 
 ## BUNDLING
 
 Output will be a `KeePass4Web-{VERSION}.tar.gz` file, which includes all files required to run the app but without the development/build files
 
 - Follow `BUILDING` first, then run the perl make file
-> perl Makefile.PL
+    > perl Makefile.PL
 
 - Bundle the app to a tar
-> make dist
+    > make dist
 
 - Clean up afterwards
-> make clean
+    > make clean
 
 
 ## MODULE INSTALLATION
@@ -131,31 +131,28 @@ E.g. for Ubuntu 14.04 with mod_perl2:
 ##### Core
 
 - Install disto packages
-> sudo apt-get install build-essential libkeyutils-dev libkeyutils1 libapache2-mod-perl2 libinline-perl libdancer-perl libfile-keepass-perl libdancer-session-cookie-perl libbytes-random-secure-perl libmath-random-isaac-xs-perl libplack-perl libjson-xs-perl libjson-perl libipc-sharelite-perl libsereal-encoder-perl libsereal-decoder-perl libfile-type-perl
+    > sudo apt-get install build-essential libkeyutils-dev libkeyutils1 libapache2-mod-perl2 libinline-perl libdancer-perl libfile-keepass-perl libdancer-session-cookie-perl libbytes-random-secure-perl libmath-random-isaac-xs-perl libplack-perl libjson-xs-perl libjson-perl libipc-sharelite-perl libsereal-encoder-perl libsereal-decoder-perl libfile-type-perl
 
 - Install remaining Perl modules via cpan, depending on cipher configuration
-> cpan Crypt::Mode::CBC Crypt::Cipher::AES
+    > cpan Crypt::Mode::CBC Crypt::Cipher::AES
 
 ##### LDAP
-
 > sudo apt-get install libnet-ldap-perl
 
 ##### Htpasswd
-
 > cpan Authen::Htpasswd Crypt::Eksblowfish::Bcrypt
 
 ##### Seafile
-
 > cpan REST::Client
 
 
 ## CONFIGURATION
 
 - Copy or rename `config.yml.dist` to `config.yml`
-> cp config.yml.dist config.yml
+    > cp config.yml.dist config.yml
 
 - Change `session_cookie_key` to a **long**, **random** value if using `Cookie` in `session`, e.g.
-> pwgen -ysN1 128
+    > pwgen -ysN1 128
 
 
 ## DEPLOYMENT
@@ -163,34 +160,33 @@ E.g. for Ubuntu 14.04 with mod_perl2:
 Running this app on a web server with mod_perl2 or fcgi is **recommended** but running as standalone app is possible as well (with Dancer's capabilities).
 
 - Create the log directory (as defined in config.yml)
-> sudo mkdir /var/log/keepass4web/
+    > sudo mkdir /var/log/keepass4web/
 
 - The directory the app lives in has to be readable by the user running the web server, e.g.
-> sudo chown -R root:www-data /opt/keepass4web/ /var/log/keepass4web/
+    > sudo chown -R root:www-data /opt/keepass4web/ /var/log/keepass4web/
 
-> chmod g+r -R /opt/keepass4web/
+    > chmod g+r -R /opt/keepass4web/
 
 - Addtionally, it needs write permissions on the log directory, e.g.
-> chmod g+w /var/log/keepass4web/
+    > chmod g+w /var/log/keepass4web/
 
 - Remove permissions on sensitive data for everyone else
-> chmod o-rwx /opt/keepass4web/config.yml /var/log/keepass4web/
+    > chmod o-rwx /opt/keepass4web/config.yml /var/log/keepass4web/
 
-- Finally, give web server user acces to the .Inline directory
-to compile C files necessary for Kernel::Keyring
-> chmod g+w /opt/keepass4web/.Inline
+- Finally, give web server user acces to the .Inline directory to compile C files necessary for Kernel::Keyring
+    > chmod g+w /opt/keepass4web/.Inline
 
 - Optionally, run the compile process beforehand by loading the module once
-> cd /opt/keepass4web/
+    > cd /opt/keepass4web/
 
-> perl -MKernel::Keyring -Ilib -e ''
+    > perl -MKernel::Keyring -Ilib -e ''
 
 - For apache, enable the perl mod and ssl
-> sudo a2enmod perl
+    > sudo a2enmod perl
 
-> sudo a2enmod ssl
+    > sudo a2enmod ssl
 
-> sudo a2ensite default-ssl
+    > sudo a2ensite default-ssl
 
 
 ##### Running apache2 using mod_perl2/Plack with TLS:
@@ -228,28 +224,26 @@ PerlPostConfigHandler KeePass4Web::Apache2::post_config
 ##### Using the standalone server on default port 8080
 
 - Run (as correct user)
-> ./bin/app.pl
+    > ./bin/app.pl
 
 
 - As there is no TLS or IPv6, it is recommonded to run a front-end web server with reverse proxy, example config for apache:
+    ```apache
+    <IfModule mod_ssl.c>
+        <VirtualHost _default_:443>
+        ServerName example.org
+
+        SSLEngine on
+        SSLCertificateFile    /etc/ssl/certs/ssl-cert-snakeoil.pem
+        SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
+
+        ProxyPass        /keepass/ http://localhost:8080/
+        ProxyPassReverse /keepass/ http://localhost:8080/
 
 
-```apache
-<IfModule mod_ssl.c>
-    <VirtualHost _default_:443>
-    ServerName example.org
-
-    SSLEngine on
-    SSLCertificateFile    /etc/ssl/certs/ssl-cert-snakeoil.pem
-    SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
-
-    ProxyPass        /keepass/ http://localhost:8080/
-    ProxyPassReverse /keepass/ http://localhost:8080/
-
-
-    </VirtualHost>
-</IfModule>
-```
+        </VirtualHost>
+    </IfModule>
+    ```
 
 ##### Open `https://<domain>/keepass/` (notice the trailing slash)
 
@@ -309,33 +303,33 @@ Logging into some service on behalf of the user is an anti-pattern, therefore it
 ## MISCELLANEOUS
 
 - Show currently used shared segments
-> sudo ipcs
+    > sudo ipcs
 
 - Removing segments (effectively closing user databases)
-> sudo ipcrm -M `key`
+    > sudo ipcrm -M `key`
 
 - Show kernel keyrings in use (as root)
-> sudo cat /proc/keys
+    > sudo cat /proc/keys
 
-> sudo cat/proc/key-users
+    > sudo cat/proc/key-users
 
 - Adding users to .htpasswd, using bcrypt (needs apache2-utils)
-> touch .htpasswd               # create file
+    > touch .htpasswd               # create file
 
-> htpasswd -B .htpasswd <username>
+    > htpasswd -B .htpasswd <username>
 
-> sudo chown root:www-data .htpasswd # change group
+    > sudo chown root:www-data .htpasswd # change group
 
-> chmod g+r,o-rwx .htpasswd     # remove permission of others, add read to webserver user
+    > chmod g+r,o-rwx .htpasswd     # remove permission of others, add read to webserver user
 
 
 ## LIMITATIONS
 
 - KeePass databases are read only for now
 - Caching of KeePass databases happens in SysV IPC shared memory, whose maximum size depends on the OS. Defined by `shmall` and `shmmni` kernel variables
-> sudo cat /proc/sys/kernel/shmmni
+    > sudo cat /proc/sys/kernel/shmmni
 
-> sudo cat /proc/sys/kernel/shmall
+    > sudo cat /proc/sys/kernel/shmall
 - Limits of kernel keyring apply
 - Because right now all cached databases are seralized and deserialzed together, more *simultaneously active* users will make fetching the database from IPC slower for every user. A better approach would be using one shared segment per user, which would make one roundtrip perpetual
 
