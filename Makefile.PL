@@ -39,7 +39,7 @@ WriteMakefile(
         'Config'                  => 0,
         'Kernel::Keyring'         => 0,
         'File::KeePass::Web'      => 0,
-# optional modules 
+# optional modules
 #        'Crypt::Cipher::AES'      => 0,
 #        'Dancer::Session::Cookie' => 0,
 #        'Math::Random::ISAAC::XS' => 0,
