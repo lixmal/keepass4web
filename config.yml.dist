@@ -113,7 +113,7 @@ session_cookie_key: ''
 
 
 # usually no need to change these
-server:               '127.0.0.0'
+server:               '127.0.0.1'
 appname:              'Keepass4web'
 charset:              'UTF-8'
 server_tokens:        0
