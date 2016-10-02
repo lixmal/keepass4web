@@ -1,0 +1,143 @@
+@import url("node_modules/bootstrap/dist/css/bootstrap.min.css");
+
+@font-face {
+    font-family: 'Glyphicons Halflings';
+    src: url('../fonts/glyphicons-halflings-regular.eot');
+    src: url('../fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/glyphicons-halflings-regular.woff2') format('woff2'),
+         url('../fonts/glyphicons-halflings-regular.woff') format('woff'),
+         url('../fonts/glyphicons-halflings-regular.ttf') format('truetype'),
+         url('../fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+}
+
+body {
+    padding-top: 70px;
+    background-color: #ddd;
+}
+ 
+.kp-login {
+    margin-top: 65px !important;
+    padding: 15px;
+    width: auto;
+    height: auto;
+    min-height: 200px;
+    min-width: 320px;
+    max-width: 400px;
+    background-color: #f3f3f3;
+    margin:0 auto;
+    border-radius: 9px;
+    border: 1px solid ##c5c5c5;
+    text-align: center;
+}
+
+.login-inner {
+    margin:0 auto;
+    max-width: 380px;
+    width: auto;
+}
+
+.login>h4 {
+    font-size: 20px;
+    margin-left: 5px;
+    font-weight: 600;
+}
+
+.user {
+    margin-bottom: 5px;
+}
+
+.password {
+    margin-bottom: 15px;
+}
+
+.submit {
+    margin-top: 5px;
+}
+
+.login-error {
+    margin-top: 15px;
+    animation: blinker 1s linear;
+    margin-bottom: 0px;
+    padding-bttom: 0px;
+}
+
+@keyframes blinker {  
+    50% { opacity: 0.0; }
+}
+
+.table {
+    background-color: #EEEEEE;
+}
+
+.kp-files {
+    text-align: center;
+}
+
+.kp-fields {
+    text-align: center;
+}
+
+.kp-name {
+    text-align: center;
+}
+
+.backend-icon {
+    height: auto;
+    width: auto;
+    max-height: 25px;
+}
+
+.kp-entry-label {
+    min-width: 60;
+    max-width: 120px;
+    width: 100px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.kp-entry-value {
+    min-width: 80px;
+    max-width: 200px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.kp-entry-comment {
+    height: 150px;
+}
+
+.kp-entry-buttons {
+    min-width: 55px;
+    width: 100px;
+    max-width: 110px;
+}
+
+.kp-entry-label:hover {
+    text-overflow: clip;
+    white-space: normal;
+    word-break: break-all;
+}
+
+.kp-entry-value:hover {
+    text-overflow: clip;
+    white-space: normal;
+    word-break: break-all;
+}
+
+.kp-entry-label:active {
+    text-overflow: clip;
+    white-space: normal;
+    word-break: break-all;
+}
+
+.kp-entry-value:active {
+    text-overflow: clip;
+    white-space: normal;
+    word-break: break-all;
+}
+
+.dir-tree {
+    margin-bottom: 20px;
+}

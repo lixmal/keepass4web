@@ -1,3 +1,5 @@
+# Perl
+
 /blib/
 /.build/
 _build/
@@ -18,3 +20,27 @@ nytprof.out
 *.o
 *.bs
 /_eumm/
+*.tar
+*.tar.gz
+*.tar.bz2
+.Inline/*
+_Inline/
+log/*
+
+# npm
+node_modules/
+public/scripts/bundle.js
+npm-debug.log
+
+# vim
+*.sw[a-z]
+
+# dancer
+config.yml
+
+# bootstrap
+public/src/fonts/*
+
+# data
+.htpasswd
+*.kdbx
