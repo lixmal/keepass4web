@@ -1,0 +1,134 @@
+# vim: set filetype=yaml
+
+# where to get keepass database from
+# use 'Filesystem' for a simple file in the local filesystem
+# use 'Seafile' to get database from a Seafile host
+db_backend: 'Filesystem'
+
+# backend to authenticate users before anything else
+# available: LDAP, Htpasswd
+auth_backend: 'LDAP'
+
+# whether to use auth credentials for database backend provider (if backend requires authentication)
+auth_reuse_cred: 0
+
+# file specific configuration, db_backend = 'File'
+File:
+    db_location: '/opt/keepass4web/db.kdbx'
+
+# seafile specific configuration, db_backend = 'Seafile'
+Seafile:
+    # server url
+    url:         'https://seacloud.cc/'
+    db_location: '632ab0a8-eca9-4495-90ba-f351b5bfe975/Keepass/db.kdbx'
+    # whether to use login password to decrypt encrypted repositories
+    reuse_repopw: 0
+
+
+# ldap specific configuration, auth_backend = 'LDAP'
+LDAP:
+    uri:    'ldap://127.0.0.1:389'
+    scope:  'subtree'
+    base_dn: 'OU=People,DC=example,DC=org'
+    filter: '(&(objectClass=inetOrgPerson)(memberOf=CN=keepass,OU=groups,DC=example,DC=org))'
+
+    # (unique) ldap attribute for user login
+    # Active Directory: sAMAccountName or userPrincipalName
+    # openLDAP/389 Directory Server/etc: uid
+    login_attribute: 'uid'
+
+    # ldap bind DN and password, leave empty for anonymous bind
+    bind:     'CN=ldap-read,OU=Special Users,DC=example,DC=org'
+    password: ''
+
+    # ldap attribute containing the keepass database or keyfile (per user), dependent on db backend
+    # leave empty to use static db_location from above
+    database_attribute: 'keePass'
+    # key file location attribute
+    keyfile_attribute:  'keePassKeyFile'
+
+# htpasswd specific configuration, auth_backend = 'Htpasswd'
+# apache htpasswd style files
+Htpasswd:
+    # may be a relative path to the app dir
+    filepath: '.htpasswd'
+    # hash algorithm
+    # available: bcrypt, md5, sha1, crypt, plain
+    hash: 'bcrypt'
+
+
+# time till database gets closed (user idle time)
+# user will have to reenter database password/keyfile
+db_session_timeout: '10 minutes'
+# cipher used for db encryption in shared memory. Basically the Crypt::Cipher::<Name> module
+ipc_cipher: 'AES'
+# segment size in kilobytes to request
+ipc_segment_size: 64
+# cipher used for encryption of all password fields and files
+pw_cipher: 'AES'
+# SysV IPC key, usually only needs change if it clashes with another application
+ipc_id: 3294967296
+# type of keyring used for Kernel::Keyring
+# see "man keyctl"
+keyring_session: '@s'
+# whether to include files and history in cached database
+# disabling this can speed up the initial loading of the database and memory in IPC
+hist_and_bin: 1
+# webinterface: maximum open tree levels on load
+toggled_levels: 3
+
+search:
+    # fields to search for matching entries
+    fields:
+        - title
+        - username
+        - tags
+        - comments
+        - url
+    # whether to search in user supplied fields and file names
+    extra_fields: 1
+    # only if you can trust users, might lead to server hang (backtracking)
+    allow_regex: 0
+
+
+
+# Dancer related config
+port:            8080
+logger:          'file'
+log_path:        '/var/log/keepass4web/'
+log_file:        'info.log'
+# log level
+log:             'info'
+logger_format:   '%T [%L] %m (in %f l. %l)'
+
+# cookie session name
+session_name:    'KeePass4Web'
+# session expiration
+session_expires: '1 hour'
+session:         'Cookie'
+# should be at least 16 bytes long
+# we could change that one periodially, e.g. weekly via cron
+session_cookie_key: ''
+
+
+
+# usually no need to change these
+server:               '127.0.0.0'
+appname:              'Keepass4web'
+charset:              'UTF-8'
+server_tokens:        0
+# warnings are critical
+warnings:             0
+# stack traces on error
+show_errors:          0
+# caching routes for speed
+route_cache:          1
+# using https only cookies
+session_is_http_only: 1
+session_secure:       1
+environment:          'production'
+
+plugins:
+    'Ajax':
+        content_type: 'application/json'
+
