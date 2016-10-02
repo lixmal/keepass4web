@@ -14,7 +14,7 @@ body {
     padding-top: 70px;
     background-color: #ddd;
 }
- 
+
 .kp-login {
     margin-top: 65px !important;
     padding: 15px;
@@ -61,7 +61,7 @@ body {
     padding-bttom: 0px;
 }
 
-@keyframes blinker {  
+@keyframes blinker {
     50% { opacity: 0.0; }
 }
 

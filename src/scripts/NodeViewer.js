@@ -12,10 +12,10 @@ export default class NodeViewer extends React.Component {
             data = null
         if (!name || name === 'password')
             this.props.entry.password = data
-        else 
+        else
             this.props.entry.strings[name] = data
 
-        if (hide === true) 
+        if (hide === true)
             target.childNodes[0].className = 'glyphicon glyphicon-eye-open'
         else
             target.childNodes[0].className = 'glyphicon glyphicon-eye-close'
@@ -45,7 +45,7 @@ export default class NodeViewer extends React.Component {
             }.bind(this),
             error: KeePass4Web.error.bind(this),
         })
-        
+
     }
 
     copyHandler(name, event) {

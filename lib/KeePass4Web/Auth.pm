@@ -18,7 +18,7 @@ my $auth = $type->new;
 if (!$auth->DOES(__PACKAGE__ . '::Abstract')) {
     die "$type does not inherit from " . __PACKAGE__ . '::Abstract';
 }
- 
+
 # auth attempt with configured backend
 # MUST die on error
 # MAY return HoA with more info on the authenticated user

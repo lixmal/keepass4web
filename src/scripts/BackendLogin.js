@@ -1,5 +1,5 @@
 import React from 'react'
-import LoginForm from './LoginForm' 
+import LoginForm from './LoginForm'
 import NavBar from './NavBar'
 import Alert from './Alert'
 
@@ -16,7 +16,7 @@ export default class BackendLogin extends LoginForm {
         for (var i in tpl.fields) {
             let field = tpl.fields[i]
             fields.push(
-                <input 
+                <input
                     key={field.field}
                     className={ 'form-control ' + (field.type === 'password' ? 'password' : 'user') }
                     type={field.type}

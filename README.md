@@ -27,7 +27,7 @@ This will probably only run under some flavor of Linux. The instructions assume 
 - Inline::C
 - Dancer
 - Dancer::Session::Cookie *(default session engine, `Cookie` in config)*
-- IPC::ShareLite 
+- IPC::ShareLite
 - JSON
 - JSON::XS *(for performance)*
 - Plack *(if using mod_perl2 or fastcgi)*
@@ -59,7 +59,7 @@ This will probably only run under some flavor of Linux. The instructions assume 
 Most modules can be taken from the disto, e.g. for Ubuntu 14.04:
 
 - libinline-perl
-- libdancer-perl 
+- libdancer-perl
 - libfile-keepass-perl
 - libdancer-session-cookie-perl
 - libipc-sharelite-perl
@@ -292,7 +292,7 @@ Web server needs read access to the files.
 KeePass database is stored in the private cloud.
 
 Locations for the database and the key file can be configured in config.yml (global for all users) or fetched from auth backend (individually per user).
-Location syntax is '<repository-id>/<path-to-database>', see config.yml.dist for an example. 
+Location syntax is '<repository-id>/<path-to-database>', see config.yml.dist for an example.
 
 The server uses the (possibly auth backend) credentials to fetch a token from Seafile which is used for consequent requests.
 No user credentials are saved anywhere at any time!
@@ -311,7 +311,7 @@ Logging into some service on behalf of the user is an anti-pattern, therefore it
 - Show currently used shared segments
 > sudo ipcs
 
-- Removing segments (effectively closing user databases) 
+- Removing segments (effectively closing user databases)
 > sudo ipcrm -M `key`
 
 - Show kernel keyrings in use (as root)
@@ -361,11 +361,11 @@ Logging into some service on behalf of the user is an anti-pattern, therefore it
 
 ```
 Client                                                       Server
-                              
+
 
 Load website /
                               request KeePass tree
-                              -------------------->  
+                              -------------------->
 
                                                         Check sesssion
 
@@ -376,27 +376,27 @@ Redirect to /user_login
 Show credentials dialog
 
                               user credentials
-                              -------------------->  
+                              -------------------->
 
                                                         User auth (LDAP, SQL, ...)
 
-                                           login OK                      
+                                           login OK
                               <--------------------
 
 Redirect to /backend_login
-Show backend login dialog 
+Show backend login dialog
 
-                              backend credentials 
+                              backend credentials
                               -------------------->
 
                                                         Init DB backend / receive backend token
-                                           login OK                      
+                                           login OK
                               <--------------------
 
 Redirect to /db_login
 Show KeePass password dialog
 
-                              KeePass credentials                           
+                              KeePass credentials
                               -------------------->
                                                         Possibly decrypt backend repo
                                                         Get KeePass database from backend
@@ -407,7 +407,7 @@ Show KeePass password dialog
                                                         Put encryption key into kernel keyring
                                                         Write keyring ids to session
                                                         Put encrypted database into IPC shared memory
-                                      decryption OK                      
+                                      decryption OK
                               <--------------------
 
 Redirect to /
@@ -433,7 +433,7 @@ Password request by user
                                                         Get database from IPC shared memory
                                                         Decrypt database
                                                         Decrypt requested password
-                                    
+
                                   Send pw entry
                               <--------------------
 Show cleartext pw
@@ -452,5 +452,5 @@ Page reload
                                   Send KeePass tree
                               <--------------------
 Show KeePass tree
-                                                        
-``` 
+
+```

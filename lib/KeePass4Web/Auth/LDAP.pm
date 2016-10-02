@@ -41,7 +41,7 @@ sub auth {
         # no need to use trailing newline, Auth::LDAP does that job
         die $err;
     }
-    
+
 
     # set db and keyfile location for session, if configured in auth backend
     my $db_attr      = config->{LDAP}->{database_attribute};

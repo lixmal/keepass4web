@@ -76,7 +76,7 @@ sub lock {
     my ($self, $groups, $cipher, $hist_and_bin) = @_;
     $groups //= $self->groups;
 
-    my $b = Bytes::Random::Secure->new(NonBlocking => 1); 
+    my $b = Bytes::Random::Secure->new(NonBlocking => 1);
     my $key = $b->bytes(32);
     my $iv  = $b->bytes(16);
 
@@ -88,14 +88,14 @@ sub lock {
 
         # encrypt string pws
         encrypt_strings $b, $crypt, \$key, $e;
-        
+
         # don't include history and files if requested
         unless ($hist_and_bin) {
             $e->{history} = undef;
             $e->{binary} = undef;
             next;
         }
-        
+
         # encrypt files
         encrypt_files $b, $crypt, \$key, $e;
 
@@ -105,7 +105,7 @@ sub lock {
             $hist_e->{password} //= '';
             $iv = $b->bytes(16);
             $hist_e->{password} = $iv . $crypt->encrypt($hist_e->{password}, $key, $iv);
-        
+
             # encrypt history string pws
             encrypt_strings $b, $crypt, \$key, $hist_e;
 
@@ -169,7 +169,7 @@ sub _master_key {
     my $key = (!$pass && !$file) ? die "One or both of password or key file must be passed\n"
             : ($head->{'version'} && $head->{'version'} eq '2') ? sha256(grep {$_} $pass, $file)
             : ($pass && $file) ? sha256($pass, $file) : $pass ? $pass : $file;
-    my $b = Bytes::Random::Secure->new(NonBlocking => 1); 
+    my $b = Bytes::Random::Secure->new(NonBlocking => 1);
     $head->{'enc_iv'}     ||= $b->bytes(16);
     $head->{'seed_rand'}  ||= $b->bytes($head->{'version'} && $head->{'version'} eq '2' ? 32 : 16);
     $head->{'seed_key'}   ||= sha256 $b->bytes(32);

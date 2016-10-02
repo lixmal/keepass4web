@@ -123,7 +123,7 @@ sub ipc {
         -destroy   => 0,
         -exclusive => 0,
         -size      => IPC_SIZE
-    ) or die "$!\n";   
+    ) or die "$!\n";
 
     debug 'IPC memory usage: ', $ipc->size * $ipc->num_segments;
 
@@ -147,7 +147,7 @@ sub ipc_store {
     if ($data) {
         $shared->{session SESSION_USERNAME}->{groups} = $data;
         $shared->{session SESSION_USERNAME}->{expiry} = time + DB_TIMEOUT;
-    } 
+    }
     else {
         delete $shared->{session SESSION_USERNAME};
     }
@@ -159,13 +159,13 @@ sub fetch_and_decrypt {
 
     # grab db ref from backend
     my $db = KeePass4Web::Backend::get_db;
-    
+
     # key file user input overrides configured key file location
     # eval in case key file location is not available
     my $keyfile = ${$args{keyfile}} || eval { ${KeePass4Web::Backend::get_key()} };
     my $keyfile_ref;
     $keyfile_ref = \$keyfile if $keyfile;
-    
+
     # untaint
     my ($password) = $args{password} =~ /^(.*)$/;
     $password = $args{password};
@@ -176,7 +176,7 @@ sub fetch_and_decrypt {
     my $pw_key = $kp->parse_db($db, [$password, $keyfile_ref], undef, config->{pw_cipher}, config->{hist_and_bin});
     my $b = Bytes::Random::Secure->new(NonBlocking => 1);
     my ($db_key, $db_iv) = ($b->bytes(32), $b->bytes(16));
-    
+
     # reencrypt db and store in shared memory
     # add expiry date in front
     ipc_store get_crypt->encrypt(encode_sereal($kp->groups), $db_key, $db_iv);
@@ -238,7 +238,7 @@ sub opened {
 sub walk_tree {
     my ($group, $children, $counter) = @_;
     $counter++;
-    
+
     # not interested in leafs
     my $groups = $group->{groups} // return;
 
@@ -256,7 +256,7 @@ sub walk_tree {
         children => @$grandchildren ? $grandchildren : undef,
     };
 
-    
+
 =pod
     # if it has groups, it also has entries, even if empty
     foreach my $entry (@{$group->{entries}}) {
@@ -282,7 +282,7 @@ sub debloat {
 ajax '/get_tree' => sub {
     my $kp = eval { ipc_retrieve->[0] };
     if ($@) {
-        debug session(SESSION_USERNAME), ": $@"; 
+        debug session(SESSION_USERNAME), ": $@";
         clear_db;
         return failure 'Failed to load database', UNAUTHORIZED;
     }
@@ -318,19 +318,19 @@ ajax '/get_group' => sub {
 
     my $kp = eval { ipc_retrieve };
     if ($@) {
-        debug session(SESSION_USERNAME), ": $@"; 
+        debug session(SESSION_USERNAME), ": $@";
         clear_db;
         return failure 'Failed to load database', UNAUTHORIZED;
     }
 
     # create new object for the find methods
     my @entries = File::KeePass::Web->new(groups => $kp)->find_entries({ group_id => $id });
-    
+
     # remove bloated / protected fields
     foreach my $entry (@entries) {
         debloat $entry;
     }
-    
+
     return success undef, \@entries;
 };
 
@@ -339,25 +339,25 @@ ajax '/get_entry' => sub {
 
     my $kp = eval { ipc_retrieve };
     if ($@) {
-        debug session(SESSION_USERNAME), ": $@"; 
+        debug session(SESSION_USERNAME), ": $@";
         clear_db;
         return failure 'Failed to load database', UNAUTHORIZED;
     }
 
     my $entry = eval { File::KeePass::Web->new(groups => $kp)->find_entry({ id => $id }) };
     if ($@) {
-        error session(SESSION_USERNAME), ": $@"; 
+        error session(SESSION_USERNAME), ": $@";
         return failure 'Search returned more than one entry', SERVER_ERROR;
     }
     return failure 'Could not find entry', SERVER_ERROR if !$entry;
-    
+
     $entry->{password} = undef;
     my $strings = $entry->{strings};
     my $protected = $entry->{protected};
     foreach my $string (keys %$strings) {
         $strings->{$string} = undef if $protected->{$string};
     }
-    
+
     # remove history and files to keep the size small
     $entry->{history} = undef;
     my $files = $entry->{binary};
@@ -366,7 +366,7 @@ ajax '/get_entry' => sub {
             $files->{$file} = undef;
         }
     }
-    
+
     return success undef, $entry;
 };
 
@@ -377,23 +377,23 @@ ajax '/get_password' => sub {
 
     my $kp = eval { ipc_retrieve };
     if ($@) {
-        debug session(SESSION_USERNAME), ": $@"; 
+        debug session(SESSION_USERNAME), ": $@";
         clear_db;
         return failure 'Failed to load database', UNAUTHORIZED;
     }
 
     my $entry = eval { File::KeePass::Web->new(groups => $kp)->find_entry({ id => $id }) };
     if ($@) {
-        error session(SESSION_USERNAME), ": $@"; 
+        error session(SESSION_USERNAME), ": $@";
         return failure 'Search returned more than one entry', SERVER_ERROR;
     }
     return failure 'Could not find entry', SERVER_ERROR if !$entry;
-    
+
     if ($entry->{protected}->{$name}) {
         # TODO: update timestamp and usecount, but requires saving back to backend
          my ($iv, $ciphertext) = unpack 'a16a*', $name eq 'password' ? $entry->{password} : $entry->{strings}->{$name};
          return success undef, get_crypt(config->{pw_cipher})->decrypt($ciphertext, retrieve_pw_key, $iv);
-    } 
+    }
     return failure 'Field is not encrypted';
 };
 
@@ -403,18 +403,18 @@ ajax '/get_file' => sub {
 
     my $kp = eval { ipc_retrieve };
     if ($@) {
-        debug session(SESSION_USERNAME), ": $@"; 
+        debug session(SESSION_USERNAME), ": $@";
         clear_db;
         return failure 'Failed to load database', UNAUTHORIZED;
     }
 
     my $entry = eval { File::KeePass::Web->new(groups => $kp)->find_entry({ id => $id }) };
     if ($@) {
-        error session(SESSION_USERNAME), ": $@"; 
+        error session(SESSION_USERNAME), ": $@";
         return failure 'Search returned more than one entry', SERVER_ERROR;
     }
     return failure 'Could not find entry', SERVER_ERROR if !$entry;
-    
+
     my $binary = $entry->{binary};
     if (ref $binary eq 'HASH' && exists $binary->{$filename}) {
          my ($iv, $ciphertext) = unpack 'a16a*', $binary->{$filename};
@@ -422,11 +422,11 @@ ajax '/get_file' => sub {
 
          # set header for download and proper file name, according to rfc5987
          header 'Content-Disposition' => "attachment; filename*=UTF-8''" . uri_escape_utf8($filename);
-         # guess and set content type 
+         # guess and set content type
          content_type(File::Type->new->checktype_contents($file));
 
          return $file;
-    } 
+    }
     return failure 'File not found', NOT_FOUND;
 };
 
@@ -435,12 +435,12 @@ ajax '/search_entries' => sub {
 
     my $kp = eval { ipc_retrieve };
     if ($@) {
-        debug session(SESSION_USERNAME), ": $@"; 
+        debug session(SESSION_USERNAME), ": $@";
         clear_db;
         return failure 'Failed to load database', UNAUTHORIZED;
     }
 
-    
+
     my $extra_fields = config->{search}->{extra_fields};
     my $rgx = config->{search}->{allow_regex} ? qr/$term/i : qr/\Q$term\E/i;
 
@@ -489,14 +489,14 @@ ajax '/search_entries' => sub {
 
         # ignore history entries
     }
-    
+
     return success undef, \@matches;
 };
 
 ajax '/close_db' => sub {
     eval { clear_db };
     if ($@) {
-        error session(SESSION_USERNAME), ": $@"; 
+        error session(SESSION_USERNAME), ": $@";
         return failure, 'Failed to clear DB', SERVER_ERROR;
     }
     return success 'DB closed';
