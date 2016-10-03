@@ -83,12 +83,19 @@ For building the JavaScript part you will also need npm (version 3+ recommended,
 
 ## INSTALL
 
-- Clone the repo to some dir
-    > git clone https://github.com/lixmal/keepass4web.git /opt/keepass4web/
+- From source:
+    - Clone the repo to some dir
+        > git clone https://github.com/lixmal/keepass4web.git /opt/keepass4web/
 
-    > cd /opt/keepass4web/
+        > cd /opt/keepass4web/
 
-- Follow `BUILDING`, `MODULE INSTALLATION`, `CONFIGURATION`, `DEPLOYMENT` in that order
+    - Follow `BUILDING`, `MODULE INSTALLATION`, `CONFIGURATION`, `DEPLOYMENT` in that order
+
+- From dist tar:
+    - Grab the latest tar from github: https://github.com/lixmal/keepass4web/releases
+    - Untar it to some directory, e.g. /opt
+    - Optionally rename it to keepass4web (for consistency with this README)
+    - Follow `MODULE INSTALLATION`, `CONFIGURATION`, `DEPLOYMENT` in that order
 
 
 ## BUILDING
