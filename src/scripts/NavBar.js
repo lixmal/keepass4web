@@ -52,11 +52,13 @@ export default class NavBar extends React.Component {
 
         if (this.props.showSearch) {
             search =  (
-                <form className="navbar-form navbar-left" onSubmit={this.props.onSearch.bind(this, this.refs)}>
-                    <div className="form-group">
-                        <input autoComplete="on" type="search" ref="term" className="form-control" placeholder="Search" autoFocus="autoFocus" />
+                <form className="navbar-form navbar-left" role="search" onSubmit={this.props.onSearch.bind(this, this.refs)}>
+                    <div className="input-group">
+                        <input autoComplete="on" type="search" ref="term" className="form-control" placeholder="Search" autoFocus />
+                        <div className="input-group-btn">
+                            <button type="submit" className="btn btn-default"><span className="glyphicon glyphicon-search"></span></button>
+                        </div>
                     </div>
-                    <button type="submit" className="btn btn-default">Submit</button>
                 </form>
             )
         }
