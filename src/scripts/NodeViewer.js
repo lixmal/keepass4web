@@ -133,7 +133,7 @@ export default class NodeViewer extends React.Component {
     }
 
     render() {
-        if (!this.props || !this.props.entry) return (<div></div>)
+        if (!this.props || !this.props.entry) return null
 
         var entry = this.props.entry
 

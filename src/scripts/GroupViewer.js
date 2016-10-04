@@ -6,7 +6,7 @@ export default class GroupViewer extends React.Component {
     }
 
     render() {
-        if (!this.props || !this.props.group) return (<div></div>)
+        if (!this.props || !this.props.group) return null
 
         var group = this.props.group
 
