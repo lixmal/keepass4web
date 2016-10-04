@@ -2,8 +2,8 @@ import React from 'react'
 import Clipboard from 'clipboard-js'
 
 export default class NodeViewer extends React.Component {
-    constructor(props) {
-        super(props)
+    constructor() {
+        super()
         this.setHide = this.setHide.bind(this)
     }
 
