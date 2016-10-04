@@ -55,11 +55,17 @@ export default class Viewport extends React.Component {
     }
 
     onSelect(entry) {
+        // remove entry first to rerender entry
+        // important for eye close/open buttons
+        this.setState({
+            entry: null
+        })
         this.serverRequest = KeePass4Web.ajax('get_entry', {
             data: {
                 id: entry.id,
             },
             success: function (data) {
+
                 this.setState({
                     entry: data.data
                 })
