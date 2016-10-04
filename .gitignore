@@ -39,7 +39,7 @@ npm-debug.log
 config.yml
 
 # bootstrap
-public/src/fonts/*
+public/fonts/*
 
 # data
 .htpasswd
