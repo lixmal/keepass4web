@@ -6,7 +6,8 @@ export default class LoginForm extends React.Component {
         this.handleLogin = this.handleLogin.bind(this);
         this.logout = this.logout.bind(this);
         this.state = {
-            error: false
+            error: false,
+            mask: false
         }
     }
 
@@ -29,9 +30,13 @@ export default class LoginForm extends React.Component {
         event.preventDefault()
 
         var success = false
+        this.setState({ mask: true })
         KeePass4Web.ajax(this.url, {
             success: function(data) {
-                this.setState({ error: false })
+                this.setState({
+                    error: false,
+                    mask: false
+                })
                 success = true
             }.bind(this),
             async: false,
@@ -43,7 +48,10 @@ export default class LoginForm extends React.Component {
                 if (s == 'error' && r.responseJSON) {
                     errmsg = r.responseJSON.message
                 }
-                this.setState({ error: errmsg })
+                this.setState({
+                    error: errmsg,
+                    mask: false
+                })
             }.bind(this)
         })
 
