@@ -33,10 +33,10 @@ This will probably only run under some flavour of Linux. The instructions assume
 - Plack *(if using mod_perl2 or fastcgi)*
 - File::KeePass
 - Bytes::Random::Secure
-- Math::Random::Isaac::XS *(recommended for performance)*
+- Math::Random::ISAAC::XS *(recommended for performance)*
 - File::Type
-- Sereal::Encode
-- Sereal::Decode
+- Sereal::Encoder
+- Sereal::Decoder
 - Crypt::Mode::CBC
 - Crypt::Cipher::AES *(default cipher)*
 
