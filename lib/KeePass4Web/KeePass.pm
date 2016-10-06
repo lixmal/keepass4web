@@ -13,7 +13,7 @@ use Sereal::Decoder qw/decode_sereal/;
 use Config ();
 use MIME::Base64 qw/decode_base64/;
 use URI::Escape qw/uri_escape_utf8/;
-use File::Type;
+use File::LibMagic;
 
 use File::KeePass::Web;
 use Kernel::Keyring;
@@ -423,7 +423,9 @@ ajax '/get_file' => sub {
          # set header for download and proper file name, according to rfc5987
          header 'Content-Disposition' => "attachment; filename*=UTF-8''" . uri_escape_utf8($filename);
          # guess and set content type
-         content_type(File::Type->new->checktype_contents($file));
+         # Dancer will convert text/* types to UTF-8 here
+         # TODO: make the module optional
+         content_type(File::LibMagic->new->info_from_string(\$file)->{mime_type});
 
          return $file;
     }

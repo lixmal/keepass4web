@@ -20,6 +20,8 @@ This will probably only run under some flavour of Linux. The instructions assume
 - libkeyutils-dev
 - libkeyutils1
 - libapache2-mod-perl2 *(if running mod_perl2 with apache2)*
+- libmagic1
+- libmagic-dev
 
 ##### Perl modules
 
@@ -34,7 +36,7 @@ This will probably only run under some flavour of Linux. The instructions assume
 - File::KeePass
 - Bytes::Random::Secure
 - Math::Random::ISAAC::XS *(recommended for performance)*
-- File::Type
+- File::LibMagic
 - Sereal::Encoder
 - Sereal::Decoder
 - Crypt::Mode::CBC
@@ -70,11 +72,9 @@ Most modules can be taken from the disto, e.g. for Ubuntu 14.04:
 - libplack-perl
 - libjson-perl
 - libjson-xs-perl
-- liblwp-simple-perl
 - libnet-ldap-perl
-- libfile-type-perl
 
-Remaining modules need to be installed from CPAN: `Rest::Client`, `Crypt::Mode::CBC`, `Crypt::Cipher::AES`.
+Remaining modules need to be installed from CPAN.
 Alternatively you can get all modules in the most recent version from CPAN, although this will take quite some time to install.
 
 
@@ -138,10 +138,10 @@ E.g. for Ubuntu 14.04 with mod_perl2:
 ##### Core
 
 - Install disto packages
-    > sudo apt-get install build-essential libkeyutils-dev libkeyutils1 libapache2-mod-perl2 libinline-perl libdancer-perl libfile-keepass-perl libdancer-session-cookie-perl libbytes-random-secure-perl libmath-random-isaac-xs-perl libplack-perl libjson-xs-perl libjson-perl libipc-sharelite-perl libsereal-encoder-perl libsereal-decoder-perl libfile-type-perl
+    > sudo apt-get install build-essential libkeyutils-dev libkeyutils1 libapache2-mod-perl2 libinline-perl libdancer-perl libfile-keepass-perl libdancer-session-cookie-perl libbytes-random-secure-perl libmath-random-isaac-xs-perl libplack-perl libjson-xs-perl libjson-perl libipc-sharelite-perl libsereal-encoder-perl libsereal-decoder-perl
 
 - Install remaining Perl modules via cpan, depending on cipher configuration
-    > cpan Crypt::Mode::CBC Crypt::Cipher::AES
+    > cpan Crypt::Mode::CBC Crypt::Cipher::AES File::LibMagic
 
 ##### LDAP
 > sudo apt-get install libnet-ldap-perl
