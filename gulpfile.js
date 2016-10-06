@@ -5,5 +5,5 @@ var gulp = require('gulp');
 gulp.task('fonts', function() {
     gulp.src(
         'node_modules/bootstrap/fonts/*'
-    ).pipe(gulp.dest('public/src/fonts/'));
+    ).pipe(gulp.dest('public/fonts/'));
 });
