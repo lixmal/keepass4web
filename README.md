@@ -138,7 +138,7 @@ E.g. for Ubuntu 14.04 with mod_perl2:
 ##### Core
 
 - Install disto packages
-    > sudo apt-get install build-essential libkeyutils-dev libkeyutils1 libapache2-mod-perl2 libinline-perl libdancer-perl libfile-keepass-perl libdancer-session-cookie-perl libbytes-random-secure-perl libmath-random-isaac-xs-perl libplack-perl libjson-xs-perl libjson-perl libipc-sharelite-perl libsereal-encoder-perl libsereal-decoder-perl
+    > sudo apt-get install build-essential libkeyutils-dev libkeyutils1 libmagic1 libmagic-dev libapache2-mod-perl2 libinline-perl libdancer-perl libfile-keepass-perl libdancer-session-cookie-perl libbytes-random-secure-perl libmath-random-isaac-xs-perl libplack-perl libjson-xs-perl libjson-perl libipc-sharelite-perl libsereal-encoder-perl libsereal-decoder-perl
 
 - Install remaining Perl modules via cpan, depending on cipher configuration
     > cpan Crypt::Mode::CBC Crypt::Cipher::AES File::LibMagic
