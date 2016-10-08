@@ -73,13 +73,13 @@ sub _init_repo {
     my $seafile = _new;
 
     my $location = _location $get_key;
-    debug 'Seafile location: ', $location, "\n";
+    debug 'Seafile location: ', $location;
 
     my ($repo_id, $dir) = split /\//, $location, 2;
     if (!defined $repo_id || !defined $dir) {
         die "Invalid Seafile location\n";
     }
-    debug 'Repo: ', $repo_id, ', dir: ', $dir, "\n";
+    debug 'Repo: ', $repo_id, ', dir: ', $dir;
 
     return $seafile, $repo_id, $dir;
 }
