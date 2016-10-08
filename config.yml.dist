@@ -12,8 +12,8 @@ auth_backend: 'LDAP'
 # whether to use auth credentials for database backend provider (if backend requires authentication)
 auth_reuse_cred: 0
 
-# file specific configuration, db_backend = 'File'
-File:
+# file specific configuration, db_backend = 'Filesystem'
+Filesystem:
     db_location: '/opt/keepass4web/db.kdbx'
 
 # seafile specific configuration, db_backend = 'Seafile'

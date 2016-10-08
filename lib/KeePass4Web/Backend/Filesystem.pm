@@ -16,7 +16,7 @@ sub _location {
     return $session_db if $session_db;
 
     # default is statically configured location
-    return config->{File}->{db_location};
+    return config->{Filesystem}->{db_location};
 }
 
 sub get_db {
