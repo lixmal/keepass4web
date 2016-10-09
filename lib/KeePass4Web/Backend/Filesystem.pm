@@ -44,7 +44,7 @@ sub get_key          { \undef }
 
 # no credentials required
 sub credentials_init { shift }
-sub credentials_tpl  { }
+sub credentials_tpl  { undef }
 sub authenticated    { 1 }
 
 1;
