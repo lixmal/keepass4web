@@ -24,6 +24,30 @@ Seafile:
     # whether to use login password to decrypt encrypted repositories
     reuse_repopw: 0
 
+# http specific configuration, db_backend = 'HTTP'
+HTTP:
+    # server url, download also works for ftp and gopher
+    db_location: 'https:/example.org/db.kdbx'
+    # username/password for http basic auth, leave password empty if not required
+    username: ''
+    password: ''
+    # proxy url to use
+    proxy: ''
+    upload:
+        # form field name used in upload POST request
+        fieldname: 'file'
+        # useful for unicode filenames, needs server support
+        use_rfc5987: 1
+    # options passed to LWP::UserAgent constructor
+    # see https://metacpan.org/pod/LWP::UserAgent#CONSTRUCTOR-METHODS
+    lwp_options:
+        ssl_opts:
+            verify_hostname: 1
+        agent: 'LWP/KeePass4Web'
+        # get proxy settings from environment
+        # mod_perl needs to pass env aditionally in apache config (PerlPassEnv directive)
+        env_proxy: 1
+        timeout: 30
 
 # ldap specific configuration, auth_backend = 'LDAP'
 LDAP:
