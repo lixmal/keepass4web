@@ -52,6 +52,9 @@ This will probably only run under some flavour of Linux. The instructions assume
 ###### Seafile
 - REST::Client
 
+###### HTTP
+- LWP::UserAgent
+
 ###### Bundled modules, may become external
 - File::KeePass::Web
 - Kernel::Keyring
@@ -151,6 +154,9 @@ E.g. for Ubuntu 14.04 with mod_perl2:
 
 ##### Seafile
 > cpan REST::Client
+
+##### HTTP
+> sudo apt-get install libwww-perl
 
 
 ## CONFIGURATION
@@ -286,8 +292,6 @@ Grabs the KeePass database from the local filesystem. No support for local key f
 Can get database and key file location from auth backend.
 Web server needs read access to the files.
 
-
-
 ##### Seafile
 
 KeePass database is stored in the private cloud.
@@ -305,7 +309,14 @@ Logging into some service on behalf of the user is an anti-pattern, therefore it
 
 ##### WebDAV (planned)
 
-##### HTTP (planned)
+##### HTTP
+
+Backend to fetch database from http, ftp or other (see [LWP NETWORK SUPPORT](http://search.cpan.org/dist/libwww-perl/lib/LWP.pm#NETWORK_SUPPORT)).
+Supports per-user database and key file location from auth backend. No support for key files if configured statically (in config.yml).
+Http basic auth is supported, but only globally (same for all users, even if urls differ). Otherwise it would be necessary to store the user credentials in the session, which might be not a good idea.
+Database upload (saving) is only implemented for http right now.
+
+Username and password may also be supplied in the form of `ftp://username:password@example.org`
 
 ## MISCELLANEOUS
 
