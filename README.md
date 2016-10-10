@@ -52,7 +52,7 @@ This will probably only run under some flavour of Linux. The instructions assume
 ###### Seafile
 - REST::Client
 
-###### HTTP
+###### LWP
 - LWP::UserAgent
 
 ###### Bundled modules, may become external
@@ -155,7 +155,7 @@ E.g. for Ubuntu 14.04 with mod_perl2:
 ##### Seafile
 > cpan REST::Client
 
-##### HTTP
+##### LWP
 > sudo apt-get install libwww-perl
 
 
@@ -309,11 +309,12 @@ Logging into some service on behalf of the user is an anti-pattern, therefore it
 
 ##### WebDAV (planned)
 
-##### HTTP
+##### LWP
 
-Backend to fetch database from http, ftp or other (see [LWP NETWORK SUPPORT](http://search.cpan.org/dist/libwww-perl/lib/LWP.pm#NETWORK_SUPPORT)).
+Backend to fetch database from http, ftp or any other protocol supported by the LWP module collection (see [LWP NETWORK SUPPORT](http://search.cpan.org/dist/libwww-perl/lib/LWP.pm#NETWORK_SUPPORT)).
+Additional protocols can be added by installing corresponding modules (see [LWP::Protocol modules](https://metacpan.org/search?p=1&q=LWP%3A%3AProtocol%3A%3A&search_type=modules&size=30)).
 Supports per-user database and key file location from auth backend. No support for key files if configured statically (in config.yml).
-Http basic auth is supported, but only globally (same for all users, even if urls differ). Otherwise it would be necessary to store the user credentials in the session, which might be not a good idea.
+Basic auth is supported for http, but only globally (same for all users, even if urls differ). Otherwise it would be necessary to store the user credentials in the session, which might be not a good idea.
 Database upload (saving) is only implemented for http right now.
 
 Username and password may also be supplied in the form of `ftp://username:password@example.org/db.kdbx`

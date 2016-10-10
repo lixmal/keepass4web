@@ -1,4 +1,4 @@
-package KeePass4Web::Backend::HTTP;
+package KeePass4Web::Backend::LWP;
 use strict;
 use warnings;
 use parent 'KeePass4Web::Backend::Abstract';
@@ -11,7 +11,7 @@ use Encode ();
 use KeePass4Web::Constant qw/SESSION_KP_DB SESSION_KP_KEYFILE/;
 
 BEGIN {
-    if (config->{HTTP}->{upload}->{use_rfc5987}) {
+    if (config->{LWP}->{upload}->{use_rfc5987}) {
         require URI::Escape;
     }
 }
@@ -30,26 +30,26 @@ sub _location {
     return $db_session if $db_session;
 
     # default is statically configured location
-    return config->{HTTP}->{db_location};
+    return config->{LWP}->{db_location};
 }
 
 # TODO:  add explicit proxy setting
 sub _get {
     my ($self, $get_key) = @_;
 
-    my $ua = LWP::UserAgent->new(%{config->{HTTP}->{lwp_options}});
+    my $ua = LWP::UserAgent->new(%{config->{LWP}->{lwp_options}});
 
     my $location = _location $get_key;
-    debug 'HTTP location: ', $location;
+    debug 'LWP location: ', $location;
 
-    die "Invalid backend location\n" if !$location;
+    die "Invalid LWP location\n" if !$location;
 
     my $request = GET $location;
 
 
-    my $password = config->{HTTP}->{password};
+    my $password = config->{LWP}->{password};
     if (defined $password) {
-        $request->authorization_basic(config->{HTTP}->{username} || '', $password);
+        $request->authorization_basic(config->{LWP}->{username} || '', $password);
     }
 
     my $response = $ua->request($request);
@@ -72,11 +72,11 @@ sub get_db {
 sub put_db {
     my ($self, $db) = @_;
 
-    my $config = config->{HTTP};
+    my $config = config->{LWP};
     my $ua = LWP::UserAgent->new(%{$config->{lwp_options}});
 
     my $location = _location;
-    debug 'HTTP location: ', $location;
+    debug 'LWP location: ', $location;
 
     die "Invalid backend location\n" if !$location;
 

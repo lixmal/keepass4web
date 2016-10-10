@@ -3,6 +3,7 @@
 # where to get keepass database from
 # use 'Filesystem' for a simple file in the local filesystem
 # use 'Seafile' to get database from a Seafile host
+# use 'LWP' to get database via a protocol supported by LWP
 db_backend: 'Filesystem'
 
 # backend to authenticate users before anything else
@@ -24,11 +25,11 @@ Seafile:
     # whether to use login password to decrypt encrypted repositories
     reuse_repopw: 0
 
-# http specific configuration, db_backend = 'HTTP'
-HTTP:
-    # server url, download also works for ftp and gopher
+# LWP specific configuration, db_backend = 'LWP'
+LWP:
+    # server url
     db_location: 'https:/example.org/db.kdbx'
-    # username/password for http basic auth, leave password empty if not required
+    # username/password for http basic auth and ftp, leave password empty if not required
     username: ''
     password: ''
     # proxy url to use
