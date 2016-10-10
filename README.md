@@ -316,7 +316,7 @@ Supports per-user database and key file location from auth backend. No support f
 Http basic auth is supported, but only globally (same for all users, even if urls differ). Otherwise it would be necessary to store the user credentials in the session, which might be not a good idea.
 Database upload (saving) is only implemented for http right now.
 
-Username and password may also be supplied in the form of `ftp://username:password@example.org`
+Username and password may also be supplied in the form of `ftp://username:password@example.org/db.kdbx`
 
 ## MISCELLANEOUS
 
@@ -353,7 +353,7 @@ Username and password may also be supplied in the form of `ftp://username:passwo
 
 ## BUGS / CAVEATS / TODO
 
-- Using mod_perl apache may create two kernel session keyrings, because it restarts directly after startup, effectively executing KeePass4Web::KeePass twice
+- Using mod_perl, apache may create two kernel session keyrings, because it restarts directly after startup, effectively executing KeePass4Web::KeePass twice
 
 - Log may have 'Key has been revoked' messages: happens when session keyring gets revoked once user (who (re)started the server) logs out. Please file a bug report in this case.
 
