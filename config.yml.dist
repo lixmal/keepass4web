@@ -97,7 +97,7 @@ ipc_id: 3294967296
 # see "man keyctl"
 keyring_session: '@s'
 # whether to include files and history in cached database
-# disabling this can speed up the initial loading of the database and memory in IPC
+# disabling this can speed up the initial loading of the database and decrease memory in IPC
 hist_and_bin: 1
 # webinterface: maximum open tree levels on load
 toggled_levels: 3
