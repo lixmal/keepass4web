@@ -11,7 +11,9 @@ lib/KeePass4Web/Auth/Htpasswd.pm
 lib/KeePass4Web/Auth/LDAP.pm
 lib/KeePass4Web/Backend.pm
 lib/KeePass4Web/Backend/Abstract.pm
+lib/KeePass4Web/Backend/Dropbox.pm
 lib/KeePass4Web/Backend/Filesystem.pm
+lib/KeePass4Web/Backend/LWP.pm
 lib/KeePass4Web/Backend/Seafile.pm
 lib/KeePass4Web/Constant.pm
 lib/KeePass4Web/KeePass.pm
