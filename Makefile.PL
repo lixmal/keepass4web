@@ -11,9 +11,9 @@ $eumm_version =~ s/_//;
 WriteMakefile(
     NAME                => 'KeePass4Web',
     AUTHOR              => q{Viktor Liu},
-    VERSION             => '0.1.0',
+    VERSION             => '0.2.0',
     ABSTRACT            => 'KeePass web application',
-    ($eumm_version >= 6.3001  ? ('LICENSE'=> 'GPLv3') : ()),
+    ($eumm_version >= 6.3001  ? ('LICENSE'=> 'gpl_3') : ()),
     PL_FILES            => {},
 
     PREREQ_PM => {
@@ -51,6 +51,8 @@ WriteMakefile(
 #        'Net::LDAP'               => 0,
 #        'Net::LDAP::Util'         => 0,
 #        'Authen::Htpasswd'        => 0,
+#        'WebService::Dropbox'     => 0,
+#        'LWP::UserAgent'          => 0,
 #        'Crypt::Eksblowfish::Bcrypt' => 0,
     },
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
