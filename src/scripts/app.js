@@ -53,10 +53,17 @@ KeePass4Web.checkAuth = function(nextState, replace) {
         })
     }
     else if (!auth.backend && origPath !== '/backend_login' ) {
-        replace({
-            pathname: 'backend_login',
-            state: { nextPathname: origPath }
-        })
+        let type = auth.data.credentials_tpl.type
+        if (type === 'redirect') {
+            window.location = auth.data.credentials_tpl.url
+            // stopping javascript execution to prevent redirect loop
+            throw 'Redirecting'
+        }
+        else if (type === 'mask')
+            replace({
+                pathname: 'backend_login',
+                state: { nextPathname: origPath }
+            })
     }
     else if (!auth.db && origPath !== '/db_login' ) {
         replace({
@@ -134,6 +141,7 @@ KeePass4Web.getCN = function() {
 
 KeePass4Web.clearStorage = function() {
     localStorage.removeItem('cn')
+    localStorage.removeItem('template')
 }
 
 KeePass4Web.setTemplate = function(template) {

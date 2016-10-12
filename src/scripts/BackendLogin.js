@@ -12,6 +12,10 @@ export default class BackendLogin extends LoginForm {
     render() {
 
         var tpl = KeePass4Web.getTemplate()
+
+        if (!tpl)
+            return null
+
         var fields = []
         for (var i in tpl.fields) {
             let field = tpl.fields[i]

@@ -225,6 +225,7 @@ sub credentials_init {
 
 sub credentials_tpl {
     return {
+        type        => 'mask',
         login_title => 'Login',
         # relative to public/
         icon_src    => 'img/seafile-logo.png',
