@@ -55,6 +55,9 @@ This will probably only run under some flavour of Linux. The instructions assume
 ###### LWP
 - LWP::UserAgent
 
+###### Dropbox
+- WebService::Dropbox
+
 ###### Bundled modules, may become external
 - File::KeePass::Web
 - Kernel::Keyring
@@ -158,6 +161,8 @@ E.g. for Ubuntu 14.04 with mod_perl2:
 ##### LWP
 > sudo apt-get install libwww-perl
 
+##### Dropbox
+> cpan WebService::Dropbox
 
 ## CONFIGURATION
 
@@ -275,14 +280,15 @@ Useful when the database backend server uses the same auth backend internally.
 
 Attempts to authenticate the user against an LDAP server (Microsoft AD, 389 Directory Server, OpenLDAP, ...)
 
-##### SQL (planned)
-
 ##### Htpasswd
 
 Authentication using apache htpasswd files.
 Support for plain, sha1, crypt, md5 and bcrypt. Only bcrypt is considered secure.
 
 ##### PAM (planned)
+
+##### SQL (planned)
+
 
 ### Database
 
@@ -305,10 +311,6 @@ No user credentials are saved anywhere at any time!
 Right now the server does all Seafile requests. It is planned to migrate to a model where the client fetches the token from the Seafile server (if on the same domain) and passes it to the app server.
 Logging into some service on behalf of the user is an anti-pattern, therefore it is not recommended for non private servers.
 
-##### Dropbox (planned)
-
-##### WebDAV (planned)
-
 ##### LWP
 
 Backend to fetch database from http, ftp or any other protocol supported by the LWP module collection (see [LWP NETWORK SUPPORT](http://search.cpan.org/dist/libwww-perl/lib/LWP.pm#NETWORK_SUPPORT)).
@@ -318,6 +320,25 @@ Basic auth is supported for http, but only globally (same for all users, even if
 Database upload (saving) is only implemented for http right now.
 
 Username and password may also be supplied in the form of `ftp://username:password@example.org/db.kdbx`
+
+##### Dropbox
+
+First you need to register the app with Dropbox [Create App](https://www.dropbox.com/developers/apps/create).
+Choose the type of access you need, give it a name (e.g. `KeePass4Web`).
+Add an redirect url pointing to you application, followed by `callback`, e.g. `https://example.org/keepass/callback`.
+Optionally, generate an access token.
+Putting the token into the config will limit all users to that one Dropbox account (unless they open the Dropbox link by themselves, for which they would need to know the app key).
+Put the displayed app key, the app secret and the redirect url into `config.yml`.
+
+Now, once users log into the web application, they will be redirected to the Dropbox login page (unless already logged in).
+After logging in and granting the app access to Dropbox, they will be redirected back to the app.
+
+The backend also can fetch key files from Dropbox, if per-user databases are supported by the auth backend.
+
+For the format to use in `config.yml`/`db_location` or the auth backend see the [Dropbox HTTP doc](https://www.dropbox.com/developers/documentation/http/documentation) under `Path formats` or [HTTP download](https://www.dropbox.com/developers/documentation/http/documentation#files-download) next to `Paramaters`
+
+##### WebDAV (planned)
+
 
 ## MISCELLANEOUS
 
