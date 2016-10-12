@@ -86,7 +86,7 @@ sub put_db {
 
 sub credentials_init { shift }
 
-sub credentials_tpl { 
+sub credentials_tpl {
     my $uri = _new->authorize(
         {
             redirect_uri => config->{Dropbox}->{redirect_uri},
@@ -120,7 +120,7 @@ get '/callback' => sub {
     my $code = param 'code' or send_error 'Code parameter missing', BAD_REQUEST;
 
     my $dropbox = _new;
- 
+
     my $token = $dropbox->token($code, config->{Dropbox}->{redirect_uri});
     if (!$token) {
         error 'Dropbox: ', _err $dropbox;
@@ -131,9 +131,9 @@ get '/callback' => sub {
 
     session SESSION_DB_TOKEN, delete $token->{access_token};
     info 'Dropbox user info: ', $token;
- 
+
     redirect '/';
 };
- 
+
 
 1;
