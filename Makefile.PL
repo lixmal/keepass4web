@@ -34,7 +34,7 @@ WriteMakefile(
         'Time::Duration::Parse'   => 0,
         'Sereal::Encoder'         => 0,
         'Sereal::Decoder'         => 0,
-        'File::Type'              => 0,
+        'File::LibMagic'          => 1.07,
         'URI::Escape'             => 0,
         'Config'                  => 0,
         'Kernel::Keyring'         => 0,
