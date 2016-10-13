@@ -65,8 +65,19 @@ body {
     50% { opacity: 0.0; }
 }
 
-.table {
+.panel-body {
     background-color: #EEEEEE;
+}
+
+/*
+** leave more space on mobile devices,
+** showing more letters of the label
+*/
+@media screen and (max-width: 767px) {
+    .panel-body {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
 }
 
 .kp-files {
@@ -77,10 +88,6 @@ body {
     text-align: center;
 }
 
-.kp-name {
-    text-align: center;
-}
-
 .backend-icon {
     height: auto;
     width: auto;
@@ -88,54 +95,39 @@ body {
 }
 
 .kp-entry-label {
-    min-width: 60;
+    width: 21%;
     max-width: 120px;
-    width: 100px;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
 }
 
 .kp-entry-value {
-    min-width: 80px;
-    max-width: 200px;
+    width: 69%; 
+}
+
+.kp-entry-buttons {
+    width: 91px;
+    max-width: 91px;
+}
+
+.kp-wrap {
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
 }
 
-.kp-entry-comment {
-    height: 150px;
-}
-
-.kp-entry-buttons {
-    min-width: 55px;
-    width: 100px;
-    max-width: 110px;
-}
-
-.kp-entry-label:hover {
+.kp-wrap:hover {
     text-overflow: clip;
     white-space: normal;
     word-break: break-all;
 }
 
-.kp-entry-value:hover {
+.kp-wrap:active {
     text-overflow: clip;
     white-space: normal;
     word-break: break-all;
 }
 
-.kp-entry-label:active {
-    text-overflow: clip;
-    white-space: normal;
-    word-break: break-all;
-}
-
-.kp-entry-value:active {
-    text-overflow: clip;
-    white-space: normal;
-    word-break: break-all;
+.kp-table {
+    table-layout: fixed;
 }
 
 .dir-tree {
@@ -143,39 +135,39 @@ body {
 }
 
 .loading-mask {
-  position: relative;
+    position: relative;
 }
 
 .loading-mask::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background-color: rgba(0, 0, 0, 0.25);
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.25);
 }
 
 @keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(359deg);
-  }
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(359deg);
+    }
 }
 
 .loading-mask::after {
-  content: '';
-  position: absolute;
-  border-width: 3px;
-  border-style: solid;
-  border-color: transparent rgb(255, 255, 255) rgb(255, 255, 255);
-  border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  top: calc(50% - 12px);
-  left: calc(50% - 12px);
-  animation: 2s linear 0s normal none infinite running spin;
-  filter: drop-shadow(0 0 2 rgba(0, 0, 0, 0.33));
+    content: '';
+    position: absolute;
+    border-width: 3px;
+    border-style: solid;
+    border-color: transparent rgb(255, 255, 255) rgb(255, 255, 255);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    top: calc(50% - 12px);
+    left: calc(50% - 12px);
+    animation: 2s linear 0s normal none infinite running spin;
+    filter: drop-shadow(0 0 2 rgba(0, 0, 0, 0.33));
 }

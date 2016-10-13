@@ -150,8 +150,8 @@ export default class NodeViewer extends React.Component {
             if (strings.hasOwnProperty(string)) {
                 fields.push(
                     <tr key={string}>
-                        <td>{string}</td>
-                        <td>
+                        <td className="kp-wrap">{string}</td>
+                        <td className="kp-wrap">
                             {
                                 entry.protected && entry.protected[string] ?
                                 strings[string] !== null ?
@@ -198,7 +198,7 @@ export default class NodeViewer extends React.Component {
             if (binary.hasOwnProperty(file)) {
                 files.push(
                     <tr key={file}>
-                        <td colSpan="2">
+                        <td colSpan="2" className="kp-wrap">
                             {file}
                         </td>
                         <td>
@@ -223,83 +223,85 @@ export default class NodeViewer extends React.Component {
                 <div className="panel-heading">
                     {entry.title}
                 </div>
-                <table className="table table-hover table-bordered table-sm">
-                    <colgroup>
-                        <col className="kp-entry-label" />
-                        <col className="kp-entry-value" />
-                        <col className="kp-entry-buttons" />
-                    </colgroup>
-                    <tbody>
-                        <tr>
-                            <td>
-                                Username
-                            </td>
-                            <td>
-                                {entry.username}
-                            </td>
-                            <td>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Password
-                            </td>
-                            <td>
-                                { entry.password !== null ? entry.password : '******' }
-                            </td>
-                            <td>
-                                <div className="btn-group" role="group">
-                                    <button
-                                        onClick={this.PWHandler.bind(this, 'password')}
-                                        type="button"
-                                        className="btn btn-default"
-                                    >
-                                        <span className="glyphicon glyphicon-eye-open"></span>
-                                    </button>
-                                    <button
-                                        onClick={this.copyHandler.bind(this, 'password')}
-                                        type="button"
-                                        className="btn btn-default"
-                                    >
-                                        <span className="glyphicon glyphicon-copy"></span>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                URL
-                            </td>
-                            <td>
-                                <a href={entry.url} target="_blank">{entry.url}</a>
-                            </td>
-                            <td>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Comments
-                            </td>
-                            <td className="td-entry-comment">
-                                {entry.comment}
-                            </td>
-                            <td>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Tags
-                            </td>
-                            <td>
-                                {entry.tags.split(';').join(' ')}
-                            </td>
-                            <td>
-                            </td>
-                        </tr>
-                        {fields}
-                        {files}
-                    </tbody>
-                </table>
+                <div className="panel-body">
+                    <table className="table table-hover table-condensed kp-table">
+                        <colgroup>
+                            <col className="kp-entry-label" />
+                            <col className="kp-entry-value" />
+                            <col className="kp-entry-buttons" />
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <td className="kp-wrap">
+                                    Username
+                                </td>
+                                <td className="kp-wrap">
+                                    {entry.username}
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td className="kp-wrap">
+                                    Password
+                                </td>
+                                <td className="kp-wrap">
+                                    { entry.password !== null ? entry.password : '******' }
+                                </td>
+                                <td>
+                                    <div className="btn-group" role="group">
+                                        <button
+                                            onClick={this.PWHandler.bind(this, 'password')}
+                                            type="button"
+                                            className="btn btn-default"
+                                        >
+                                            <span className="glyphicon glyphicon-eye-open"></span>
+                                        </button>
+                                        <button
+                                            onClick={this.copyHandler.bind(this, 'password')}
+                                            type="button"
+                                            className="btn btn-default"
+                                        >
+                                            <span className="glyphicon glyphicon-copy"></span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    URL
+                                </td>
+                                <td className="kp-wrap">
+                                    <a href={entry.url} target="_blank">{entry.url}</a>
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td className="kp-wrap">
+                                    Comments
+                                </td>
+                                <td className="kp-wrap">
+                                    {entry.comment}
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td className="kp-wrap">
+                                    Tags
+                                </td>
+                                <td className="kp-wrap">
+                                    {entry.tags.split(';').join(' ')}
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                            {fields}
+                            {files}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         )
     }

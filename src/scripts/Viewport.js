@@ -134,14 +134,14 @@ export default class Viewport extends React.Component {
                             style={Style}
                         />
                     </div>
-                    <div className="col-sm-2">
+                    <div className="col-sm-4">
                         <GroupViewer
                             group={this.state.group}
                             groupName={this.state.groupName}
                             onSelect={this.onSelect}
                         />
                     </div>
-                    <div className="col-sm-4">
+                    <div className="col-sm-6">
                         <NodeViewer
                             entry={this.state.entry}
                             timeoutSec={30 * 1000}

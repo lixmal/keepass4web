@@ -1,6 +1,6 @@
 # KeePass4Web
 
-An application which serves KeePass database entries on a web frontend.
+A mobile-friendly web application which serves KeePass database entries on a web frontend.
 
 Databases can be fetched from a configureable location (Filesystem, Seafile, Dropbox, ...).
 
@@ -378,8 +378,6 @@ For the format to use in `config.yml`/`db_location` or the auth backend see the 
 - Using mod_perl, apache may create two kernel session keyrings, because it restarts directly after startup, effectively executing KeePass4Web::KeePass twice
 
 - Log may have 'Key has been revoked' messages: happens when session keyring gets revoked once user (who (re)started the server) logs out. Please file a bug report in this case.
-
-- Minor layout issues on the web frontend
 
 - Loading masks for long running ajax requests missing
 
