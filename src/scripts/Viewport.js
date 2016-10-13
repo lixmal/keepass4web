@@ -55,6 +55,9 @@ export default class Viewport extends React.Component {
     }
 
     onSelect(entry) {
+        // ignore already selected
+        if (this.state.entry && this.state.entry.id && entry.id === this.state.entry.id) return
+
         // remove entry first to rerender entry
         // important for eye close/open buttons
         this.setState({
