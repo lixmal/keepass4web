@@ -2,12 +2,12 @@ package KeePass4Web::KeePass;
 use strict;
 use warnings;
 
-use Dancer qw/:syntax/;
-use Dancer::Plugin::Ajax;
+use Dancer2 appname => 'KeePass4Web';
+use Dancer2::Plugin::Ajax;
 use IPC::ShareLite;
-use Time::Duration::Parse;
+use Dancer2::Core::Time;
 use Crypt::Mode::CBC;
-use Bytes::Random::Secure;
+use Crypt::URandom;
 use Sereal::Encoder qw/encode_sereal/;
 use Sereal::Decoder qw/decode_sereal/;
 use Config ();
@@ -21,7 +21,7 @@ use Kernel::Keyring;
 use KeePass4Web::Backend;
 use KeePass4Web::Constant;
 
-use constant DB_TIMEOUT      => parse_duration config->{db_session_timeout};
+use constant DB_TIMEOUT      => Dancer2::Core::Time->new(expression => config->{db_session_timeout})->seconds;
 use constant IPC_ID          => config->{ipc_id};
 use constant IPC_SIZE        => config->{ipc_segment_size} * 1024;
 use constant SESSION_PW_KEY  => 'kp:pw_key_';
@@ -31,16 +31,8 @@ use constant KEYRING_TYPE    => 'user';
 use constant KEYRING_SESSION => config->{keyring_session};
 # all to possessor, none to everyone else
 use constant KEYRING_PERM    => 0x3f000000;
-use constant EPOCH_TEMPLATE  => $Config::Config{ivsize} == 8 ? 'Q' : 'L';
 
 BEGIN {
-    require Exporter;
-    our @ISA = 'Exporter';
-    our @EXPORT = qw/
-        failure
-        success
-    /;
-
     # preload cipher module, so we don't get any surprises later
     my $module = 'Crypt::Cipher::' . config->{ipc_cipher} . '.pm';
     $module =~ s/::/\//g;
@@ -174,8 +166,7 @@ sub fetch_and_decrypt {
     # keyfile is a ref to a scalar
     # returns key and IV for newly encrypted entry passwords
     my $pw_key = $kp->parse_db($db, [$password, $keyfile_ref], undef, config->{pw_cipher}, config->{hist_and_bin});
-    my $b = Bytes::Random::Secure->new(NonBlocking => 1);
-    my ($db_key, $db_iv) = ($b->bytes(32), $b->bytes(16));
+    my ($db_key, $db_iv) = (Crypt::URandom::urandom(32), Crypt::URandom::urandom(16));
 
     # reencrypt db and store in shared memory
     # add expiry date in front

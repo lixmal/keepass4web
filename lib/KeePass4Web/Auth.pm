@@ -2,7 +2,7 @@ package KeePass4Web::Auth;
 use strict;
 use warnings;
 
-use Dancer qw/:syntax/;
+use Dancer2 appname => 'KeePass4Web';
 
 # Simple wrapper for backends
 

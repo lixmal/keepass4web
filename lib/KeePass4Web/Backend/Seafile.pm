@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use parent 'KeePass4Web::Backend::Abstract';
 
-use Dancer qw/:syntax/;
+use Dancer2 appname => 'KeePass4Web';
 
 use Seafile::Client::REST;
 use KeePass4Web::Constant qw/!BAD_REQUEST !NOT_FOUND/;

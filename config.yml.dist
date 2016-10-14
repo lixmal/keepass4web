@@ -131,44 +131,57 @@ search:
     allow_regex: 0
 
 
+##################################
+###  Dancer2 related config ###
+##################################
+# https://metacpan.org/pod/distribution/Dancer2/lib/Dancer2/Config.pod
 
-# Dancer related config
-port:            8080
-logger:          'file'
-log_path:        '/var/log/keepass4web/'
-log_file:        'info.log'
-# log level
-log:             'info'
-logger_format:   '%T [%L] %m (in %f l. %l)'
-
-# cookie session name
-session_name:    'KeePass4Web'
-# session expiration
-session_expires: '1 hour'
-session:         'Cookie'
-# should be at least 16 bytes long
-# we could change that one periodially, e.g. weekly via cron
-session_cookie_key: ''
-
+port:    8080
+# Dancer2::Logger::<name> modules
+logger:  'File'
+# Dancer2::Session::<name> modules
+session: 'Cookie'
 
 
 # usually no need to change these
-server:               '127.0.0.1'
-appname:              'Keepass4web'
-charset:              'UTF-8'
-server_tokens:        0
-# warnings are critical
-warnings:             0
+server:           '127.0.0.1'
+appname:          'KeePass4Web'
+charset:          'UTF-8'
+no_server_tokens: 1
+# critical warnings
+warnings:         0
 # stack traces on error
-show_errors:          0
+show_errors:      0
 # caching routes for speed
-route_cache:          1
-# using https only cookies
-session_is_http_only: 1
-session_secure:       1
-environment:          'production'
+route_cache:      1
+environment:      'production'
 
 plugins:
     'Ajax':
         content_type: 'application/json'
 
+engines:
+    # https://metacpan.org/pod/Dancer2::Core::Role::Logger
+    logger:
+        File:
+            log_level:  'info'
+            log_dir:    '/var/log/keepass4web/'
+            file_name:  'info.log'
+            log_format: '%T [%L] %m (in %f l. %l)'
+
+    # https://metacpan.org/pod/Dancer2::Core::Role::SessionFactory
+    session:
+        Cookie:
+            # cookie session name
+            cookie_name:      'KeePass4Web'
+            # cookie expiry
+            cookie_duration:  '1 hour'
+            # session expiry, in seconds
+            session_duration: 3600
+            # should be at least 16 bytes long
+            # we could change that one periodially, e.g. weekly via cron
+            secret_key:       ''
+            # using https cookies
+            is_secure:        1
+            # no javascript access
+            is_http_only:     1

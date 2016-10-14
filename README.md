@@ -27,36 +27,46 @@ This will probably only run under some flavour of Linux. The instructions assume
 
 ###### Core
 - Inline::C
-- Dancer
-- Dancer::Session::Cookie *(default session engine, `Cookie` in config)*
+- Dancer2
+- Dancer2::Session::Cookie *(default session engine, `Cookie` in config)*
 - IPC::ShareLite
 - JSON
-- JSON::XS *(for performance)*
-- Plack *(if using mod_perl2 or fastcgi)*
 - File::KeePass
-- Bytes::Random::Secure
-- Math::Random::ISAAC::XS *(recommended for performance)*
+- Crypt::URandom *(cryptographically secure PRNG)*
+- Math::Random::ISAAC::XS
 - File::LibMagic
 - Sereal::Encoder
 - Sereal::Decoder
 - Crypt::Mode::CBC
-- Crypt::Cipher::AES *(default cipher)*
 
-###### LDAP
+###### Backend LDAP
 - Net::LDAP
 
-###### Htpasswd
+###### Backend Htpasswd
 - Crypt::Eksblowfish::Bcrypt *(bcrypt)*
 - Authen::Htpasswd  *(md5, sha1, crypt, plain)*
 
-###### Seafile
+###### Backend Seafile
 - REST::Client
 
-###### LWP
+###### Backend LWP
 - LWP::UserAgent
 
-###### Dropbox
+###### Backend Dropbox
 - WebService::Dropbox
+
+###### Performance
+- JSON::XS
+- Class::Load::XS
+- URL::Encode::XS
+- CGI::Deurl::XS
+- HTTP::Parser::XS
+- Scope::Upper
+- Class::XSAccessor
+- HTTP::XSCookies
+- HTTP::XSHeaders
+- YAML::XS
+
 
 ###### Bundled modules, may become external
 - File::KeePass::Web
@@ -67,24 +77,27 @@ This will probably only run under some flavour of Linux. The instructions assume
 Most modules can be taken from the disto, e.g. for Ubuntu 14.04:
 
 - libinline-perl
-- libdancer-perl
-- libfile-keepass-perl
-- libdancer-session-cookie-perl
+- libdancer2-perl
 - libipc-sharelite-perl
+- libfile-keepass-perl
+- libcrypt-urandom-perl
+- libmath-random-isaac-xs-perl
 - libsereal-encoder-perl
 - libsereal-decoder-perl
-- libbytes-random-secure-perl
-- libmath-random-isaac-xs-perl
 - libplack-perl
 - libjson-perl
-- libjson-xs-perl
 - libnet-ldap-perl
+- libwww-perl
+- libjson-xs-perl
+- libhttp-parser-xs-perl
+- libclass-load-xs-perl
+
 
 Remaining modules need to be installed from CPAN.
 Alternatively you can get all modules in the most recent version from CPAN, although this will take quite some time to install.
 
 
-For building the JavaScript part you will also need npm (version 3+ recommended, else your node_modules directory will explode!) and therefore `Node.js`
+To build the JavaScript part you will also need npm (version 3+ recommended, else your node_modules directory will explode!) and therefore `Node.js`
 
 
 ## INSTALL
@@ -143,26 +156,40 @@ E.g. for Ubuntu 14.04 with mod_perl2:
 
 ##### Core
 
-- Install disto packages
-    > sudo apt-get install build-essential libkeyutils-dev libkeyutils1 libmagic1 libmagic-dev libapache2-mod-perl2 libinline-perl libdancer-perl libfile-keepass-perl libdancer-session-cookie-perl libbytes-random-secure-perl libmath-random-isaac-xs-perl libplack-perl libjson-xs-perl libjson-perl libipc-sharelite-perl libsereal-encoder-perl libsereal-decoder-perl
+Please note that installing Dancer2::Session::Cookie (see third instruction below) or any other Dancer2 related module via CPAN might pull in a newer Dancer2 version than the one of the distro, thus installation will take some time.
+In that case it is advisable to leave the libdancer2-perl distro package out of the first command.
 
-- Install remaining Perl modules via cpan, depending on cipher configuration
-    > cpan Crypt::Mode::CBC Crypt::Cipher::AES File::LibMagic
+- Install distro packages
+    > sudo apt-get install build-essential libkeyutils-dev libkeyutils1 libmagic1 libmagic-dev libapache2-mod-perl2 libinline-perl libfile-keepass-perl libcrypt-urandom-perl libmath-random-isaac-xs-perl libjson-perl libipc-sharelite-perl libsereal-encoder-perl libsereal-decoder-perl libdancer2-perl
 
-##### LDAP
+- Install remaining Perl modules via cpan
+    > cpan Crypt::Mode::CBC File::LibMagic
+
+- Install session module of choice, e.g.
+    > cpan Dancer2::Session::Cookie
+
+
+##### Backend LDAP
 > sudo apt-get install libnet-ldap-perl
 
-##### Htpasswd
+##### Backend Htpasswd
 > cpan Authen::Htpasswd Crypt::Eksblowfish::Bcrypt
 
-##### Seafile
+##### Backend Seafile
 > cpan REST::Client
 
-##### LWP
+##### Backend LWP
 > sudo apt-get install libwww-perl
 
-##### Dropbox
+##### Backend Dropbox
 > cpan WebService::Dropbox
+
+##### Performance
+The following modules can be installed to increase performance
+> sudo apt-get libjson-xs-perl libhttp-parser-xs-perl libclass-load-xs-perl libclass-xsaccessor-perl
+
+> cpan URL::Encode::XS CGI::Deurl::XS Scope::Upper HTTP::XSCookies HTTP::XSHeaders YAML::XS
+
 
 ## CONFIGURATION
 
@@ -175,7 +202,7 @@ E.g. for Ubuntu 14.04 with mod_perl2:
 
 ## DEPLOYMENT
 
-Running this app on a web server with mod_perl2 or fcgi is **recommended** but running as standalone app is possible as well (with Dancer's capabilities).
+Running this app on a web server with mod_perl2 or fcgi is **recommended** but running as standalone app is possible as well (with Dancer2's capabilities).
 
 - Create the log directory (as defined in config.yml)
     > sudo mkdir /var/log/keepass4web/
@@ -242,7 +269,7 @@ PerlPostConfigHandler KeePass4Web::Apache2::post_config
 ##### Using the standalone server on default port 8080
 
 - Run (as correct user)
-    > ./bin/app.pl
+    > bin/app.psgi
 
 
 - As there is no TLS or IPv6, it is recommonded to run a front-end web server with reverse proxy, example config for apache:
@@ -266,7 +293,7 @@ PerlPostConfigHandler KeePass4Web::Apache2::post_config
 ##### Open `https://<domain>/keepass/` (notice the trailing slash)
 
 
-##### Refer to [Dancer::Deployment](http://search.cpan.org/dist/Dancer/lib/Dancer/Deployment.pod) for more options.
+##### Refer to [Dancer2::Manual::Deployment](https://metacpan.org/pod/Dancer2::Manual::Deployment) for more options.
 
 ## BACKENDS
 

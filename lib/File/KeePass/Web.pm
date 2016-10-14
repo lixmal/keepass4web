@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use parent 'File::KeePass';
 
-use Bytes::Random::Secure;
+use Crypt::URandom;
 use Digest::SHA 'sha256';
 use MIME::Base64 ();
 use Crypt::Mode::CBC;
@@ -52,22 +52,22 @@ sub parse_db {
 }
 
 sub encrypt_strings {
-    my ($b, $crypt, $key, $entry) = @_;
+    my ($crypt, $key, $entry) = @_;
     my $strings = $entry->{strings};
     my $protected = $entry->{protected};
     foreach my $string (keys %$strings) {
         if ($protected->{$string}) {
-            my $iv = $b->bytes(16);
+            my $iv = Crypt::URandom::urandom(16);
             $strings->{$string} = $iv . $crypt->encrypt($strings->{$string}, $$key, $iv);
         }
     }
 }
 
 sub encrypt_files {
-    my ($b, $crypt, $key, $entry) = @_;
+    my ($crypt, $key, $entry) = @_;
     my $files = $entry->{binary};
     foreach my $file (keys %$files) {
-        my $iv = $b->bytes(16);
+        my $iv = Crypt::URandom::urandom(16);
         $files->{$file} = $iv . $crypt->encrypt($files->{$file}, $$key, $iv);
     }
 }
@@ -76,9 +76,8 @@ sub lock {
     my ($self, $groups, $cipher, $hist_and_bin) = @_;
     $groups //= $self->groups;
 
-    my $b = Bytes::Random::Secure->new(NonBlocking => 1);
-    my $key = $b->bytes(32);
-    my $iv  = $b->bytes(16);
+    my $key = Crypt::URandom::urandom(32);
+    my $iv  = Crypt::URandom::urandom(16);
 
     my $crypt = get_crypt($cipher);
     foreach my $e ($self->find_entries({}, $groups)) {
@@ -87,7 +86,7 @@ sub lock {
         $e->{password} = $iv . $crypt->encrypt($e->{password}, $key, $iv);
 
         # encrypt string pws
-        encrypt_strings $b, $crypt, \$key, $e;
+        encrypt_strings $crypt, \$key, $e;
 
         # don't include history and files if requested
         unless ($hist_and_bin) {
@@ -97,20 +96,20 @@ sub lock {
         }
 
         # encrypt files
-        encrypt_files $b, $crypt, \$key, $e;
+        encrypt_files $crypt, \$key, $e;
 
         # encrypt all history pws, so we don't leak any data
         foreach my $hist_e (@{$e->{history}}) {
             # encrypt history main pw
             $hist_e->{password} //= '';
-            $iv = $b->bytes(16);
+            $iv = Crypt::URandom::urandom(16);
             $hist_e->{password} = $iv . $crypt->encrypt($hist_e->{password}, $key, $iv);
 
             # encrypt history string pws
-            encrypt_strings $b, $crypt, \$key, $hist_e;
+            encrypt_strings $crypt, \$key, $hist_e;
 
             # encrypt history string pws
-            encrypt_files $b, $crypt, \$key, $hist_e;
+            encrypt_files $crypt, \$key, $hist_e;
         }
     }
 
@@ -169,10 +168,9 @@ sub _master_key {
     my $key = (!$pass && !$file) ? die "One or both of password or key file must be passed\n"
             : ($head->{'version'} && $head->{'version'} eq '2') ? sha256(grep {$_} $pass, $file)
             : ($pass && $file) ? sha256($pass, $file) : $pass ? $pass : $file;
-    my $b = Bytes::Random::Secure->new(NonBlocking => 1);
-    $head->{'enc_iv'}     ||= $b->bytes(16);
-    $head->{'seed_rand'}  ||= $b->bytes($head->{'version'} && $head->{'version'} eq '2' ? 32 : 16);
-    $head->{'seed_key'}   ||= sha256 $b->bytes(32);
+    $head->{'enc_iv'}     ||= Crypt::URandom::urandom(16);
+    $head->{'seed_rand'}  ||= Crypt::URandom::urandom($head->{'version'} && $head->{'version'} eq '2' ? 32 : 16);
+    $head->{'seed_key'}   ||= sha256 Crypt::URandom::urandom(32);
     #$head->{'seed_key'}   ||= sha256 time.rand(2**32-1).$$;
     $head->{'rounds'} ||= $self->{'rounds'} || ($head->{'version'} && $head->{'version'} eq '2' ? 6_000 : 50_000);
 

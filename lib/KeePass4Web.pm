@@ -2,9 +2,9 @@ package KeePass4Web;
 use strict;
 use warnings;
 
-use Dancer ':syntax';
-use Dancer::Plugin::Ajax;
-use MIME::Base64;
+use Dancer2;
+use Dancer2::Plugin::Ajax;
+use MIME::Base64 qw/decode_base64/;
 
 BEGIN {
     # change to correct dir if using mod_perl2
@@ -17,6 +17,12 @@ use KeePass4Web::KeePass;
 use KeePass4Web::Backend;
 use KeePass4Web::Auth;
 use KeePass4Web::Constant;
+
+BEGIN {
+    # export doesn't work with Dancer2
+    *KeePass4Web::failure = \&KeePass4Web::KeePass::failure;
+    *KeePass4Web::success = \&KeePass4Web::KeePass::success;
+}
 
 
 hook 'before' => sub {
@@ -146,7 +152,9 @@ ajax '/db_login' => sub {
 
 ajax '/logout' => sub {
     eval { KeePass4Web::KeePass::clear_db };
-    return failure 'Not logged in', MTHD_NOT_ALLOWED if !session->destroy;
+    my $username = session SESSION_USERNAME;
+    app->destroy_session;
+    return failure 'Not logged in', MTHD_NOT_ALLOWED if !$username;
     return success 'Logged out';
 };
 
