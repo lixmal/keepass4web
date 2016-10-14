@@ -350,7 +350,7 @@ Username and password may also be supplied in the form of `ftp://username:passwo
 
 ##### Dropbox
 
-First you need to register the app with Dropbox [Create App](https://www.dropbox.com/developers/apps/create).
+First you need to register the app with Dropbox: [Create App](https://www.dropbox.com/developers/apps/create).
 Choose the type of access you need, give it a name (e.g. `KeePass4Web`).
 Add an redirect url pointing to you application, followed by `callback`, e.g. `https://example.org/keepass/callback`.
 Optionally, generate an access token.
