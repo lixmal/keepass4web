@@ -1,5 +1,9 @@
 # vim: set filetype=yaml
 
+##################################
+### KeePass4Web related config ###
+##################################
+
 # where to get keepass database from
 # use 'Filesystem' for a simple file in the local filesystem
 # use 'Seafile' to get database from a Seafile host
@@ -13,6 +17,8 @@ auth_backend: 'LDAP'
 
 # whether to use auth credentials for database backend provider (if backend requires authentication)
 auth_reuse_cred: 0
+
+### Database backends ###
 
 # file specific configuration, db_backend = 'Filesystem'
 Filesystem:
@@ -34,7 +40,7 @@ LWP:
     username: ''
     password: ''
     # proxy url to use
-    proxy: ''
+    proxy:    ''
     upload:
         # form field name used in upload POST request
         fieldname: 'file'
@@ -49,21 +55,23 @@ LWP:
         # get proxy settings from environment
         # mod_perl needs to pass env aditionally in apache config (PerlPassEnv directive)
         env_proxy: 1
-        timeout: 30
+        timeout:   30
 # dropbox specific configuration, db_backend = 'Dropbox'
 Dropbox:
-    key: ''
+    key:    ''
     secret: ''
     # access token will only work for a single dropbox user (the one who registered the app)
     # may be used to supply the same database to all users
     access_token: ''
     # external url of the app
     redirect_uri: 'https://example.org/keepass/callback'
-    db_location: 'db.kdbx'
+    db_location:  'db.kdbx'
     # get proxy settings from environment
     # mod_perl needs to pass env aditionally in apache config (PerlPassEnv directive)
-    env_proxy: 1
+    env_proxy:    1
 
+
+### Authentication backends ###
 
 # ldap specific configuration, auth_backend = 'LDAP'
 LDAP:
