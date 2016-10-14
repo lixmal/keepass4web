@@ -14,6 +14,7 @@ use Config ();
 use MIME::Base64 qw/decode_base64/;
 use URI::Escape qw/uri_escape_utf8/;
 use File::LibMagic;
+use Encode ();
 
 use File::KeePass::Web;
 use Kernel::Keyring;
@@ -383,7 +384,7 @@ ajax '/get_password' => sub {
     if ($entry->{protected}->{$name}) {
         # TODO: update timestamp and usecount, but requires saving back to backend
          my ($iv, $ciphertext) = unpack 'a16a*', $name eq 'password' ? $entry->{password} : $entry->{strings}->{$name};
-         return success undef, get_crypt(config->{pw_cipher})->decrypt($ciphertext, retrieve_pw_key, $iv);
+         return success undef, Encode::decode_utf8 get_crypt(config->{pw_cipher})->decrypt($ciphertext, retrieve_pw_key, $iv);
     }
     return failure 'Field is not encrypted';
 };
@@ -416,9 +417,11 @@ ajax '/get_file' => sub {
          # guess and set content type
          # Dancer will convert text/* types to UTF-8 here
          # TODO: make the module optional
-         content_type(File::LibMagic->new->info_from_string(\$file)->{mime_with_encoding});
+         my $type = File::LibMagic->new->info_from_string(\$file);
+         # TODO: find out encoding stored in database instead of guessing
+         content_type($type->{mime_with_encoding});
 
-         return $file;
+         return eval { Encode::decode $type->{encoding}, $file } || $file;
     }
     return failure 'File not found', NOT_FOUND;
 };
