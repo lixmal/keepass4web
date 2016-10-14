@@ -416,7 +416,7 @@ ajax '/get_file' => sub {
          # guess and set content type
          # Dancer will convert text/* types to UTF-8 here
          # TODO: make the module optional
-         content_type(File::LibMagic->new->info_from_string(\$file)->{mime_type});
+         content_type(File::LibMagic->new->info_from_string(\$file)->{mime_with_encoding});
 
          return $file;
     }
