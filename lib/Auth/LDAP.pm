@@ -6,7 +6,7 @@ use Net::LDAP::Util ();
 
 use constant LDAP_VERSION => 3;
 
-our $VERSION = 0.2;
+our $VERSION = 0.2.0;
 
 sub new {
     my ($class, %args) = @_;

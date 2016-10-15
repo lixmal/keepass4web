@@ -8,7 +8,7 @@ use Exporter 'import';
 
 Inline->init;
 
-our $VERSION = 0.1;
+our $VERSION = 0.1.0;
 
 our @EXPORT = qw/
     key_add

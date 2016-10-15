@@ -9,7 +9,7 @@ use MIME::Base64 ();
 use Crypt::Mode::CBC;
 use Crypt::Rijndael;
 
-our $VERSION = 0.1;
+our $VERSION = 0.1.1;
 
 ### Differences to File::KeePass ###
 # Subclassing of methods to support the following:

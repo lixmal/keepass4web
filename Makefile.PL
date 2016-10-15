@@ -11,7 +11,7 @@ $eumm_version =~ s/_//;
 WriteMakefile(
     NAME                => 'KeePass4Web',
     AUTHOR              => q{Viktor Liu},
-    VERSION             => '0.2.1',
+    VERSION             => '0.3.0',
     ABSTRACT            => 'KeePass web application',
     ($eumm_version >= 6.3001  ? ('LICENSE'=> 'gpl_3') : ()),
     PL_FILES            => {},
