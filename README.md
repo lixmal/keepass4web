@@ -257,7 +257,7 @@ PerlPostConfigHandler KeePass4Web::Apache2::post_config
     <Location /keepass/>
         SetHandler perl-script
         PerlResponseHandler Plack::Handler::Apache2
-        PerlSetVar psgi_app /opt/keepass4web/bin/app.pl
+        PerlSetVar psgi_app /opt/keepass4web/bin/app.psgi
     </Location>
 
 
