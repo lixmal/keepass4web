@@ -28,6 +28,7 @@ This will probably only run under some flavour of Linux. The instructions assume
 ###### Core
 - Inline::C
 - Dancer2
+- Dancer2::Plugin::Ajax
 - Dancer2::Session::Cookie *(default session engine, `Cookie` in config)*
 - IPC::ShareLite
 - JSON
