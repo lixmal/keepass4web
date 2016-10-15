@@ -218,7 +218,7 @@ Running this app on a web server with mod_perl2 or fcgi is **recommended** but r
 - Remove permissions on sensitive data for everyone else
     > chmod o-rwx /opt/keepass4web/config.yml /var/log/keepass4web/
 
-- Finally, give web server user acces to the .Inline directory to compile C files necessary for Kernel::Keyring
+- Finally, give web server user access to the .Inline directory to compile C files necessary for Kernel::Keyring
     > chmod g+w /opt/keepass4web/.Inline
 
 - Optionally, run the compile process beforehand by loading the module once
