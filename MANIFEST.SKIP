@@ -20,8 +20,9 @@ MYMETA.yml
 ^package.json$
 ^config.yml$
 ^npm-debug.log$
-^\.Inline\/
+^\.Inline\/(?!.exists)
 ^_Inline\/
 ^gulpfile.js$
 ^.*\.kdbx$
 ^.htpasswd$
+^KeePass4Web-*

@@ -1,3 +1,4 @@
+.Inline/.exists
 bin/app.psgi
 config.yml.dist
 lib/Auth/LDAP.pm
