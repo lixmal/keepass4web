@@ -514,3 +514,14 @@ Page reload
 Show KeePass tree
 
 ```
+
+## COPYRIGHT AND LICENSING
+
+This software is copyright (c) by Viktor Liu.
+It is released under the terms of the GPL version 3.
+
+Most of the icons in the `public/img/icons` directory are released under the LGPL version 2, the licence can be found in the same directory.
+The remaining icons are public domain.
+As these icons are the same as the ones used by the original KeePass software, you can refer to the info there: [Icon Acknowledgements](http://keepass.info/help/base/credits.html#icons).
+
+The Seafile logo is copyright (c) by Seafile Ltd.
