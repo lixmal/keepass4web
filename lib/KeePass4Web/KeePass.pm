@@ -126,20 +126,24 @@ sub ipc {
 }
 
 sub ipc_store {
-    my $data = shift;
+    my ($groups, $header) = @_;
     my ($shared, $ipc) = ipc;
 
+    # remove expired databases of other users
+    my $time = time;
     foreach my $user (keys %$shared) {
-        my $time = $shared->{$user}->{expires};
-        if (time >= $time) {
-            debug "Removed expired database of $user";
+        if ($time >= $shared->{$user}->{expires}) {
+            info "Removed expired database of $user";
             delete $shared->{$user};
         }
     }
 
-    if ($data) {
-        $shared->{session SESSION_USERNAME}->{groups} = $data;
-        $shared->{session SESSION_USERNAME}->{expiry} = time + DB_TIMEOUT;
+    if (@_) {
+        $shared->{session SESSION_USERNAME} = {
+            groups  => $groups,
+            header  => $header,
+            expires => $time + DB_TIMEOUT,
+        };
     }
     else {
         delete $shared->{session SESSION_USERNAME};
@@ -169,28 +173,41 @@ sub fetch_and_decrypt {
     my $pw_key = $kp->parse_db($db, [$password, $keyfile_ref], undef, config->{pw_cipher}, config->{hist_and_bin});
     my ($db_key, $db_iv) = (Crypt::URandom::urandom(32), Crypt::URandom::urandom(16));
 
+    my $header = $kp->header;
+    delete $header->{custom_icons} if !config->{custom_icons};
+
     # reencrypt db and store in shared memory
     # add expiry date in front
-    ipc_store get_crypt->encrypt(encode_sereal($kp->groups), $db_key, $db_iv);
+    ipc_store get_crypt->encrypt(encode_sereal($kp->groups), $db_key, $db_iv), $header;
 
     # pw key is already a ref
     store_keys $pw_key, \$db_key, \$db_iv;
 }
 
 sub ipc_retrieve {
+    my $get_header = shift;
     my ($shared, $ipc) = ipc;
 
     my $user = $shared->{session SESSION_USERNAME};
 
     # update expiry date
     if (defined $user) {
-        $user->{expires} = time + DB_TIMEOUT;
-        $ipc->store(encode_sereal $shared);
+        # TODO: remove database (die) if expired
+        my $time = time + DB_TIMEOUT;
+        # don't update if no less than 1 second passed
+        # improves performance, e.g. while fetching icons
+        my $diff = $time - $user->{expires};
+        debug "Time diff from last request: $diff";
+        if ($diff > 1) {
+            $user->{expires} = $time;
+            $ipc->store(encode_sereal $shared);
+        }
     }
     else {
         die "Database is closed\n";
     }
 
+    return $user->{header} if $get_header;
     return decode_sereal get_crypt->decrypt($user->{groups}, retrieve_db_key);
 }
 
