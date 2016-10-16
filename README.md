@@ -413,8 +413,11 @@ For the format to use in `config.yml`/`db_location` or the auth backend see the 
 
 - CSRF
 
+## SCREENSHOTS
 
+![Login](doc/img/login.png)
 
+![App](doc/img/app.png)
 
 ## APP DETAILS / BACKGROUND
 ### Sequence of client/server operations

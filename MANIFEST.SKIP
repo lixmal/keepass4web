@@ -26,3 +26,4 @@ MYMETA.yml
 ^.*\.kdbx$
 ^.htpasswd$
 ^KeePass4Web-*
+^doc\/
