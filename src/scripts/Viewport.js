@@ -16,7 +16,6 @@ export default class Viewport extends React.Component {
             tree: {},
             entry: null,
             group: null,
-            groupName: null,
         }
     }
 
@@ -36,7 +35,6 @@ export default class Viewport extends React.Component {
         if (cur == group) return
 
         this.setState({
-            groupName: group.name,
             group: null,
             entry: null,
         })
@@ -89,7 +87,6 @@ export default class Viewport extends React.Component {
                 this.setState({
                     cursor: null,
                     group: data.data,
-                    groupName: 'Search results for "' + refs.term.value + '"',
                     entry: null
                 })
             }.bind(this),
@@ -137,7 +134,6 @@ export default class Viewport extends React.Component {
                     <div className="col-sm-4">
                         <GroupViewer
                             group={this.state.group}
-                            groupName={this.state.groupName}
                             onSelect={this.onSelect}
                         />
                     </div>

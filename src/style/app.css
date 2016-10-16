@@ -100,7 +100,7 @@ body {
 }
 
 .kp-entry-value {
-    width: 69%; 
+    width: 69%;
 }
 
 .kp-entry-buttons {
@@ -128,6 +128,13 @@ body {
 
 .kp-table {
     table-layout: fixed;
+}
+
+.kp-icon {
+    height: auto;
+    width: auto;
+    max-width: 16px;
+    margin-right: 0.25em;
 }
 
 .dir-tree {

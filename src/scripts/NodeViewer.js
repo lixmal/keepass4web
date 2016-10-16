@@ -67,9 +67,6 @@ export default class NodeViewer extends React.Component {
     }
 
     downloadHandler(filename, event) {
-        // alternative:
-        // window.location = 'get_file?id=' + encodeURIComponent(btoa(this.props.entry.id)) + '&filename=' + encodeURIComponent(filename)
-
         // mostly taken from http://stackoverflow.com/questions/16086162/handle-file-download-from-ajax-post
         // with adjustments
         var xhr = new XMLHttpRequest()
@@ -218,9 +215,16 @@ export default class NodeViewer extends React.Component {
         }
 
 
+        var icon = null
+        if (entry.custom_icon_uuid)
+            icon = <img className="kp-icon" src={'img/icon/' + encodeURIComponent(entry.custom_icon_uuid.replace(/\//g, '_'))} />
+        else if (entry.icon)
+            icon = <img className="kp-icon" src={'img/icons/' + encodeURIComponent(entry.icon) + '.png'} />
+
         return (
             <div className="panel panel-default">
                 <div className="panel-heading">
+                    {icon}
                     {entry.title}
                 </div>
                 <div className="panel-body">

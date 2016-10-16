@@ -94,7 +94,6 @@ sub retrieve_pw_key () {
 }
 
 sub retrieve_db_key () {
-
     # update key timeout on access
     # database becomes inaccessible after user idled for some time
     # need to update from db keys only since it is always called first
@@ -333,14 +332,22 @@ ajax '/get_group' => sub {
     }
 
     # create new object for the find methods
-    my @entries = File::KeePass::Web->new(groups => $kp)->find_entries({ group_id => $id });
+    my $group = eval { File::KeePass::Web->new(groups => $kp)->find_group({ id => $id }) };
+    if ($@) {
+        error session(SESSION_USERNAME), ": $@";
+        return failure 'Search returned more than one group', SERVER_ERROR;
+    }
 
     # remove bloated / protected fields
-    foreach my $entry (@entries) {
+    foreach my $entry (@{$group->{entries}}) {
         debloat $entry;
     }
 
-    return success undef, \@entries;
+    # remove big nodes
+    delete $group->{groups};
+    delete $group->{deleted_objects};
+
+    return success undef, $group;
 };
 
 ajax '/get_entry' => sub {
@@ -444,7 +451,17 @@ ajax '/get_file' => sub {
 };
 
 ajax '/search_entries' => sub {
-    my $term = param 'term' or return success undef, [];
+    my $term = param('term') || '';
+
+    # simulate group
+    my $group = {
+        title   =>  qq!Search results for "$term"!,
+        entries => [],
+        icon    => undef,
+        icon_custom_uuid => undef,
+    };
+
+    return success undef, $group if !defined $term || $term eq '';
 
     my $kp = eval { ipc_retrieve };
     if ($@) {
@@ -502,8 +519,38 @@ ajax '/search_entries' => sub {
 
         # ignore history entries
     }
+    $group->{entries} = \@matches;
+    return success undef, $group;
+};
 
-    return success undef, \@matches;
+get '/img/icon/:icon_id' => sub {
+    my ($icon_id) = param 'icon_id' or return failure 'No icon id given';
+
+    # (encoded) slash gets replaced on the frontend,
+    # some webservers don't like encoded slashes in urls
+    $icon_id =~ s/_/\//g;
+
+    my $header = eval { ipc_retrieve 'get_header' };
+    if ($@) {
+        debug session(SESSION_USERNAME), ": $@";
+        clear_db;
+        return failure 'Failed to load database', UNAUTHORIZED;
+    }
+
+    # TODO: turn icon array into hash on database first load to increase perf
+    my $file;
+    foreach my $icon (@{$header->{custom_icons}->{Icon}}) {
+        if ($icon->{UUID} eq $icon_id) {
+            $file = decode_base64 $icon->{Data};
+            last;
+        }
+    }
+
+    return failure 'Icon not found', NOT_FOUND if !$file;
+
+    content_type(File::LibMagic->new->info_from_string(\$file)->{mime_with_encoding});
+
+    return $file;
 };
 
 ajax '/close_db' => sub {
