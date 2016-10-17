@@ -2,17 +2,26 @@
 
 A mobile-friendly web application which serves KeePass database entries on a web frontend.
 
-Databases can be fetched from a configureable location (Filesystem, Seafile, Dropbox, ...).
-
-Frontend authenticates users (LDAP, SQL, ...) before any database access is granted.
-
 Written in Perl and JavaScript.
 
-This will probably only run under some flavour of Linux. The instructions assume a Linux environment.
+
+## FEATURES
+
+- Users need to authenticate with one of the auth backends (LDAP, Htpasswd, SQL, ...) before they can open a database
+- Server can fetch databases from various locations (Filesystem, Seafile, Dropbox, ...)
+- Either all users get access to the same database or each user gets access to his/her own
+- Doesn't save master password, uses a new and unique encryption key to cache the database
+- Caches encrypted databases in shared memory (so it works with multiple web server workers)
+- Encryption key is stored in the kernel keyring and therefore doesn't swap to disk
+- Passwords, protected fields and files are encrypted separately (also the ones in history). The web server only decrypts requested information. This way other passwords don't stay in memory in plain text and don't leave the server
+- Server revokes encryption keys after a configurable user idle time, effectively removing access to the cached database
+- Web interface offers entry search and access to files stored inside the database. Also displays custom entry icons
+- Highly configurable
 
 
 ## PREREQUISITES
 
+This will probably only run under some flavour of Linux. The instructions assume a Linux environment.
 
 ##### Libraries / Packages
 
@@ -399,7 +408,7 @@ For the format to use in `config.yml`/`db_location` or the auth backend see the 
 
     > sudo cat /proc/sys/kernel/shmall
 - Limits of kernel keyring apply
-- Because right now all cached databases are seralised and deserialised together, more *simultaneously active* users will make fetching the database from IPC slower for every user. A better approach would be using one shared segment per user, which would make one roundtrip perpetual
+- Right now all cached databases are seralised and deserialised together. This means more *simultaneously active* users will make fetching databases from IPC slower for every user. A better approach would be using one shared segment per user, which would make one roundtrip perpetual
 
 ## BUGS / CAVEATS / TODO
 
