@@ -1,3 +1,59 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [KeePass4Web](#keepass4web)
+  - [FEATURES](#features)
+  - [PREREQUISITES](#prerequisites)
+        - [Libraries / Packages](#libraries--packages)
+        - [Perl modules](#perl-modules)
+          - [Core](#core)
+          - [Backend LDAP](#backend-ldap)
+          - [Backend Htpasswd](#backend-htpasswd)
+          - [Backend Seafile](#backend-seafile)
+          - [Backend LWP](#backend-lwp)
+          - [Backend Dropbox](#backend-dropbox)
+          - [Performance](#performance)
+          - [Bundled modules, may become external](#bundled-modules-may-become-external)
+  - [INSTALL](#install)
+  - [BUILDING](#building)
+  - [BUNDLING](#bundling)
+  - [MODULE INSTALLATION](#module-installation)
+        - [Core](#core-1)
+        - [Backend LDAP](#backend-ldap-1)
+        - [Backend Htpasswd](#backend-htpasswd-1)
+        - [Backend Seafile](#backend-seafile-1)
+        - [Backend LWP](#backend-lwp-1)
+        - [Backend Dropbox](#backend-dropbox-1)
+        - [Performance](#performance-1)
+  - [CONFIGURATION](#configuration)
+  - [DEPLOYMENT](#deployment)
+        - [Running apache2 using mod_perl2/Plack with TLS:](#running-apache2-using-mod_perl2plack-with-tls)
+        - [Using the standalone server on default port 8080](#using-the-standalone-server-on-default-port-8080)
+        - [Open `https://<domain>/keepass/` (notice the trailing slash)](#open-httpsdomainkeepass-notice-the-trailing-slash)
+        - [Refer to Dancer2::Manual::Deployment for more options.](#refer-to-dancer2manualdeployment-for-more-options)
+  - [BACKENDS](#backends)
+    - [Authentication](#authentication)
+        - [LDAP](#ldap)
+        - [Htpasswd](#htpasswd)
+        - [PAM (planned)](#pam-planned)
+        - [SQL (planned)](#sql-planned)
+    - [Database](#database)
+        - [Filesystem](#filesystem)
+        - [Seafile](#seafile)
+        - [LWP](#lwp)
+        - [Dropbox](#dropbox)
+        - [WebDAV (planned)](#webdav-planned)
+  - [MISCELLANEOUS](#miscellaneous)
+  - [LIMITATIONS](#limitations)
+  - [BUGS / CAVEATS / TODO](#bugs--caveats--todo)
+  - [SCREENSHOTS](#screenshots)
+  - [APP DETAILS / BACKGROUND](#app-details--background)
+    - [Sequence of client/server operations](#sequence-of-clientserver-operations)
+  - [COPYRIGHT AND LICENSING](#copyright-and-licensing)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # KeePass4Web
 
 A mobile-friendly web application which serves KeePass database entries on a web frontend.
@@ -118,13 +174,13 @@ To build the JavaScript part you will also need npm (version 3+ recommended, els
 
         > cd /opt/keepass4web/
 
-    - Follow `BUILDING`, `MODULE INSTALLATION`, `CONFIGURATION`, `DEPLOYMENT` in that order
+    - Follow [BUILDING](#building), [MODULE INSTALLATION](#module-installation), [CONFIGURATION](#configuration), [DEPLOYMENT](#deployment) in that order
 
 - From dist tar:
     - Grab the latest tar from github: https://github.com/lixmal/keepass4web/releases
     - Untar it to some directory, e.g. /opt
     - Optionally rename it to keepass4web (for consistency with this README)
-    - Follow `MODULE INSTALLATION`, `CONFIGURATION`, `DEPLOYMENT` in that order
+    - Follow [MODULE INSTALLATION](#module-installation), [CONFIGURATION](#configuration), [DEPLOYMENT](#deployment) in that order
 
 
 ## BUILDING
