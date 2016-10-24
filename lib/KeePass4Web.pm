@@ -25,13 +25,13 @@ BEGIN {
 }
 
 
-hook 'before' => sub {
+hook before => sub {
     # TODO: check here for 'authenticated', to allow empty user authentication (auth_backend = '')
 
     # check session
-    if (!session SESSION_USERNAME and request->path_info !~ /^\/$|^\/user_login$|^\/authenticated$/) {
+    if (!session SESSION_USERNAME and request->dispatch_path !~ m{^(?:/|/user_login|/authenticated)$}) {
         status UNAUTHORIZED;
-        request->path_info('/');
+        forward '/';
     }
     else {
        # TODO: check CSRF token;
