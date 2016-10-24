@@ -38,6 +38,12 @@ export default class LoginForm extends React.Component {
                     mask: false
                 })
                 success = true
+
+                if (data && data.data) {
+                    KeePass4Web.setCN(data.data.cn)
+                    KeePass4Web.setTemplate(data.data.credentials_tpl)
+                    KeePass4Web.setCSRFToken(data.data.csrf_token)
+                }
             }.bind(this),
             async: false,
             data: this.transformRefs(this.refs),

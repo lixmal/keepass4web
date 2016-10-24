@@ -476,8 +476,6 @@ For the format to use in `config.yml`/`db_location` or the auth backend see the 
 
 - Tests
 
-- CSRF
-
 ## SCREENSHOTS
 
 ![Login](doc/img/login.png)

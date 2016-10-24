@@ -37,11 +37,6 @@ KeePass4Web.checkAuth = function(nextState, replace) {
 
     if (!auth) return
 
-    if (auth.data) {
-        KeePass4Web.setCN(auth.data.cn)
-        KeePass4Web.setTemplate(auth.data.credentials_tpl)
-    }
-
     // route to proper login page if unauthenticated
     // in that order
     var origPath = nextState.location.pathname
@@ -53,13 +48,13 @@ KeePass4Web.checkAuth = function(nextState, replace) {
         })
     }
     else if (!auth.backend && origPath !== '/backend_login' ) {
-        let type = auth.data.credentials_tpl.type
-        if (type === 'redirect') {
-            window.location = auth.data.credentials_tpl.url
+        var template = KeePass4Web.getTemplate()
+        if (template.type === 'redirect') {
+            window.location = template.url
             // stopping javascript execution to prevent redirect loop
             throw 'Redirecting'
         }
-        else if (type === 'mask')
+        else if (template.type === 'mask')
             replace({
                 pathname: 'backend_login',
                 state: { nextPathname: origPath }
@@ -91,18 +86,10 @@ KeePass4Web.ajax = function(url, conf) {
     conf.method   = typeof conf.method   === 'undefined' ? 'POST' : conf.method
     conf.dataType = typeof conf.dataType === 'undefined' ? 'json' : conf.dataType
 
-    /*
-    if (conf.error === undefined) {
-        conf.error = function(r, s, e) {
-            // reload page if auth expired
-            if (r.status == 401)
-                location.reload(true)
-
-            // call passed callback
-            conf.error(r, s, e)
-        }.bind(this)
+    if (typeof conf.headers === 'undefined') {
+        conf.headers = {}
     }
-    */
+    conf.headers['X-CSRF-Token'] = KeePass4Web.getCSRFToken()
 
     jQuery.ajax(conf)
 }
@@ -142,6 +129,7 @@ KeePass4Web.getCN = function() {
 KeePass4Web.clearStorage = function() {
     localStorage.removeItem('cn')
     localStorage.removeItem('template')
+    localStorage.removeItem('CSRFToken')
 }
 
 KeePass4Web.setTemplate = function(template) {
@@ -150,6 +138,14 @@ KeePass4Web.setTemplate = function(template) {
 
 KeePass4Web.getTemplate = function() {
     return JSON.parse(localStorage.getItem('template'))
+}
+
+KeePass4Web.setCSRFToken = function(CSRFToken) {
+    localStorage.setItem('CSRFToken', CSRFToken || '')
+}
+
+KeePass4Web.getCSRFToken = function() {
+    return localStorage.getItem('CSRFToken') || null
 }
 
 KeePass4Web.error = function(r, s, e) {

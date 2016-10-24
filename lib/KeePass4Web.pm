@@ -4,7 +4,8 @@ use warnings;
 
 use Dancer2;
 use Dancer2::Plugin::Ajax;
-use MIME::Base64 qw/decode_base64/;
+use MIME::Base64 qw/encode_base64 decode_base64/;
+use Crypt::URandom;
 
 BEGIN {
     # change to correct dir if using mod_perl2
@@ -28,13 +29,17 @@ BEGIN {
 hook before => sub {
     # TODO: check here for 'authenticated', to allow empty user authentication (auth_backend = '')
 
+    my $session = session SESSION_USERNAME;
     # check session
-    if (!session SESSION_USERNAME and request->dispatch_path !~ m{^(?:/|/user_login|/authenticated)$}) {
-        status UNAUTHORIZED;
-        forward '/';
+    if (!$session and request->dispatch_path !~ m{^(?:/|/user_login|/authenticated)$}) {
+        halt failure 'Not logged in', UNAUTHORIZED;
     }
-    else {
-       # TODO: check CSRF token;
+    # check CSRF token, with some exceptions
+    elsif ($session and request->dispatch_path !~ m{^(?:/|/csrf_token)$|^/img/icon/}) {
+        my $token = session(SESSION_CSRF) || '';
+        if ($token ne request_header 'X-CSRF-Token') {
+            send_error 'CSRF token validation failed', FORBIDDEN;
+        }
     }
 };
 
@@ -77,13 +82,20 @@ ajax '/user_login' => sub {
     info 'User login successful: ', $username;
     session SESSION_USERNAME, $username;
 
+    my $csrf_token = encode_base64 Crypt::URandom::urandom(32), '';
+    session SESSION_CSRF, $csrf_token;
+
     # set a CN to display on the web interface
     my $cn = ref $userinfo eq 'HASH' && $userinfo->{CN} ? $userinfo->{CN}->[0] : lc $username;
     $cn //= lc $username;
 
     session SESSION_CN, $cn;
 
-    return success 'Login successful';
+    return success 'Login successful', {
+        csrf_token      => $csrf_token,
+        cn              => $cn,
+        credentials_tpl => KeePass4Web::Backend::credentials_tpl(),
+    }
 };
 
 
@@ -174,12 +186,6 @@ ajax '/authenticated' => sub {
     $auth{backend} = 1 if eval { KeePass4Web::Backend::authenticated };
     $auth{db}      = 1 if eval { KeePass4Web::KeePass::opened };
 
-
-    $auth{data} = {
-        cn              => session(SESSION_CN),
-        credentials_tpl => KeePass4Web::Backend::credentials_tpl(),
-    };
-
     # return auth fail if any auth is false
     foreach my $val (values %auth) {
         return failure \%auth, UNAUTHORIZED if !$val;
@@ -188,8 +194,20 @@ ajax '/authenticated' => sub {
     return success 'Authenticated';
 };
 
+ajax '/settings' => sub {
+    return success undef, {
+        cn              => session(SESSION_CN),
+        credentials_tpl => KeePass4Web::Backend::credentials_tpl(),
+    };
+};
+
+ajax '/csrf_token' => sub {
+    return success undef, {
+        csrf_token => session(SESSION_CSRF),
+    };
+};
+
 any ['post', 'get'] => '/' => sub {
-    # TODO: insert csrf token
     send_file 'index.html';
 };
 

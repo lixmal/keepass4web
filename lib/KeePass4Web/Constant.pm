@@ -4,6 +4,7 @@ use warnings;
 
 use constant BAD_REQUEST        => 400;
 use constant UNAUTHORIZED       => 401;
+use constant FORBIDDEN          => 403;
 use constant NOT_FOUND          => 404;
 use constant MTHD_NOT_ALLOWED   => 405;
 use constant NOT_ACCEPTABLE     => 406;
@@ -13,6 +14,7 @@ use constant SESSION_KP_DB      => 'kp_db';
 use constant SESSION_KP_KEYFILE => 'kp_keyfile';
 use constant SESSION_CN         => 'CN';
 use constant SESSION_USERNAME   => 'username';
+use constant SESSION_CSRF       => 'csrf_token';
 
 BEGIN {
     require Exporter;
@@ -20,6 +22,7 @@ BEGIN {
     our @EXPORT = qw/
         BAD_REQUEST
         UNAUTHORIZED
+        FORBIDDEN
         NOT_FOUND
         MTHD_NOT_ALLOWED
         NOT_ACCEPTABLE
@@ -29,6 +32,7 @@ BEGIN {
         SESSION_KP_KEYFILE
         SESSION_CN
         SESSION_USERNAME
+        SESSION_CSRF
     /;
 }
 

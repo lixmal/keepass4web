@@ -557,7 +557,7 @@ ajax '/close_db' => sub {
     eval { clear_db };
     if ($@) {
         error session(SESSION_USERNAME), ": $@";
-        return failure, 'Failed to clear DB', SERVER_ERROR;
+        return failure 'Failed to clear DB', SERVER_ERROR;
     }
     return success 'DB closed';
 };
