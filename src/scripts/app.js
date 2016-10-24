@@ -95,7 +95,6 @@ KeePass4Web.ajax = function(url, conf) {
 }
 
 KeePass4Web.logout = function(router) {
-    KeePass4Web.clearStorage()
     KeePass4Web.ajax('logout', {
         // need async, else check for authenticated may finish first
         async: false,
@@ -103,6 +102,7 @@ KeePass4Web.logout = function(router) {
             router.replace('/user_login')
         }
     })
+    KeePass4Web.clearStorage()
 }
 
 KeePass4Web.closeDB = function(router) {
