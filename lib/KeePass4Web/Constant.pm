@@ -2,6 +2,7 @@ package KeePass4Web::Constant;
 use strict;
 use warnings;
 
+use constant NOT_MODIFIED       => 304;
 use constant BAD_REQUEST        => 400;
 use constant UNAUTHORIZED       => 401;
 use constant FORBIDDEN          => 403;
@@ -20,6 +21,7 @@ BEGIN {
     require Exporter;
     our @ISA = 'Exporter';
     our @EXPORT = qw/
+        NOT_MODIFIED
         BAD_REQUEST
         UNAUTHORIZED
         FORBIDDEN

@@ -530,6 +530,13 @@ get '/img/icon/:icon_id' => sub {
     # some webservers don't like encoded slashes in urls
     $icon_id =~ s/_/\//g;
 
+    # answer conditional requests
+    my $matchheader = request_header 'If-None-Match';
+    if ($matchheader && $matchheader eq $icon_id) {
+        status NOT_MODIFIED;
+        halt;
+    }
+
     my $header = eval { ipc_retrieve 'get_header' };
     if ($@) {
         debug session(SESSION_USERNAME), ": $@";
@@ -549,6 +556,10 @@ get '/img/icon/:icon_id' => sub {
     return failure 'Icon not found', NOT_FOUND if !$file;
 
     content_type(File::LibMagic->new->info_from_string(\$file)->{mime_with_encoding});
+
+    # caching
+    response_header 'Cache-Control' => 'max-age=31536000; public; s-max-age=31536000';
+    response_header 'ETag' => $icon_id;
 
     return $file;
 };
