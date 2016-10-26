@@ -19,6 +19,13 @@ export default class Viewport extends React.Component {
         }
     }
 
+    scroll(id) {
+        document.getElementById(id).scrollIntoView()
+        if (window.scrollY)
+            // scroll height of bootstrap fixed header down
+            window.scroll(0, scrollY - 70)
+    }
+
     onToggle(group, toggled) {
         if (this.state.cursor) { this.state.cursor.active = false }
         group.active = true
@@ -47,6 +54,8 @@ export default class Viewport extends React.Component {
                 this.setState({
                     group: data.data,
                 })
+
+                this.scroll('group-viewer')
             }.bind(this),
             error: KeePass4Web.error.bind(this),
         })
@@ -66,10 +75,11 @@ export default class Viewport extends React.Component {
                 id: entry.id,
             },
             success: function (data) {
-
                 this.setState({
                     entry: data.data
                 })
+
+                this.scroll('node-viewer')
             }.bind(this),
             error: KeePass4Web.error.bind(this),
         })
@@ -131,13 +141,13 @@ export default class Viewport extends React.Component {
                             style={Style}
                         />
                     </div>
-                    <div className="col-sm-4">
+                    <div id="group-viewer" className="col-sm-4">
                         <GroupViewer
                             group={this.state.group}
                             onSelect={this.onSelect}
                         />
                     </div>
-                    <div className="col-sm-6">
+                    <div id="node-viewer" className="col-sm-6">
                         <NodeViewer
                             entry={this.state.entry}
                             timeoutSec={30 * 1000}
