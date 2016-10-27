@@ -36,7 +36,7 @@ sub key_add {
         die "Wrong number of parameters\n";
     }
     my $keyring = $keyrings{$_[3]} or die "Unknown keyring: $_[3]\n";
-    my $id = _key_add($_[0], $_[1], $_[2], $keyring);
+    my $id = _key_add($_[0], $_[1], $_[2], length $_[2], $keyring);
     if ($id < 0) {
         die "Error adding key: $!\n"
     }
@@ -117,8 +117,8 @@ __C__
 // using int for key_serial_t and unsigned for key_perm_t,
 // as perl doesn't know those and there is no typemap yet
 
-int _key_add(char* type, char* desc, char* data, int keyring) {
-	return add_key(type, desc, data, strlen(data), keyring);
+int _key_add(char* type, char* desc, char* data, int datalen, int keyring) {
+	return add_key(type, desc, data, datalen, keyring);
 }
 
 void _key_read(int key_id) {
@@ -129,7 +129,7 @@ void _key_read(int key_id) {
     Inline_Stack_Reset;
     Inline_Stack_Push(sv_2mortal(newSViv(ret)));
     if (key != NULL)
-        Inline_Stack_Push(sv_2mortal(newSVpv(key, PL_na)));
+        Inline_Stack_Push(sv_2mortal(newSVpv(key, ret)));
     Inline_Stack_Done;
 }
 
