@@ -63,11 +63,6 @@ export default class LoginForm extends React.Component {
 
         // even on fail this will redirect to root and check which authentication is required
         // in case some previous auth expired while the user took too much time
-        const { location } = this.props
-        if (location.state && location.state.nextPathname) {
-            this.props.router.replace(location.state.nextPathname)
-        } else {
-            this.props.router.replace('/')
-        }
+        this.props.router.replace('/')
     }
 }

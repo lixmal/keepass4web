@@ -16,7 +16,7 @@ const UserForm    = withRouter(UserLogin)
 const BackendForm = withRouter(BackendLogin)
 const DBForm      = withRouter(DBLogin)
 
-const appHistory = useRouterHistory(createHashHistory)({ queryKey: false })
+const appHistory = useRouterHistory(createHashHistory)()
 
 // global namespace
 window.KeePass4Web = {}
@@ -44,7 +44,6 @@ KeePass4Web.checkAuth = function(nextState, replace) {
         KeePass4Web.clearStorage()
         replace({
             pathname: 'user_login',
-            state: { nextPathname: origPath }
         })
     }
     else if (!auth.backend && origPath !== '/backend_login' ) {
@@ -57,13 +56,11 @@ KeePass4Web.checkAuth = function(nextState, replace) {
         else if (template.type === 'mask')
             replace({
                 pathname: 'backend_login',
-                state: { nextPathname: origPath }
             })
     }
     else if (!auth.db && origPath !== '/db_login' ) {
         replace({
             pathname: 'db_login',
-            state: { nextPathname: origPath }
         })
     }
 
