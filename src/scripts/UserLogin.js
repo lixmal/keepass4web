@@ -2,6 +2,7 @@ import React from 'react'
 import LoginForm from './LoginForm'
 import NavBar from './NavBar'
 import Alert from './Alert'
+import Classnames from 'classnames'
 
 export default class UserLogin extends LoginForm {
     constructor() {
@@ -14,7 +15,7 @@ export default class UserLogin extends LoginForm {
             <div>
                 <NavBar router={this.props.router} />
                 <div className="container">
-                    <div className="kp-login">
+                    <div className={this.classes()}>
                         <form className="kp-login-inner" onSubmit={this.handleLogin}>
                             <h4>User Login</h4>
                             <input className="form-control user" autoComplete="on" type="text" ref="username" placeholder="Username" required="required" autoFocus={this.state.error ? '' : 'autoFocus'}/>

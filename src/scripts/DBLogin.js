@@ -27,7 +27,7 @@ export default class DBLogin extends LoginForm {
             <div>
                 <NavBar router={this.props.router} />
                 <div className="container">
-                    <div className="kp-login">
+                    <div className={this.classes()}>
                         <form className="kp-login-inner" onSubmit={this.handleLogin}>
                             <h4>KeePass Login</h4>
                             <input className="form-control user" type="password" ref="password" placeholder="Master Password" autoFocus="autoFocus" />

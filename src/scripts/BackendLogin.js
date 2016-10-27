@@ -10,7 +10,6 @@ export default class BackendLogin extends LoginForm {
     }
 
     render() {
-
         var tpl = KeePass4Web.getTemplate()
 
         if (!tpl)
@@ -36,7 +35,7 @@ export default class BackendLogin extends LoginForm {
             <div>
                 <NavBar router={this.props.router} />
                 <div className="container">
-                    <div className="kp-login">
+                    <div className={this.classes()}>
                         <form className="kp-login-inner" onSubmit={this.handleLogin}>
                             <h4>{tpl.icon_src ? <img className="backend-icon" src={tpl.icon_src} /> : ''}{tpl.login_title}</h4>
                             {fields}
