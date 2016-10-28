@@ -34,7 +34,7 @@ export default class DBLogin extends LoginForm {
                             <input className="input-group btn" type="file" accept="*/*" ref="keyfile" placeholder="Key file" onChange={this.handleFile}/>
                             <input id="key" ref="key" type="hidden"/>
                             <button className="btn btn-block btn-lg btn-success" type="submit">Open</button>
-                            <Alert error={this.state.error} key={Math.random(Math.pow(2, 32))}/>
+                            <Alert error={this.state.error} />
                         </form>
                     </div>
                 </div>

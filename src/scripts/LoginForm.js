@@ -36,13 +36,14 @@ export default class LoginForm extends React.Component {
 
     handleLogin(event) {
         event.preventDefault()
+        if (this.state.mask)
+            return
 
         var success = false
         this.setState({
             error: false,
             mask: true
         })
-        this.forceUpdate()
         KeePass4Web.ajax(this.url, {
             success: function(data) {
                 success = true

@@ -40,7 +40,7 @@ export default class BackendLogin extends LoginForm {
                             <h4>{tpl.icon_src ? <img className="backend-icon" src={tpl.icon_src} /> : ''}{tpl.login_title}</h4>
                             {fields}
                             <button className="btn btn-block btn-lg btn-success" type="submit">Login</button>
-                            <Alert error={this.state.error} key={Math.random(Math.pow(2, 32))}/>
+                            <Alert error={this.state.error} />
                         </form>
                     </div>
                 </div>
