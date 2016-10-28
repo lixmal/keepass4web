@@ -105,3 +105,6 @@ public/img/seafile-logo.png
 public/index.html
 public/scripts/bundle.js
 README.md
+t/001_base.t
+t/002_index_route.t
+t/003_keyring.t
