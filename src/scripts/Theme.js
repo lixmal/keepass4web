@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 export default {
     tree: {
@@ -77,4 +77,4 @@ export default {
             }
         }
     }
-};
+}

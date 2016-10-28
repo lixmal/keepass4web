@@ -1,5 +1,5 @@
 import jQuery from 'jquery'
-import Css from '../style/app.css';
+import Css from '../style/app.css'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { withRouter, useRouterHistory, Router, Route } from 'react-router'
@@ -175,4 +175,4 @@ ReactDOM.render(
         <Route path='/db_login'      component={DBForm} />
     </Router>,
     document.getElementById('app-content')
-);
+)

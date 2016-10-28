@@ -1,9 +1,7 @@
-import React from 'react';
-//import jQuery from 'jquery'
-//import Bootstrap from 'bootstrap'
-window.$ = window.jQuery = require('jquery');
-var Bootstrap = require('bootstrap');
-Bootstrap.$ = $;
+import React from 'react'
+import Classnames from 'classnames'
+window.$ = window.jQuery = require('jquery')
+var Bootstrap = require('bootstrap')
 
 
 export default class NavBar extends React.Component {
@@ -89,6 +87,6 @@ export default class NavBar extends React.Component {
             </nav>
         )
     }
-};
+}
 
 

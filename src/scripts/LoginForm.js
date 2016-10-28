@@ -4,8 +4,8 @@ import Classnames from 'classnames'
 export default class LoginForm extends React.Component {
     constructor() {
         super()
-        this.handleLogin = this.handleLogin.bind(this);
-        this.logout = this.logout.bind(this);
+        this.handleLogin = this.handleLogin.bind(this)
+        this.logout = this.logout.bind(this)
         this.state = {
             error: false,
             mask: false
@@ -24,14 +24,14 @@ export default class LoginForm extends React.Component {
     }
 
     logout() {
-        window.KeePass4Web.logout(this.props.router);
+        window.KeePass4Web.logout(this.props.router)
     }
 
     classes() {
         return Classnames({
             'kp-login': true,
             'loading-mask': this.state.mask,
-        });
+        })
     }
 
     handleLogin(event) {

@@ -26,6 +26,6 @@ export default class UserLogin extends LoginForm {
                     </div>
                 </div>
             </div>
-       );
+       )
     }
 }
