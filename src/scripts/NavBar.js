@@ -1,5 +1,4 @@
 import React from 'react'
-import Classnames from 'classnames'
 window.$ = window.jQuery = require('jquery')
 var Bootstrap = require('bootstrap')
 

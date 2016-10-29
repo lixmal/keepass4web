@@ -41,9 +41,12 @@ export default class Viewport extends React.Component {
 
         if (cur == group) return
 
+        if (this.serverRequest)
+            this.serverRequest.abort()
+
         this.setState({
-            group: null,
             entry: null,
+            groupMask: true,
         })
 
         this.serverRequest = KeePass4Web.ajax('get_group', {
@@ -53,6 +56,7 @@ export default class Viewport extends React.Component {
             success: function (data) {
                 this.setState({
                     group: data.data,
+                    groupMask: false,
                 })
 
                 this.scroll('group-viewer')
@@ -65,18 +69,25 @@ export default class Viewport extends React.Component {
         // ignore already selected
         if (this.state.entry && this.state.entry.id && entry.id === this.state.entry.id) return
 
-        // remove entry first to rerender entry
-        // important for eye close/open buttons
+        if (this.serverRequest)
+            this.serverRequest.abort()
+
         this.setState({
-            entry: null
+            nodeMask: true,
         })
         this.serverRequest = KeePass4Web.ajax('get_entry', {
             data: {
                 id: entry.id,
             },
             success: function (data) {
+                // remove entry first to rerender entry
+                // important for eye close/open buttons
                 this.setState({
-                    entry: data.data
+                    entry: null,
+                })
+                this.setState({
+                    entry: data.data,
+                    nodeMask: false,
                 })
 
                 this.scroll('node-viewer')
@@ -87,6 +98,15 @@ export default class Viewport extends React.Component {
 
     onSearch(refs, event) {
         event.preventDefault()
+
+        if (this.serverRequest)
+            this.serverRequest.abort()
+
+        this.setState({
+            entry: null,
+            groupMask: true,
+        })
+
         this.serverRequest = KeePass4Web.ajax('search_entries', {
             data: {
                 term: refs.term.value,
@@ -97,13 +117,12 @@ export default class Viewport extends React.Component {
                 this.setState({
                     cursor: null,
                     group: data.data,
-                    entry: null
+                    groupMask: false,
                 })
             }.bind(this),
             error: KeePass4Web.error.bind(this),
         })
     }
-
 
     componentDidMount() {
         if (KeePass4Web.getCN()) {
@@ -145,12 +164,14 @@ export default class Viewport extends React.Component {
                         <GroupViewer
                             group={this.state.group}
                             onSelect={this.onSelect}
+                            mask={this.state.groupMask}
                         />
                     </div>
                     <div id="node-viewer" className="col-sm-6">
                         <NodeViewer
                             entry={this.state.entry}
                             timeoutSec={30 * 1000}
+                            mask={this.state.nodeMask}
                         />
                     </div>
                 </div>

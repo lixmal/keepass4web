@@ -177,4 +177,5 @@ body {
     left: calc(50% - 12px);
     animation: 2s linear 0s normal none infinite running spin;
     filter: drop-shadow(0 0 2 rgba(0, 0, 0, 0.33));
+    z-index: 2000;
 }

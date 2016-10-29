@@ -88,7 +88,7 @@ KeePass4Web.ajax = function(url, conf) {
     }
     conf.headers['X-CSRF-Token'] = KeePass4Web.getCSRFToken()
 
-    jQuery.ajax(conf)
+    return jQuery.ajax(conf)
 }
 
 KeePass4Web.logout = function(router) {
@@ -146,6 +146,9 @@ KeePass4Web.getCSRFToken = function() {
 }
 
 KeePass4Web.error = function(r, s, e) {
+    // ignore aborted requests
+    if (e === 'abort')
+        return
     if (r.status == 401) {
         if (this.props && this.props.router) {
             // redirect first, to hide sensitive data
@@ -162,6 +165,13 @@ KeePass4Web.error = function(r, s, e) {
         let error = e
         if (r.responseJSON)
             error = r.responseJSON.message
+        // disable remaining loading masks
+        if (this.state) {
+            this.setState({
+                groupMask: false,
+                nodeMask: false,
+            })
+        }
         alert(e)
     }
 }

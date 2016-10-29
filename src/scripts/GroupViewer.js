@@ -1,4 +1,5 @@
 import React from 'react'
+import Classnames from 'classnames'
 
 export default class GroupViewer extends React.Component {
     constructor(props) {
@@ -16,7 +17,13 @@ export default class GroupViewer extends React.Component {
     }
 
     render() {
-        if (!this.props || !this.props.group) return null
+        var classes = Classnames({
+            'panel': true,
+            'panel-default': true,
+            'loading-mask': this.props.mask,
+        })
+
+        if (!this.props.group) return (<div className={classes}></div>)
 
         var group = this.props.group
 
@@ -38,7 +45,7 @@ export default class GroupViewer extends React.Component {
         }
 
         return (
-            <div className="panel panel-default">
+            <div className={classes}>
                 <div className="panel-heading">
                     {this.getIcon(group)}
                     {group.title}

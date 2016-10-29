@@ -472,8 +472,6 @@ For the format to use in `config.yml`/`db_location` or the auth backend see the 
 
 - Log may have 'Key has been revoked' messages: happens when session keyring gets revoked once user (who (re)started the server) logs out. Please file a bug report in this case.
 
-- Loading masks for long running ajax requests missing
-
 - Tests
 
 ## SCREENSHOTS

@@ -1,5 +1,6 @@
 import React from 'react'
 import Clipboard from 'clipboard-js'
+import Classnames from 'classnames'
 
 export default class NodeViewer extends React.Component {
     constructor() {
@@ -8,6 +9,7 @@ export default class NodeViewer extends React.Component {
     }
 
     setHide(target, hide, name, data) {
+        if (!this.props.entry) return
         if (typeof data === 'undefined')
             data = null
         if (!name || name === 'password')
@@ -130,7 +132,13 @@ export default class NodeViewer extends React.Component {
     }
 
     render() {
-        if (!this.props || !this.props.entry) return null
+        var classes = Classnames({
+            'panel': true,
+            'panel-default': true,
+            'loading-mask': this.props.mask,
+        })
+
+        if (!this.props.entry) return (<div className={classes}></div>)
 
         var entry = this.props.entry
 
@@ -222,7 +230,7 @@ export default class NodeViewer extends React.Component {
             icon = <img className="kp-icon" src={'img/icons/' + encodeURIComponent(entry.icon) + '.png'} />
 
         return (
-            <div className="panel panel-default">
+            <div className={classes}>
                 <div className="panel-heading">
                     {icon}
                     {entry.title}
