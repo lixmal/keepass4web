@@ -220,8 +220,10 @@ E.g. for Ubuntu 14.04 with mod_perl2:
 
 ## CONFIGURATION
 
-- Copy or rename `config.yml.dist` to `config.yml`
-    > cp config.yml.dist config.yml
+- Copy or rename `config.yml` to `config_local.yml`
+    > cp config.yml config_local.yml
+
+- Do changes in `config_local.yml`. Settings in `config_local.yml` override those in `config.yml`
 
 - Change `session_cookie_key` to a **long** and **random** value if using `Cookie` in `session`, e.g.
     > pwgen -ysN1 128
@@ -231,7 +233,7 @@ E.g. for Ubuntu 14.04 with mod_perl2:
 
 Running this app on a web server with mod_perl2 or fcgi is **recommended** but running as standalone app is possible as well (with Dancer2's capabilities).
 
-- Create the log directory (as defined in config.yml)
+- Create the log directory (as defined in `config_local.yml`)
     > sudo mkdir /var/log/keepass4web/
 
 - The directory the app lives in has to be readable by the user running the web server, e.g.
@@ -243,7 +245,7 @@ Running this app on a web server with mod_perl2 or fcgi is **recommended** but r
     > chmod g+w /var/log/keepass4web/
 
 - Remove permissions on sensitive data for everyone else
-    > chmod o-rwx /opt/keepass4web/config.yml /var/log/keepass4web/
+    > chmod o-rwx /opt/keepass4web/config*.yml /var/log/keepass4web/
 
 - Finally, give web server user access to the .Inline directory to compile C files necessary for Kernel::Keyring
     > chmod g+w /opt/keepass4web/.Inline
@@ -348,7 +350,7 @@ Support for plain, sha1, crypt, md5 and bcrypt. Only bcrypt is considered secure
 
 ##### Filesystem
 
-Grabs the KeePass database from the local filesystem. No support for local key files if configured statically (in config.yml).
+Grabs the KeePass database from the local filesystem. No support for local key files if configured statically (in `config_local.yml`).
 Can get database and key file location from auth backend.
 Web server needs read access to the files.
 
@@ -356,8 +358,8 @@ Web server needs read access to the files.
 
 KeePass database is stored in the private cloud.
 
-Locations for the database and the key file can be configured in config.yml (global for all users) or fetched from auth backend (individually per user).
-Location syntax is '\<repository-id>/\<path-to-database>', see config.yml.dist for an example.
+Locations for the database and the key file can be configured in `config_local.yml` (global for all users) or fetched from auth backend (individually per user).
+Location syntax is '\<repository-id>/\<path-to-database>', see `config_local.yml`.dist for an example.
 
 The server uses the (possibly auth backend) credentials to fetch a token from Seafile which is used for consequent requests.
 No user credentials are saved anywhere at any time!
@@ -369,7 +371,7 @@ Logging into some service on behalf of the user is an anti-pattern, therefore it
 
 Backend to fetch database from http, ftp or any other protocol supported by the LWP module collection (see [LWP NETWORK SUPPORT](http://search.cpan.org/dist/libwww-perl/lib/LWP.pm#NETWORK_SUPPORT)).
 Additional protocols can be added by installing corresponding modules (see [LWP::Protocol modules](https://metacpan.org/search?p=1&q=LWP%3A%3AProtocol%3A%3A&search_type=modules&size=30)).
-Supports per-user database and key file location from auth backend. No support for key files if configured statically (in config.yml).
+Supports per-user database and key file location from auth backend. No support for key files if configured statically (in `config_local.yml`).
 Basic auth is supported for http, but only globally (same for all users, even if urls differ). Otherwise it would be necessary to store the user credentials in the session, which might be not a good idea.
 Database upload (saving) is only implemented for http right now.
 
@@ -382,14 +384,14 @@ Choose the type of access you need, give it a name (e.g. `KeePass4Web`).
 Add an redirect url pointing to you application, followed by `callback`, e.g. `https://example.org/keepass/callback`.
 Optionally, generate an access token.
 Putting the token into the config will limit all users to that one Dropbox account (unless they open the Dropbox link by themselves, for which they would need to know the app key).
-Put the displayed app key, the app secret and the redirect url into `config.yml`.
+Put the displayed app key, the app secret and the redirect url into `config_local.yml`.
 
 Now, once users log into the web application, they will be redirected to the Dropbox login page (unless already logged in).
 After logging in and granting the app access to Dropbox, they will be redirected back to the app.
 
 The backend also can fetch key files from Dropbox, if per-user databases are supported by the auth backend.
 
-For the format to use in `config.yml`/`db_location` or the auth backend see the [Dropbox HTTP doc](https://www.dropbox.com/developers/documentation/http/documentation) under `Path formats` or [HTTP download](https://www.dropbox.com/developers/documentation/http/documentation#files-download) next to `Paramaters`
+For the format to use in `config_local.yml`/`db_location` or the auth backend see the [Dropbox HTTP doc](https://www.dropbox.com/developers/documentation/http/documentation) under `Path formats` or [HTTP download](https://www.dropbox.com/developers/documentation/http/documentation#files-download) next to `Paramaters`
 
 ##### WebDAV (planned)
 

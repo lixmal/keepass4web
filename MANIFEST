@@ -1,6 +1,6 @@
 .Inline/.exists
 bin/app.psgi
-config.yml.dist
+config.yml
 cpanfile
 lib/Auth/LDAP.pm
 lib/File/KeePass/Web.pm

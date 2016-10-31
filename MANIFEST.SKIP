@@ -18,7 +18,7 @@ MYMETA.yml
 ^src\/
 ^node_modules\/
 ^package.json$
-^config.yml$
+^config_local.yml$
 ^npm-debug.log$
 ^\.Inline\/(?!.exists)
 ^_Inline\/
