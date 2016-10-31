@@ -19,13 +19,6 @@
   - [BUILDING](#building)
   - [BUNDLING](#bundling)
   - [MODULE INSTALLATION](#module-installation)
-        - [Core](#core-1)
-        - [Backend LDAP](#backend-ldap-1)
-        - [Backend Htpasswd](#backend-htpasswd-1)
-        - [Backend Seafile](#backend-seafile-1)
-        - [Backend LWP](#backend-lwp-1)
-        - [Backend Dropbox](#backend-dropbox-1)
-        - [Performance](#performance-1)
   - [CONFIGURATION](#configuration)
   - [DEPLOYMENT](#deployment)
         - [Running apache2 using mod_perl2/Plack with TLS:](#running-apache2-using-mod_perl2plack-with-tls)
@@ -87,6 +80,7 @@ This will probably only run under some flavour of Linux. The instructions assume
 - libapache2-mod-perl2 *(if running mod_perl2 with apache2)*
 - libmagic1
 - libmagic-dev
+- cpanminus
 
 ##### Perl modules
 
@@ -133,14 +127,15 @@ This will probably only run under some flavour of Linux. The instructions assume
 - HTTP::XSHeaders
 - YAML::XS
 
-
 ###### Bundled modules, may become external
 - File::KeePass::Web
 - Kernel::Keyring
 - Auth::LDAP
 - Seafile::Client::REST
 
-Most modules can be taken from the disto, e.g. for Ubuntu 14.04:
+
+For best compatibility, the perl module dependencies should be installed from CPAN. Although this will take some time.
+Alternatively, some modules can be installed from distro packages to save time, e.g. for Ubuntu:
 
 - libinline-perl
 - libdancer2-perl
@@ -158,13 +153,7 @@ Most modules can be taken from the disto, e.g. for Ubuntu 14.04:
 - libhttp-parser-xs-perl
 - libclass-load-xs-perl
 
-
-Remaining modules need to be installed from CPAN.
-Alternatively you can get all modules in the most recent version from CPAN, although this will take quite some time to install.
-
-
 To build the JavaScript part you will also need npm (version 3+ recommended, else your node_modules directory will explode!) and therefore `Node.js`
-
 
 ## INSTALL
 
@@ -220,42 +209,14 @@ Output will be a `KeePass4Web-{VERSION}.tar.gz` file, which includes all files r
 
 E.g. for Ubuntu 14.04 with mod_perl2:
 
-##### Core
-
-Please note that installing Dancer2::Session::Cookie (see third instruction below) or any other Dancer2 related module via CPAN might pull in a newer Dancer2 version than the one of the distro, thus installation will take some time.
-In that case it is advisable to leave the libdancer2-perl distro package out of the first command.
-
 - Install distro packages
-    > sudo apt-get install build-essential libkeyutils-dev libkeyutils1 libmagic1 libmagic-dev libapache2-mod-perl2 libinline-perl libfile-keepass-perl libcrypt-urandom-perl libmath-random-isaac-xs-perl libjson-perl libipc-sharelite-perl libsereal-encoder-perl libsereal-decoder-perl libdancer2-perl
+    > sudo apt-get install build-essential libkeyutils-dev libkeyutils1 libmagic1 libmagic-dev libapache2-mod-perl2 cpanminus
 
-- Install remaining Perl modules via cpan
-    > cpan Crypt::Mode::CBC File::LibMagic
+- Install dependencies with all backends, the recommended modules (for performance) and the suggested session engine (`Cookie`)
+    > cpanm --sudo --installdeps . --with-all-features --with-recommends --with-suggests
 
-- Install session module of choice, e.g.
-    > cpan Dancer2::Session::Cookie
-
-
-##### Backend LDAP
-> sudo apt-get install libnet-ldap-perl
-
-##### Backend Htpasswd
-> cpan Authen::Htpasswd Crypt::Eksblowfish::Bcrypt
-
-##### Backend Seafile
-> cpan REST::Client
-
-##### Backend LWP
-> sudo apt-get install libwww-perl
-
-##### Backend Dropbox
-> cpan WebService::Dropbox
-
-##### Performance
-The following modules can be installed to increase performance
-> sudo apt-get libjson-xs-perl libhttp-parser-xs-perl libclass-load-xs-perl libclass-xsaccessor-perl
-
-> cpan URL::Encode::XS CGI::Deurl::XS Scope::Upper HTTP::XSCookies HTTP::XSHeaders YAML::XS
-
+- Alternatively, install dependencies with selected backends only
+    > cpanm --sudo --installdeps . --with-feature Dropbox --with-feature LDAP --with-recommends
 
 ## CONFIGURATION
 

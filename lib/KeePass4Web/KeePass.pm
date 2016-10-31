@@ -10,7 +10,6 @@ use Crypt::Mode::CBC;
 use Crypt::URandom;
 use Sereal::Encoder qw/encode_sereal/;
 use Sereal::Decoder qw/decode_sereal/;
-use Config ();
 use MIME::Base64 qw/decode_base64/;
 use URI::Escape qw/uri_escape_utf8/;
 use File::LibMagic;
