@@ -1,0 +1,15 @@
+language: 'perl'
+perl:
+    - '5.22'
+    - '5.18'
+    - '5.14'
+    - '5.12'
+    - '5.10'
+before_install:
+    - 'sudo mkdir /var/log/keepass4web'
+    - 'sudo chmod 777 /var/log/keepass4web'
+    - 'sudo apt-get update -qq'
+    - 'sudo apt-get install -qq libkeyutils-dev libkeyutils1 libmagic1 libmagic-dev'
+install: 'cpanm --installdeps . --with-all-features --with-recommends --with-suggests --notest --quiet'
+sudo: 'required'
+dist: 'trusty'
