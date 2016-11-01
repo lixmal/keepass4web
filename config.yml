@@ -165,10 +165,6 @@ show_errors:      0
 route_cache:      1
 environment:      'production'
 
-plugins:
-    'Ajax':
-        content_type: 'application/json'
-
 engines:
     # https://metacpan.org/pod/Dancer2::Core::Role::Logger
     logger:

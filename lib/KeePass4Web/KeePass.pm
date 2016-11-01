@@ -45,11 +45,13 @@ BEGIN {
 
 sub failure {
     status $_[1] || BAD_REQUEST;
+    content_type 'application/json';
     return to_json { success => \0, message => $_[0] }
 }
 
 sub success {
     status $_[2] if defined $_[2];
+    content_type 'application/json';
     return to_json { success => \1, message => $_[0], data => $_[1] }
 }
 
