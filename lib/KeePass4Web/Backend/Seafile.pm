@@ -6,7 +6,7 @@ use parent 'KeePass4Web::Backend::Abstract';
 use Dancer2 appname => 'KeePass4Web';
 
 use Seafile::Client::REST;
-use KeePass4Web::Constant qw/!BAD_REQUEST !NOT_FOUND/;
+use KeePass4Web::Constant qw/!BAD_REQUEST !NOT_FOUND !FORBIDDEN/;
 
 use constant SESSION_SF_TOKEN => 'seafile_token';
 

@@ -76,7 +76,7 @@ export default class NavBar extends React.Component {
                     {search}
                     <ul className="nav navbar-nav navbar-right">
                         <li className="dropdown">
-                            <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{ cn }
+                            <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{cn}
                                 <span className="caret"></span>
                             </a>
                             {dropdown}
