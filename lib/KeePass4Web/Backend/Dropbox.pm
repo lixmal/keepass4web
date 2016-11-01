@@ -7,7 +7,7 @@ use Dancer2 appname => 'KeePass4Web';
 
 use WebService::Dropbox;
 
-use KeePass4Web::Constant qw/SESSION_KP_DB SESSION_KP_KEYFILE BAD_REQUEST/;
+use KeePass4Web::Constant qw/SESSION_KP_DB SESSION_KP_KEYFILE SESSION_CSRF BAD_REQUEST/;
 
 use constant SESSION_DB_TOKEN => 'dropbox_token';
 
@@ -90,14 +90,16 @@ sub credentials_tpl {
     my $uri = _new->authorize(
         {
             redirect_uri => config->{Dropbox}->{redirect_uri},
+            state        => session(SESSION_CSRF),
         }
     );
 
     debug 'Dropbox uri: ', $uri;
 
     return {
-        type => 'redirect',
-        url  => $uri,
+        type       => 'redirect',
+        url        => $uri,
+        csrf_param => 'state',
     }
 }
 
