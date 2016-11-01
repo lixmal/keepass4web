@@ -126,6 +126,8 @@ sub ipc {
 }
 
 sub ipc_store {
+    my $session = session SESSION_USERNAME or die "No session\n";
+
     my ($groups, $header) = @_;
     my ($shared, $ipc) = ipc;
 
@@ -139,7 +141,7 @@ sub ipc_store {
     }
 
     if (@_) {
-        $shared->{session SESSION_USERNAME} = {
+        $shared->{$session} = {
             groups  => $groups,
             header  => $header,
             expires => $time + DB_TIMEOUT,
@@ -185,10 +187,12 @@ sub fetch_and_decrypt {
 }
 
 sub ipc_retrieve {
+    my $session = session SESSION_USERNAME or die "No session\n";
     my $get_header = shift;
+
     my ($shared, $ipc) = ipc;
 
-    my $user = $shared->{session SESSION_USERNAME};
+    my $user = $shared->{$session};
 
     # update expiry date
     if (defined $user) {
