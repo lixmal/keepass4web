@@ -7,8 +7,8 @@ use Dancer2 appname => 'KeePass4Web';
 # Simple wrapper for backends
 
 my $type = __PACKAGE__ . '::' . config->{db_backend};
-my $module = $type =~ s/::/\//gr . '.pm';
-require $module;
+(my $module = $type) =~ s/::/\//g;
+require $module . '.pm';
 
 my $backend = $type->new;
 

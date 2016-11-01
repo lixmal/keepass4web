@@ -8,7 +8,7 @@ use Exporter 'import';
 
 Inline->init;
 
-our $VERSION = 0.1.0;
+our $VERSION = 0.1.1;
 
 our @EXPORT = qw/
     key_add
@@ -118,13 +118,13 @@ __C__
 // as perl doesn't know those and there is no typemap yet
 
 int _key_add(char* type, char* desc, char* data, int datalen, int keyring) {
-	return add_key(type, desc, data, datalen, keyring);
+    return add_key(type, desc, data, datalen, keyring);
 }
 
 void _key_read(int key_id) {
     Inline_Stack_Vars;
-	void* key = NULL;
-	int ret = keyctl_read_alloc(key_id, &key);
+    void* key = NULL;
+    int ret = keyctl_read_alloc(key_id, &key);
 
     Inline_Stack_Reset;
     Inline_Stack_Push(sv_2mortal(newSViv(ret)));

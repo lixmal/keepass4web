@@ -10,8 +10,8 @@ use Dancer2 appname => 'KeePass4Web';
 return 1 if !config->{auth_backend};
 
 my $type = __PACKAGE__ . '::' . config->{auth_backend};
-my $module = $type =~ s/::/\//gr . '.pm';
-require $module;
+(my $module = $type) =~ s/::/\//g;
+require $module . '.pm';
 
 my $auth = $type->new;
 

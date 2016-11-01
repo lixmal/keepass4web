@@ -139,14 +139,16 @@ ajax '/db_login' => sub {
 
     info session(SESSION_USERNAME), ': DB decryption attempt';
 
-	if ($keyfile) {
+    if ($keyfile) {
         # cut html file api prefix and decode from base64
-		$keyfile = eval { decode_base64 param('key') =~ s/^.*?,//r };
-		if ($@) {
-			info session(SESSION_USERNAME), ": $@";
-			return failure 'Failed to parse key file';
-		}
-	}
+        my $key = param 'key';
+        $key =~ s/^.*?,//;
+        $keyfile = eval { decode_base64 $key };
+        if ($@) {
+            info session(SESSION_USERNAME), ": $@";
+            return failure 'Failed to parse key file';
+        }
+    }
 
     eval {
         KeePass4Web::KeePass::fetch_and_decrypt(password => $password, keyfile => \$keyfile);
