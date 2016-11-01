@@ -33,13 +33,14 @@ requires   'Digest::SHA',               0;
 requires   'Crypt::Mode::CBC',          0;
 requires   'Crypt::Rijndael',           0;
 
-on 'test',  sub {
+on 'test', sub {
     requires 'Test::More',            0;
     requires 'Plack::Test',           0;
     requires 'HTTP::Request::Common', 0;
     requires 'Crypt::URandom',        0;
     requires 'Encode',                0;
     requires 'MIME::Base64',          0;
+    requires 'JSON',                  0;
 };
 
 feature 'LDAP', 'LDAP authentication backend' => sub {
@@ -60,8 +61,8 @@ feature 'Seafile', 'Seafile database backend' => sub {
 feature 'LWP', 'LWP database backend' => sub {
     requires 'LWP::UserAgent',        0;
     requires 'HTTP::Request::Common', 0;
-    requires 'URI::Escape',          0;
-    requires 'Encode',               0;
+    requires 'URI::Escape',           0;
+    requires 'Encode',                0;
 };
 
 feature 'Dropbox', 'Dropbox database backend' => sub {
