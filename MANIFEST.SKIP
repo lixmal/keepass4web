@@ -27,3 +27,4 @@ MYMETA.yml
 ^.htpasswd$
 ^KeePass4Web-*
 ^doc\/
+^.travis.yml$
