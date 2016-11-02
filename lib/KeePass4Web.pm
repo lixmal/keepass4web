@@ -37,7 +37,9 @@ hook before => sub {
     # check CSRF token, with some exceptions
     elsif ($session and request->dispatch_path !~ m{^(?:/|/csrf_token)$|^/img/icon/}) {
         my $token = session(SESSION_CSRF) || '';
-        if ($token ne (request_header('X-CSRF-Token') || param KeePass4Web::Backend::credentials_tpl->{csrf_param})) {
+        my $csrf_param = KeePass4Web::Backend::credentials_tpl;
+        my $param_token = request_header('X-CSRF-Token') || param($csrf_param && $csrf_param->{csrf_param} || '') || '' ;
+        if ($token ne $param_token) {
             send_error 'CSRF token validation failed', FORBIDDEN;
         }
     }
