@@ -119,6 +119,8 @@ export default class Viewport extends React.Component {
                     group: data.data,
                     groupMask: false,
                 })
+
+                this.scroll('group-viewer')
             }.bind(this),
             error: KeePass4Web.error.bind(this),
         })
