@@ -84,7 +84,7 @@ ajax '/user_login' => sub {
     info 'User login successful: ', $username;
     session SESSION_USERNAME, $username;
 
-    my $csrf_token = encode_base64 Crypt::URandom::urandom(32), '';
+    my $csrf_token = encode_base64 Crypt::URandom::urandom(CSRF_TOKEN_LENGTH), '';
     session SESSION_CSRF, $csrf_token;
 
     # set a CN to display on the web interface

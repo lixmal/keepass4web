@@ -17,6 +17,8 @@ use constant SESSION_CN         => 'CN';
 use constant SESSION_USERNAME   => 'username';
 use constant SESSION_CSRF       => 'csrf_token';
 
+use constant CSRF_TOKEN_LENGTH  => 32;
+
 BEGIN {
     require Exporter;
     our @ISA = 'Exporter';
@@ -35,6 +37,12 @@ BEGIN {
         SESSION_CN
         SESSION_USERNAME
         SESSION_CSRF
+
+        CSRF_TOKEN_LENGTH
+    /;
+
+    our @EXPORT_OK = qw/
+        CSRF_TOKEN_LENGTH
     /;
 }
 
