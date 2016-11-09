@@ -10,6 +10,7 @@ lib/KeePass4Web/Auth.pm
 lib/KeePass4Web/Auth/Abstract.pm
 lib/KeePass4Web/Auth/Htpasswd.pm
 lib/KeePass4Web/Auth/LDAP.pm
+lib/KeePass4Web/Auth/Test.pm
 lib/KeePass4Web/Backend.pm
 lib/KeePass4Web/Backend/Abstract.pm
 lib/KeePass4Web/Backend/Dropbox.pm
@@ -18,6 +19,7 @@ lib/KeePass4Web/Backend/LWP.pm
 lib/KeePass4Web/Backend/Seafile.pm
 lib/KeePass4Web/Constant.pm
 lib/KeePass4Web/KeePass.pm
+lib/KeePass4Web/Test.pm
 lib/Kernel/Keyring.pm
 lib/Seafile/Client/REST.pm
 LICENSE
@@ -107,5 +109,7 @@ public/index.html
 public/scripts/bundle.js
 README.md
 t/001_base.t
-t/002_index_route.t
-t/003_keyring.t
+t/002_routes_no_session.t
+t/003_routes_no_csrf.t
+t/004_routes.t
+t/010_keyring.t
