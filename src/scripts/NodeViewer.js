@@ -74,6 +74,7 @@ export default class NodeViewer extends React.Component {
         var xhr = new XMLHttpRequest()
         xhr.open('POST', 'get_file', true)
         xhr.responseType = 'arraybuffer'
+        xhr.setRequestHeader('X-CSRF-Token', KeePass4Web.getCSRFToken())
         xhr.onload = function () {
             if (this.status === 200) {
                 var filename = ""
