@@ -41,6 +41,14 @@ BEGIN {
     $module = 'Crypt::Cipher::' . config->{pw_cipher} . '.pm';
     $module =~ s/::/\//g;
     require $module;
+
+    # start keyring session if running standalone
+    if (!$ENV{DANCER_APPHANDLER} || $ENV{DANCER_APPHANDLER} eq 'Standalone') {
+        eval { key_session KEYRING_SESSION };
+        if ($@) {
+            warning "Failed to initialize keyring session: $@";
+        }
+    }
 }
 
 sub failure {

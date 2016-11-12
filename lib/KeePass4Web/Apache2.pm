@@ -6,9 +6,10 @@ BEGIN {
 
 use Apache2::Const -compile => 'OK';
 use Kernel::Keyring;
+use KeePass4Web::Constant 'KEYRING_NAME';
 
 sub post_config {
-    eval { key_session 'KeePass4Web' };
+    eval { key_session KEYRING_NAME };
 
     return Apache2::Const::OK;
 }

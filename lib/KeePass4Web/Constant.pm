@@ -18,6 +18,7 @@ use constant SESSION_USERNAME   => 'username';
 use constant SESSION_CSRF       => 'csrf_token';
 
 use constant CSRF_TOKEN_LENGTH  => 32;
+use constant KEYRING_NAME       => 'KeePass4Web';
 
 BEGIN {
     require Exporter;
@@ -39,10 +40,12 @@ BEGIN {
         SESSION_CSRF
 
         CSRF_TOKEN_LENGTH
+        KEYRING_NAME
     /;
 
     our @EXPORT_OK = qw/
         CSRF_TOKEN_LENGTH
+        KEYRING_NAME
     /;
 }
 
