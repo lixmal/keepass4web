@@ -145,7 +145,6 @@ search:
 ##################################
 # https://metacpan.org/pod/distribution/Dancer2/lib/Dancer2/Config.pod
 
-port:    8080
 # Dancer2::Logger::<name> modules
 logger:  'File'
 # Dancer2::Session::<name> modules

@@ -23,7 +23,7 @@
   - [CONFIGURATION](#configuration)
   - [DEPLOYMENT](#deployment)
         - [Running apache2 using mod_perl2/Plack with TLS:](#running-apache2-using-mod_perl2plack-with-tls)
-        - [Using the standalone server on default port 8080](#using-the-standalone-server-on-default-port-8080)
+        - [Using the standalone server](#using-the-standalone-server)
         - [Open `https://<domain>/keepass/` (notice the trailing slash)](#open-httpsdomainkeepass-notice-the-trailing-slash)
         - [Refer to Dancer2::Manual::Deployment for more options.](#refer-to-dancer2manualdeployment-for-more-options)
   - [BACKENDS](#backends)
@@ -156,6 +156,7 @@ Alternatively, some modules can be installed from distro packages to save time, 
 
 To build the JavaScript part you will also need npm (version 3+ recommended, else your node_modules directory will explode!) and therefore `Node.js`
 
+
 ## INSTALL
 
 - From source:
@@ -192,6 +193,7 @@ The minified, bundled file will be written to public/scripts/bundle.js
 - For a non-uglified version you can run
     > npm run dev
 
+
 ## BUNDLING
 
 Output will be a `KeePass4Web-{VERSION}.tar.gz` file, which includes all files required to run the app but without the development/build files
@@ -218,6 +220,7 @@ E.g. for Ubuntu 14.04 with mod_perl2:
 
 - Alternatively, install dependencies with selected backends only
     > cpanm --sudo --installdeps . --with-feature Dropbox --with-feature LDAP --with-recommends
+
 
 ## CONFIGURATION
 
@@ -295,14 +298,17 @@ PerlPostConfigHandler KeePass4Web::Apache2::post_config
 </IfModule>
 ```
 
-
-##### Using the standalone server on default port 8080
+##### Using the standalone server
 
 - Run (as correct user)
-    > bin/app.psgi
+    > plackup bin/app.psgi --port 8080 --host localhost
 
+- Or
+    > DANCER_PORT=8080 DANCER_SERVER=localhost bin/app.psgi
 
-- As there is no TLS or IPv6, it is recommonded to run a front-end web server with reverse proxy, example config for apache:
+- Options for plackup can be found in `man plackup` or [online](https://metacpan.org/pod/distribution/Plack/script/plackup)
+
+- As there is no TLS, it is recommonded to run a front-end web server with reverse proxy, example config for apache:
     ```apache
     <IfModule mod_ssl.c>
         <VirtualHost _default_:443>
@@ -322,8 +328,8 @@ PerlPostConfigHandler KeePass4Web::Apache2::post_config
 
 ##### Open `https://<domain>/keepass/` (notice the trailing slash)
 
-
 ##### Refer to [Dancer2::Manual::Deployment](https://metacpan.org/pod/Dancer2::Manual::Deployment) for more options.
+
 
 ## BACKENDS
 
@@ -345,7 +351,6 @@ Support for plain, sha1, crypt, md5 and bcrypt. Only bcrypt is considered secure
 ##### PAM (planned)
 
 ##### SQL (planned)
-
 
 ### Database
 
@@ -430,6 +435,7 @@ For the format to use in `config_local.yml`/`db_location` or the auth backend se
 - Limits of kernel keyring apply
 - Right now all cached databases are seralised and deserialised together. This means more *simultaneously active* users will make fetching databases from IPC slower for every user. A better approach would be using one shared segment per user, which would make one roundtrip perpetual
 
+
 ## BUGS / CAVEATS / TODO
 
 - Using mod_perl, apache may create two kernel session keyrings, because it restarts directly after startup, effectively executing KeePass4Web::KeePass twice
@@ -438,11 +444,13 @@ For the format to use in `config_local.yml`/`db_location` or the auth backend se
 
 - Tests
 
+
 ## SCREENSHOTS
 
 ![Login](doc/img/login.png)
 
 ![App](doc/img/app.png)
+
 
 ## APP DETAILS / BACKGROUND
 ### Sequence of client/server operations
@@ -542,6 +550,7 @@ Page reload
 Show KeePass tree
 
 ```
+
 
 ## COPYRIGHT AND LICENSING
 

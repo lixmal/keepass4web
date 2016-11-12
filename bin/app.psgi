@@ -7,3 +7,4 @@ use lib "$FindBin::Bin/../lib";
 use KeePass4Web;
 
 KeePass4Web->to_app;
+KeePass4Web->dance;
