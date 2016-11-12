@@ -3,7 +3,7 @@ use warnings;
 
 use KeePass4Web::Test;
 use KeePass4Web::Constant;
-use Test::More tests => 19;
+use Test::More tests => 18;
 
 my $res;
 
@@ -33,9 +33,6 @@ is $res->code, FORBIDDEN, '/get_file';
 
 $res = POST '/search_entries';
 is $res->code, FORBIDDEN, '/search_entries';
-
-$res = GET '/img/icon/0.png';
-is $res->code, NOT_FOUND, '/img/icon/';
 
 $res = POST '/close_db';
 is $res->code, FORBIDDEN, '/close_db';

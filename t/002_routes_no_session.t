@@ -8,8 +8,6 @@ use Test::More tests => 23;
 use JSON ();
 use Dancer2 '!pass';
 
-set logger => 'Console';
-
 my $res;
 
 my $app = KeePass4Web->to_app;
