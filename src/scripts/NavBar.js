@@ -1,4 +1,5 @@
 import React from 'react'
+import Timer from './Timer'
 window.$ = window.jQuery = require('jquery')
 var Bootstrap = require('bootstrap')
 
@@ -8,6 +9,7 @@ export default class NavBar extends React.Component {
         super()
         this.onLogout  = this.onLogout.bind(this)
         this.onCloseDB = this.onCloseDB.bind(this)
+        this.onTimeUp  = this.onTimeUp.bind(this)
     }
 
     onLogout() {
@@ -16,6 +18,11 @@ export default class NavBar extends React.Component {
 
     onCloseDB () {
         KeePass4Web.closeDB(this.props.router)
+    }
+
+    onTimeUp() {
+        this.onCloseDB()
+        alert('Database session expired')
     }
 
     componentDidMount() {
@@ -27,7 +34,7 @@ export default class NavBar extends React.Component {
 
     render() {
         var cn = KeePass4Web.getCN()
-        var dropdown, search
+        var dropdown, search, timer
         if (cn) {
             dropdown = (
                 <ul className="dropdown-menu">
@@ -58,6 +65,17 @@ export default class NavBar extends React.Component {
                     </div>
                 </form>
             )
+            let timeout = KeePass4Web.getTimeout()
+            if (timeout) {
+                timer = (
+                    <Timer
+                        format='{hh}:{mm}:{ss}'
+                        timeout={timeout}
+                        onTimeUp={this.onTimeUp}
+                        restart={KeePass4Web.restartTimer}
+                    />
+                )
+            }
         }
 
         return (
@@ -70,13 +88,14 @@ export default class NavBar extends React.Component {
                         <span className="icon-bar"></span>
                     </button>
                     <a className="navbar-brand" href="#">KeePass 4 Web</a>
+                    <div className="navbar-text">{timer}</div>
                 </div>
-
-                <div className="collapse navbar-collapse"  id="navbar-collapse-1">
+                <div className="collapse navbar-collapse" id="navbar-collapse-1">
                     {search}
                     <ul className="nav navbar-nav navbar-right">
                         <li className="dropdown">
-                            <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{cn}
+                            <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                {cn}
                                 <span className="caret"></span>
                             </a>
                             {dropdown}

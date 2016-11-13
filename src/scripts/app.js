@@ -80,7 +80,7 @@ KeePass4Web.ajax = function(url, conf) {
     conf.url  = url
 
     // set defaults
-    conf.method   = typeof conf.method   === 'undefined' ? 'POST' : conf.method
+    conf.method   = typeof conf.method  === 'undefined' ? 'POST' : conf.method
     conf.dataType = typeof conf.dataType === 'undefined' ? 'json' : conf.dataType
 
     if (typeof conf.headers === 'undefined') {
@@ -88,6 +88,7 @@ KeePass4Web.ajax = function(url, conf) {
     }
     conf.headers['X-CSRF-Token'] = KeePass4Web.getCSRFToken()
 
+    KeePass4Web.restartTimer(true)
     return jQuery.ajax(conf)
 }
 
@@ -127,6 +128,7 @@ KeePass4Web.clearStorage = function() {
     localStorage.removeItem('cn')
     localStorage.removeItem('template')
     localStorage.removeItem('CSRFToken')
+    localStorage.removeItem('timeout')
 }
 
 KeePass4Web.setTemplate = function(template) {
@@ -143,6 +145,20 @@ KeePass4Web.setCSRFToken = function(CSRFToken) {
 
 KeePass4Web.getCSRFToken = function() {
     return localStorage.getItem('CSRFToken') || null
+}
+
+KeePass4Web.setTimeout = function(timeout) {
+    localStorage.setItem('timeout', timeout || 0)
+}
+
+KeePass4Web.getTimeout = function() {
+    return localStorage.getItem('timeout') || 0
+}
+
+KeePass4Web.timer = false
+KeePass4Web.restartTimer = function(val) {
+    if (typeof val !== 'undefined' ) KeePass4Web.timer = val
+    return KeePass4Web.timer
 }
 
 KeePass4Web.error = function(r, s, e) {

@@ -4,6 +4,7 @@ use warnings;
 
 use Dancer2;
 use Dancer2::Plugin::Ajax;
+use Dancer2::Core::Time;
 use MIME::Base64 qw/encode_base64 decode_base64/;
 use Crypt::URandom;
 
@@ -18,6 +19,8 @@ use KeePass4Web::KeePass;
 use KeePass4Web::Backend;
 use KeePass4Web::Auth;
 use KeePass4Web::Constant;
+
+use constant DB_TIMEOUT      => Dancer2::Core::Time->new(expression => config->{db_session_timeout})->seconds;
 
 BEGIN {
     # export doesn't work with Dancer2
@@ -97,6 +100,7 @@ ajax '/user_login' => sub {
         csrf_token      => $csrf_token,
         cn              => $cn,
         credentials_tpl => KeePass4Web::Backend::credentials_tpl(),
+        timeout         => DB_TIMEOUT,
     }
 };
 
@@ -202,6 +206,7 @@ ajax '/settings' => sub {
     return success undef, {
         cn              => session(SESSION_CN),
         credentials_tpl => KeePass4Web::Backend::credentials_tpl(),
+        timeout         => DB_TIMEOUT,
     };
 };
 

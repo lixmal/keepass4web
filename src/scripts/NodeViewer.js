@@ -118,6 +118,9 @@ export default class NodeViewer extends React.Component {
         }
         xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded; charset=UTF-8')
         xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+
+        KeePass4Web.restartTimer(true)
+
         xhr.send('id=' + encodeURIComponent(this.props.entry.id) + '&filename=' + encodeURIComponent(filename))
     }
 
