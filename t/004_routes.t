@@ -22,11 +22,11 @@ csrf_token $token;
 
 is length decode_base64($token), CSRF_TOKEN_LENGTH, 'csrf token';
 
-is $data->{cn}, 'TESTUSER CN', 'cn';
+is $data->{settings}->{cn}, 'TESTUSER CN', 'cn';
 
-ok !ref $data->{credentials_tpl} || ref $data->{credentials_tpl} eq 'HASH', 'credentials tpl';
+ok !ref $data->{settings}->{template} || ref $data->{settings}->{template} eq 'HASH', 'credentials tpl';
 
-my $type = $data->{credentials_tpl}->{type};
+my $type = $data->{settings}->{template}->{type};
 ok !defined $type || $type =~ /^(?:redirect|mask)$/, 'credentials tpl type';
 
 

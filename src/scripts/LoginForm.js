@@ -49,10 +49,8 @@ export default class LoginForm extends React.Component {
                 success = true
 
                 if (data && data.data) {
-                    KeePass4Web.setCN(data.data.cn)
-                    KeePass4Web.setTemplate(data.data.credentials_tpl)
                     KeePass4Web.setCSRFToken(data.data.csrf_token)
-                    KeePass4Web.setTimeout(data.data.timeout)
+                    KeePass4Web.setSettings(data.data.settings)
                 }
 
                 this.setState({

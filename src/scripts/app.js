@@ -47,7 +47,7 @@ KeePass4Web.checkAuth = function(nextState, replace) {
         })
     }
     else if (!auth.backend && origPath !== '/backend_login' ) {
-        var template = KeePass4Web.getTemplate()
+        var template = KeePass4Web.getSettings().template
         if (template.type === 'redirect') {
             window.location = template.url
             // stopping javascript execution to prevent redirect loop
@@ -116,27 +116,9 @@ KeePass4Web.closeDB = function(router) {
 }
 
 // leave room for implementation changes
-KeePass4Web.setCN = function(cn) {
-    localStorage.setItem('cn', cn || '')
-}
-
-KeePass4Web.getCN = function() {
-    return localStorage.getItem('cn') || null
-}
-
 KeePass4Web.clearStorage = function() {
-    localStorage.removeItem('cn')
-    localStorage.removeItem('template')
+    localStorage.removeItem('settings')
     localStorage.removeItem('CSRFToken')
-    localStorage.removeItem('timeout')
-}
-
-KeePass4Web.setTemplate = function(template) {
-    localStorage.setItem('template', JSON.stringify(template))
-}
-
-KeePass4Web.getTemplate = function() {
-    return JSON.parse(localStorage.getItem('template'))
 }
 
 KeePass4Web.setCSRFToken = function(CSRFToken) {
@@ -147,12 +129,18 @@ KeePass4Web.getCSRFToken = function() {
     return localStorage.getItem('CSRFToken') || null
 }
 
-KeePass4Web.setTimeout = function(timeout) {
-    localStorage.setItem('timeout', timeout || 0)
+KeePass4Web.setSettings = function(settings) {
+    var stored = KeePass4Web.getSettings()
+    for (var k in settings) {
+        stored[k] = settings[k]
+    }
+    localStorage.setItem('settings', JSON.stringify(stored))
 }
-
-KeePass4Web.getTimeout = function() {
-    return localStorage.getItem('timeout') || 0
+KeePass4Web.getSettings = function() {
+    var settings = localStorage.getItem('settings')
+    if (settings)
+        return JSON.parse(settings)
+    return {}
 }
 
 KeePass4Web.timer = false

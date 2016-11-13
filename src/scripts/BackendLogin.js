@@ -10,7 +10,7 @@ export default class BackendLogin extends LoginForm {
     }
 
     render() {
-        var tpl = KeePass4Web.getTemplate()
+        var tpl = KeePass4Web.getSettings().template
 
         if (!tpl)
             return null

@@ -97,10 +97,12 @@ ajax '/user_login' => sub {
     session SESSION_CN, $cn;
 
     return success 'Login successful', {
-        csrf_token      => $csrf_token,
-        cn              => $cn,
-        credentials_tpl => KeePass4Web::Backend::credentials_tpl(),
-        timeout         => DB_TIMEOUT,
+        csrf_token => $csrf_token,
+        settings => {
+            cn       => $cn,
+            template => KeePass4Web::Backend::credentials_tpl(),
+            timeout  => DB_TIMEOUT,
+        }
     }
 };
 
@@ -204,9 +206,9 @@ ajax '/authenticated' => sub {
 
 ajax '/settings' => sub {
     return success undef, {
-        cn              => session(SESSION_CN),
-        credentials_tpl => KeePass4Web::Backend::credentials_tpl(),
-        timeout         => DB_TIMEOUT,
+        cn       => session(SESSION_CN),
+        template => KeePass4Web::Backend::credentials_tpl(),
+        timeout  => DB_TIMEOUT,
     };
 };
 

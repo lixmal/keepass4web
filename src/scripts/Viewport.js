@@ -127,10 +127,6 @@ export default class Viewport extends React.Component {
     }
 
     componentDidMount() {
-        if (KeePass4Web.getCN()) {
-            document.getElementById('logout').addEventListener('click', this.onLogout)
-            document.getElementById('closeDB').addEventListener('click', this.onCloseDB)
-        }
         this.serverRequest = KeePass4Web.ajax('get_tree', {
             success: function (data) {
                 this.setState({

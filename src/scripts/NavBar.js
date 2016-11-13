@@ -26,14 +26,14 @@ export default class NavBar extends React.Component {
     }
 
     componentDidMount() {
-        if (KeePass4Web.getCN()) {
+        if (KeePass4Web.getSettings().cn) {
             document.getElementById('logout').addEventListener('click', this.onLogout)
             document.getElementById('closeDB').addEventListener('click', this.onCloseDB)
         }
     }
 
     render() {
-        var cn = KeePass4Web.getCN()
+        var cn = KeePass4Web.getSettings().cn
         var dropdown, search, timer
         if (cn) {
             dropdown = (
@@ -65,7 +65,7 @@ export default class NavBar extends React.Component {
                     </div>
                 </form>
             )
-            let timeout = KeePass4Web.getTimeout()
+            let timeout = KeePass4Web.getSettings().timeout
             if (timeout) {
                 timer = (
                     <Timer
