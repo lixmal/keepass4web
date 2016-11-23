@@ -37,7 +37,7 @@
         "clipboard-js": "~0.3.1",
         "jquery": "^3.1.1",
         "react": "^15.3.2",
-        "react-dom": "~15.3.2",
+        "react-dom": "~15.4.1",
         "react-router": "^3.0.0",
         "react-treebeard": "^1.1.4"
     },
