@@ -6,7 +6,7 @@ export default class TreeNode extends React.Component {
 
         var node = props.node
         this.state = {
-            expanded: node.state && node.hasOwnProperty('expanded') ?
+            expanded: node.hasOwnProperty('expanded') ?
                 node.expanded :
                 props.level < (props.options.levels || 3) ? true : false
         }
