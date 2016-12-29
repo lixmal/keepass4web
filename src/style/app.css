@@ -186,6 +186,10 @@ body {
     background-color: #EEEEEE;
 }
 
+.treeview .list-group-item:hover {
+    background-color: #F5F5F5;
+}
+
 .treeview span.indent {
     margin-left: 10px;
     margin-right: 10px;
