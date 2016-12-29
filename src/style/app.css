@@ -191,9 +191,8 @@ body {
     margin-right: 10px;
 }
 
-.treeview span.img {
+.treeview img {
     margin-left: 10px;
-    margin-right: 5px;
 }
 
 .glyphicon-none:before {
