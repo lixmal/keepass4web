@@ -1,7 +1,6 @@
 import React from 'react'
 import NodeViewer from './NodeViewer'
 import GroupViewer from './GroupViewer'
-import Style from './Theme.js'
 import NavBar from './NavBar'
 import TreeViewer from './TreeViewer'
 
