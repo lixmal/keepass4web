@@ -179,3 +179,25 @@ body {
     filter: drop-shadow(0 0 2 rgba(0, 0, 0, 0.33));
     z-index: 2000;
 }
+
+.treeview .list-group-item {
+    cursor: pointer;
+    padding: 3px 10px;
+    background-color: #EEEEEE;
+}
+
+.treeview span.indent {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.treeview span.img {
+    margin-left: 10px;
+    margin-right: 5px;
+}
+
+.glyphicon-none:before {
+    content: "\2122";
+    color: transparent !important;
+}
+

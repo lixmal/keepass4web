@@ -1,14 +1,14 @@
 import React from 'react'
-import {Treebeard} from 'react-treebeard'
 import NodeViewer from './NodeViewer'
 import GroupViewer from './GroupViewer'
 import Style from './Theme.js'
 import NavBar from './NavBar'
+import TreeViewer from './TreeViewer'
 
 export default class Viewport extends React.Component {
     constructor() {
         super()
-        this.onToggle = this.onToggle.bind(this)
+        this.onGroupSelect = this.onGroupSelect.bind(this)
         this.onSelect = this.onSelect.bind(this)
         this.onSearch = this.onSearch.bind(this)
 
@@ -26,20 +26,8 @@ export default class Viewport extends React.Component {
             window.scroll(0, scrollY - 70)
     }
 
-    onToggle(group, toggled) {
-        if (this.state.cursor) { this.state.cursor.active = false }
-        group.active = true
-
-        var cur = this.state.cursor
-        this.setState({
-            cursor: group
-        })
-
-        if (group.children) {
-            group.toggled = toggled
-        }
-
-        if (cur == group) return
+    onGroupSelect(group) {
+        if (this.state.group && this.state.group.id && group.id === this.state.group.id) return
 
         if (this.serverRequest)
             this.serverRequest.abort()
@@ -112,10 +100,7 @@ export default class Viewport extends React.Component {
                 term: refs.term.value,
             },
             success: function (data) {
-                if (this.state.cursor)
-                    this.state.cursor.active = false
                 this.setState({
-                    cursor: null,
                     group: data.data,
                     groupMask: false,
                 })
@@ -152,10 +137,10 @@ export default class Viewport extends React.Component {
                 />
                 <div className="row">
                     <div className="col-sm-2 dir-tree">
-                        <Treebeard
-                            data={this.state.tree}
-                            onToggle={this.onToggle}
-                            style={Style}
+                        <TreeViewer
+                            tree={this.state.tree}
+                            nodeClick={this.onGroupSelect}
+                            nodeIcon="48"
                         />
                     </div>
                     <div id="group-viewer" className="col-sm-4">

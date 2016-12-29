@@ -270,24 +270,14 @@ sub walk_tree {
     }
 
     push @$children, {
-        name     => $group->{title},
-        id       => $group->{id},
-        toggled  => $counter >= config->{toggled_levels} ? \0 : $group->{expanded} ? \1 : \0,
+        id               => $group->{id},
+        name             => $group->{title},
+        icon             => $group->{icon},
+        custom_icon_uuid => $group->{custom_icon_uuid},
         # no toggling if no children
-        children => @$grandchildren ? $grandchildren : undef,
+        children         => @$grandchildren ? $grandchildren : undef,
+        expanded         => $counter >= config->{toggled_levels} ? \0 : $group->{expanded} ? \1 : \0,
     };
-
-
-=pod
-    # if it has groups, it also has entries, even if empty
-    foreach my $entry (@{$group->{entries}}) {
-        # only grabbing name and id, no details
-        push @$grandchildren, {
-            name => $entry->{title},
-            id   => $entry->{id},
-        }
-    }
-=cut
 }
 
 sub debloat {
@@ -310,26 +300,18 @@ ajax '/get_tree' => sub {
 
     my $children = [];
     my $tree = {
-        id       => $kp->{id},
-        name     => $kp->{title},
-        toggled  => $kp->{expanded} ? \1 : \0,
-        children => $children,
+        id               => $kp->{id},
+        name             => $kp->{title},
+        icon             => $kp->{icon},
+        custom_icon_uuid => $kp->{custom_icon_uuid},
+        children         => $children,
+        expanded         => $kp->{expanded} ? \1 : \0,
     };
 
     my $counter = 0;
     foreach my $group (@{$kp->{groups}}) {
         walk_tree $group, $children, $counter;
     }
-
-=pod
-    foreach my $entry (@{$kp->{entries}}) {
-        # only grabbing name and id, no details
-        push @$children, {
-            name => $entry->{title},
-            id   => $entry->{id},
-        }
-    }
-=cut
 
     return success undef, $tree;
 };
