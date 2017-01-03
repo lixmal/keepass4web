@@ -8,7 +8,7 @@ use Exporter 'import';
 
 Inline->init;
 
-our $VERSION = 0.1.1;
+our $VERSION = '0.1.2';
 
 our @EXPORT = qw/
     key_add
@@ -112,7 +112,6 @@ __DATA__
 __C__
 
 #include <keyutils.h>
-#include <string.h>
 
 // using int for key_serial_t and unsigned for key_perm_t,
 // as perl doesn't know those and there is no typemap yet
