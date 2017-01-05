@@ -1,7 +1,6 @@
 use strict;
 use warnings;
 use ExtUtils::MakeMaker;
-use lib 'lib';
 
 # Normalize version strings like 6.30_02 to 6.3002,
 # so that we can do numerical comparisons on it.

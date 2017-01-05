@@ -25,6 +25,6 @@ MYMETA.yml
 ^gulpfile.js$
 ^.*\.kdbx$
 ^.htpasswd$
-^KeePass4Web-*
+^KeePass4Web-
 ^doc\/
 ^.travis.yml$

@@ -1,9 +1,5 @@
 package KeePass4Web::Apache2;
 
-BEGIN {
-    $ENV{PERL_INLINE_DIRECTORY} = $ENV{KP_APPDIR};
-}
-
 use Apache2::Const -compile => 'OK';
 use Kernel::Keyring;
 use KeePass4Web::Constant 'KEYRING_NAME';

@@ -75,7 +75,7 @@ This will probably only run under some flavour of Linux. The instructions assume
 
 ##### Libraries / Packages
 
-- build-essential *(building C part of Kernel::Keyring and other XS modules)*
+- build-essential *(building XS modules)*
 - libkeyutils-dev
 - libkeyutils1
 - libapache2-mod-perl2 *(if running mod_perl2 with apache2)*
@@ -86,7 +86,7 @@ This will probably only run under some flavour of Linux. The instructions assume
 ##### Perl modules
 
 ###### Core
-- Inline::C
+- Kernel::Keyring
 - Dancer2
 - Dancer2::Plugin::Ajax
 - Dancer2::Session::Cookie *(default session engine, `Cookie` in config)*
@@ -130,7 +130,6 @@ This will probably only run under some flavour of Linux. The instructions assume
 
 ###### Bundled modules, may become external
 - File::KeePass::Web
-- Kernel::Keyring
 - Auth::LDAP
 - Seafile::Client::REST
 
@@ -138,7 +137,6 @@ This will probably only run under some flavour of Linux. The instructions assume
 For best compatibility, the perl module dependencies should be installed from CPAN. Although this will take some time.
 Alternatively, some modules can be installed from distro packages to save time, e.g. for Ubuntu:
 
-- libinline-perl
 - libdancer2-perl
 - libipc-sharelite-perl
 - libfile-keepass-perl
@@ -251,14 +249,6 @@ Running this app on a web server with mod_perl2 or fcgi is **recommended** but r
 - Remove permissions on sensitive data for everyone else
     > chmod o-rwx /opt/keepass4web/config*.yml /var/log/keepass4web/
 
-- Finally, give web server user access to the .Inline directory to compile C files necessary for Kernel::Keyring
-    > chmod g+w /opt/keepass4web/.Inline
-
-- Optionally, run the compile process beforehand by loading the module once
-    > cd /opt/keepass4web/
-
-    > perl -MKernel::Keyring -Ilib -e ''
-
 - For apache, enable the perl mod and ssl
     > sudo a2enmod perl
 
@@ -272,8 +262,6 @@ Running this app on a web server with mod_perl2 or fcgi is **recommended** but r
 Example config default-ssl:
 
 ```apache
-# Initialises keyring session
-PerlSetEnv KP_APPDIR /opt/keepass4web/.Inline
 PerlSwitches -I/opt/keepass4web/lib/
 PerlModule KeePass4Web::Apache2
 PerlPostConfigHandler KeePass4Web::Apache2::post_config

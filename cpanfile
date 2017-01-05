@@ -1,6 +1,6 @@
+requires 'Kernel::Keyring',             '0.04';
 requires 'YAML',                        0;
 recommends 'YAML::XS',                  0;
-requires 'Inline::C',                   0;
 requires 'Dancer2',                     0;
 requires 'Dancer2::Plugin::Ajax',       0;
 requires 'Dancer2::Core::Time',         0;
@@ -11,7 +11,7 @@ recommends 'JSON::XS',                  0;
 requires 'File::KeePass',               0;
 requires 'Crypt::URandom',              0;
 recommends 'Math::Random::ISAAC::XS',   0;
-requires 'File::LibMagic',              1.07;
+requires 'File::LibMagic',              '1.07';
 requires 'Sereal::Encoder',             0;
 requires 'Sereal::Decoder',             0;
 requires 'Crypt::Mode::CBC',            0;
