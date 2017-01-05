@@ -42,11 +42,6 @@ BEGIN {
         CSRF_TOKEN_LENGTH
         KEYRING_NAME
     /;
-
-    our @EXPORT_OK = qw/
-        CSRF_TOKEN_LENGTH
-        KEYRING_NAME
-    /;
 }
 
 1;
