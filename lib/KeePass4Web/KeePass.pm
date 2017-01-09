@@ -245,7 +245,7 @@ sub clear_db {
 }
 
 
-sub opened {
+sub open {
     eval { ipc_retrieve };
     if ($@) {
         debug session(SESSION_USERNAME), ": $@";

@@ -134,7 +134,7 @@ ajax '/backend_login' => sub {
 
 
 ajax '/db_login' => sub {
-    return failure 'DB already open', MTHD_NOT_ALLOWED if eval { KeePass4Web::KeePass::opened };
+    return failure 'DB already open', MTHD_NOT_ALLOWED if eval { KeePass4Web::KeePass::open };
 
     my $password = param 'password';
     # grabbing the hidden base64 encoded input field
@@ -194,7 +194,7 @@ ajax '/authenticated' => sub {
     }
 
     $auth{backend} = 1 if eval { KeePass4Web::Backend::authenticated };
-    $auth{db}      = 1 if eval { KeePass4Web::KeePass::opened };
+    $auth{db}      = 1 if eval { KeePass4Web::KeePass::open };
 
     # return auth fail if any auth is false
     foreach my $val (values %auth) {
