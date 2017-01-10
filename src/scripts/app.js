@@ -2,7 +2,12 @@ import jQuery from 'jquery'
 import Css from '../style/app.css'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { withRouter, useRouterHistory, Router, Route } from 'react-router'
+
+import Router from 'react-router/lib/Router'
+import Route from 'react-router/lib/Route'
+import useRouterHistory from 'react-router/lib/useRouterHistory'
+import withRouter from 'react-router/lib/withRouter'
+
 import { createHashHistory } from 'history'
 
 import Viewport from './Viewport'
@@ -183,10 +188,10 @@ KeePass4Web.error = function(r, s, e) {
 
 ReactDOM.render(
     <Router history={appHistory}>
-        <Route path='/'              component={View} onEnter={KeePass4Web.checkAuth} />
-        <Route path='/user_login'    component={UserForm} />
-        <Route path='/backend_login' component={BackendForm} />
-        <Route path='/db_login'      component={DBForm} />
+        <Route path="/"              component={View} onEnter={KeePass4Web.checkAuth} />
+        <Route path="/user_login"    component={UserForm} />
+        <Route path="/backend_login" component={BackendForm} />
+        <Route path="/db_login"      component={DBForm} />
     </Router>,
     document.getElementById('app-content')
 )
