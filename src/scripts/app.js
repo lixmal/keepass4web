@@ -181,7 +181,7 @@ KeePass4Web.error = function(r, s, e) {
                 nodeMask: false,
             })
         }
-        alert(e)
+        alert(error)
     }
 }
 
