@@ -90,32 +90,6 @@ KeePass4Web.ajax = function(url, conf) {
     return jQuery.ajax(conf)
 }
 
-KeePass4Web.logout = function(router) {
-    return KeePass4Web.ajax('logout', {
-        success: function() {
-            KeePass4Web.clearStorage()
-            router.replace('/user_login')
-        },
-        error: KeePass4Web.error,
-    })
-}
-
-KeePass4Web.closeDB = function(router, state) {
-    return KeePass4Web.ajax('close_db', {
-        success: function() {
-            // redirect to home, so checks for proper login can be made
-
-            // we haven't changed page, so need a workaround
-            router.replace('/db_login')
-            router.replace({
-                state: state,
-                pathname: '/'
-            })
-        },
-        error: KeePass4Web.error,
-    })
-}
-
 // leave room for implementation changes
 KeePass4Web.clearStorage = function() {
     localStorage.removeItem('settings')

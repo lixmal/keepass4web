@@ -7,17 +7,36 @@ var Bootstrap = require('bootstrap')
 export default class NavBar extends React.Component {
     constructor() {
         super()
-        this.onLogout  = this.onLogout.bind(this)
+        this.onLogout = this.onLogout.bind(this)
         this.onCloseDB = this.onCloseDB.bind(this)
         this.onTimeUp  = this.onTimeUp.bind(this)
     }
 
     onLogout() {
-        this.serverRequest = KeePass4Web.logout(this.props.router)
+        this.serverRequest = KeePass4Web.ajax('logout', {
+            success: function() {
+                KeePass4Web.clearStorage()
+                this.props.router.replace('/user_login')
+            }.bind(this),
+            error: KeePass4Web.error.bind(this),
+        })
     }
 
-    onCloseDB (event, state) {
-        this.serverRequest = KeePass4Web.closeDB(this.props.router, state)
+    onCloseDB(event, state) {
+        this.serverRequest = KeePass4Web.ajax('close_db', {
+            success: function() {
+                // redirect to home, so checks for proper login can be made
+
+                var router = this.props.router
+                // we haven't changed page, so need a workaround
+                router.replace('/db_login')
+                router.replace({
+                    state: state,
+                    pathname: '/'
+                })
+            }.bind(this),
+            error: KeePass4Web.error.bind(this),
+        })
     }
 
     onTimeUp() {

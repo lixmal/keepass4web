@@ -5,7 +5,6 @@ export default class LoginForm extends React.Component {
     constructor() {
         super()
         this.handleLogin = this.handleLogin.bind(this)
-        this.logout = this.logout.bind(this)
         this.abortRequests = this.abortRequests.bind(this)
         this.state = {
             error: false,
@@ -22,10 +21,6 @@ export default class LoginForm extends React.Component {
         }
 
         return refs
-    }
-
-    logout() {
-        window.KeePass4Web.logout(this.props.router)
     }
 
     classes() {
