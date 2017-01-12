@@ -106,6 +106,8 @@ Htpasswd:
 # time till database gets closed (user idle time)
 # user will have to reenter database password/keyfile
 db_session_timeout: '10 minutes'
+# interval to watch for user auth changes (to present proper login page, even when user is idling)
+auth_check_interval: '10 minutes'
 # cipher used for db encryption in shared memory. Basically the Crypt::Cipher::<Name> module
 ipc_cipher: 'AES'
 # segment size in kilobytes to request

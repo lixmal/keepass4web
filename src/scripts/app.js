@@ -26,58 +26,46 @@ const appHistory = useRouterHistory(createHashHistory)()
 // global namespace
 window.KeePass4Web = {}
 
-KeePass4Web.checkAuth = function(nextState, replace) {
-    var auth
-
-    KeePass4Web.ajax('authenticated', {
+KeePass4Web.checkAuth = function(nextState, replace, callback) {
+    return KeePass4Web.ajax('authenticated', {
         error: function(r, s, e) {
+            var auth
+
             if (r.status == 401 && r.responseJSON)
                 auth = r.responseJSON.message
             else
                 KeePass4Web.error(r, s, e)
+
+            if (!auth) return
+
+            // route to proper login page if unauthenticated
+            // in that order
+            if (!auth.user) {
+                KeePass4Web.clearStorage()
+                replace({
+                    pathname: '/user_login'
+                })
+            }
+            else if (!auth.backend) {
+                var template = KeePass4Web.getSettings().template
+                if (template.type === 'redirect') {
+                    window.location = template.url
+                    // stopping javascript execution to prevent redirect loop
+                    throw 'Redirecting'
+                }
+                else if (template.type === 'mask')
+                    replace({
+                        pathname: '/backend_login'
+                    })
+            }
+            else if (!auth.db) {
+                replace({
+                    pathname: '/db_login'
+                })
+            }
         }.bind(this),
-        async: false
+        complete: callback,
     })
-
-
-    if (!auth) return
-
-    // route to proper login page if unauthenticated
-    // in that order
-    var origPath = nextState.location.pathname
-    if (!auth.user && origPath !== '/user_login' ) {
-        KeePass4Web.clearStorage()
-        replace({
-            pathname: 'user_login',
-        })
-    }
-    else if (!auth.backend && origPath !== '/backend_login' ) {
-        var template = KeePass4Web.getSettings().template
-        if (template.type === 'redirect') {
-            window.location = template.url
-            // stopping javascript execution to prevent redirect loop
-            throw 'Redirecting'
-        }
-        else if (template.type === 'mask')
-            replace({
-                pathname: 'backend_login',
-            })
-    }
-    else if (!auth.db && origPath !== '/db_login' ) {
-        replace({
-            pathname: 'db_login',
-        })
-    }
-
-    /*
-    // route to root if user tries to open login page for some reason
-    else if (success && origPath === '/login' ) {
-        replace({
-            pathname: '/',
-            state: { nextPathname: origPath }
-        })
-    }
-    */
 }
 
 // simple wrapper for ajax calls, in case implementation changes
@@ -141,6 +129,7 @@ KeePass4Web.setSettings = function(settings) {
     }
     localStorage.setItem('settings', JSON.stringify(stored))
 }
+
 KeePass4Web.getSettings = function() {
     var settings = localStorage.getItem('settings')
     if (settings)

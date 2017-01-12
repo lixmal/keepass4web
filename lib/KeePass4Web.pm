@@ -20,7 +20,8 @@ use KeePass4Web::Backend;
 use KeePass4Web::Auth;
 use KeePass4Web::Constant;
 
-use constant DB_TIMEOUT      => Dancer2::Core::Time->new(expression => config->{db_session_timeout})->seconds;
+use constant DB_TIMEOUT    => Dancer2::Core::Time->new(expression => config->{db_session_timeout})->seconds;
+use constant AUTH_INTERVAL => Dancer2::Core::Time->new(expression => config->{auth_check_interval})->seconds;
 
 BEGIN {
     # export doesn't work with Dancer2
@@ -102,6 +103,7 @@ ajax '/user_login' => sub {
             cn       => $cn,
             template => KeePass4Web::Backend::credentials_tpl(),
             timeout  => DB_TIMEOUT,
+            interval => AUTH_INTERVAL,
         }
     }
 };
@@ -209,6 +211,7 @@ ajax '/settings' => sub {
         cn       => session(SESSION_CN),
         template => KeePass4Web::Backend::credentials_tpl(),
         timeout  => DB_TIMEOUT,
+        interval => AUTH_INTERVAL,
     };
 };
 
