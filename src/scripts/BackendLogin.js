@@ -2,6 +2,7 @@ import React from 'react'
 import LoginForm from './LoginForm'
 import NavBar from './NavBar'
 import Alert from './Alert'
+import Info from './Info'
 
 export default class BackendLogin extends LoginForm {
     constructor() {
@@ -37,10 +38,11 @@ export default class BackendLogin extends LoginForm {
                 <div className="container">
                     <div className={this.classes()}>
                         <form className="kp-login-inner" onSubmit={this.handleLogin}>
-                            <h4>{tpl.icon_src ? <img className="backend-icon" src={tpl.icon_src} /> : ''}{tpl.login_title}</h4>
+                            <h4>{ tpl.icon_src ? <img className="backend-icon" src={tpl.icon_src} /> : '' } {tpl.login_title}</h4>
                             {fields}
                             <button className="btn btn-block btn-lg btn-success" type="submit">Login</button>
                             <Alert error={this.state.error} />
+                            <Info info={ this.props.location.state && this.props.location.state.info } />
                         </form>
                     </div>
                 </div>

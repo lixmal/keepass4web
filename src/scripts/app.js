@@ -38,11 +38,14 @@ KeePass4Web.checkAuth = function(nextState, replace, callback) {
 
             if (!auth) return
 
+            var state = nextState && nextState.location.state
+
             // route to proper login page if unauthenticated
             // in that order
             if (!auth.user) {
                 KeePass4Web.clearStorage()
                 replace({
+                    state: state,
                     pathname: '/user_login'
                 })
             }
@@ -55,11 +58,13 @@ KeePass4Web.checkAuth = function(nextState, replace, callback) {
                 }
                 else if (template.type === 'mask')
                     replace({
+                        state: state,
                         pathname: '/backend_login'
                     })
             }
             else if (!auth.db) {
                 replace({
+                    state: state,
                     pathname: '/db_login'
                 })
             }
@@ -86,7 +91,7 @@ KeePass4Web.ajax = function(url, conf) {
 }
 
 KeePass4Web.logout = function(router) {
-    KeePass4Web.ajax('logout', {
+    return KeePass4Web.ajax('logout', {
         // need async, else check for authenticated may finish first
         async: false,
         complete: function() {
@@ -97,13 +102,16 @@ KeePass4Web.logout = function(router) {
 }
 
 KeePass4Web.closeDB = function(router) {
-    KeePass4Web.ajax('close_db', {
+    return KeePass4Web.ajax('close_db', {
         complete: function() {
             // redirect to home, so checks for proper login can be made
 
             // we haven't changed page, so need a workaround
             router.replace('/db_login')
-            router.replace('/')
+            router.replace({
+                state: state,
+                pathname: '/'
+            })
         },
     })
 }
@@ -151,8 +159,10 @@ KeePass4Web.error = function(r, s, e) {
         if (this.props && this.props.router) {
             // redirect first, to hide sensitive data
             this.props.router.replace('/db_login')
-            this.props.router.replace('/')
-            alert('Your session expired')
+            this.props.router.replace({
+                state: { info: 'Session expired' },
+                pathname: '/'
+            })
         }
         else {
             alert('Your session expired')

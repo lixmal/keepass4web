@@ -13,16 +13,17 @@ export default class NavBar extends React.Component {
     }
 
     onLogout() {
-        KeePass4Web.logout(this.props.router)
+        this.serverRequest = KeePass4Web.logout(this.props.router)
     }
 
-    onCloseDB () {
-        KeePass4Web.closeDB(this.props.router)
+    onCloseDB (event, state) {
+        this.serverRequest = KeePass4Web.closeDB(this.props.router, state)
     }
 
     onTimeUp() {
-        this.onCloseDB()
-        alert('Database session expired')
+        this.onCloseDB(null, {
+            info: 'Database session expired'
+        })
     }
 
     componentDidMount() {
@@ -30,6 +31,11 @@ export default class NavBar extends React.Component {
             document.getElementById('logout').addEventListener('click', this.onLogout)
             document.getElementById('closeDB').addEventListener('click', this.onCloseDB)
         }
+    }
+
+    componentWillUnmount() {
+        if (this.serverRequest)
+            this.serverRequest.abort()
     }
 
     render() {
@@ -106,5 +112,4 @@ export default class NavBar extends React.Component {
         )
     }
 }
-
 

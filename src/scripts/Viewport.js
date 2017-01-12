@@ -111,7 +111,7 @@ export default class Viewport extends React.Component {
     }
 
     componentDidMount() {
-        this.serverRequest = KeePass4Web.ajax('get_tree', {
+        KeePass4Web.ajax('get_tree', {
             success: function (data) {
                 this.setState({
                     tree: data.data
