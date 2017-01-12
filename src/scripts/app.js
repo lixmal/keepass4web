@@ -92,18 +92,17 @@ KeePass4Web.ajax = function(url, conf) {
 
 KeePass4Web.logout = function(router) {
     return KeePass4Web.ajax('logout', {
-        // need async, else check for authenticated may finish first
-        async: false,
-        complete: function() {
+        success: function() {
+            KeePass4Web.clearStorage()
             router.replace('/user_login')
-        }
+        },
+        error: KeePass4Web.error,
     })
-    KeePass4Web.clearStorage()
 }
 
-KeePass4Web.closeDB = function(router) {
+KeePass4Web.closeDB = function(router, state) {
     return KeePass4Web.ajax('close_db', {
-        complete: function() {
+        success: function() {
             // redirect to home, so checks for proper login can be made
 
             // we haven't changed page, so need a workaround
@@ -113,6 +112,7 @@ KeePass4Web.closeDB = function(router) {
                 pathname: '/'
             })
         },
+        error: KeePass4Web.error,
     })
 }
 
