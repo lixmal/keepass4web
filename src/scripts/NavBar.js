@@ -63,10 +63,10 @@ export default class NavBar extends React.Component {
         if (cn) {
             dropdown = (
                 <ul className="dropdown-menu">
-                    <li><a id="logout" href="#">Logout</a></li>
+                    <li><a id="logout">Logout</a></li>
                     <li role="separator" className="divider"></li>
-                    <li><a id="closeDB" href="#">Close Database</a></li>
-                    <li><a id="saveDB" href="#">Save Database</a></li>
+                    <li><a id="closeDB">Close Database</a></li>
+                    <li><a id="saveDB">Save Database</a></li>
                 </ul>
             )
         }
