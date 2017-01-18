@@ -353,7 +353,7 @@ Web server needs read access to the files.
 KeePass database is stored in the private cloud.
 
 Locations for the database and the key file can be configured in `config_local.yml` (global for all users) or fetched from auth backend (individually per user).
-Location syntax is '\<repository-id>/\<path-to-database>', see `config_local.yml`.dist for an example.
+Location syntax is '\<repository-id>/\<path-to-database>', see `config_local.yml` for an example.
 
 The server uses the (possibly auth backend) credentials to fetch a token from Seafile which is used for consequent requests.
 No user credentials are saved anywhere at any time!
