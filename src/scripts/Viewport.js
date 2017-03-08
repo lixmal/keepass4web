@@ -96,7 +96,7 @@ export default class Viewport extends React.Component {
 
         this.serverRequest = KeePass4Web.ajax('search_entries', {
             data: {
-                term: refs.term.value,
+                term: refs.term.value.replace(/^\s+|\s+$/g, ''),
             },
             success: function (data) {
                 this.setState({
