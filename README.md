@@ -157,6 +157,37 @@ To build the JavaScript part you will also need npm (version 3+ recommended, els
 
 ## INSTALL
 
+- From Ubuntu PPA:
+    - Add the repository, update and install the package
+        > sudo add-apt-repository ppa:lixmal/keepass4web
+
+        > sudo apt-get update
+
+        > sudo apt-get install keepass4web
+
+    - Move to keepass4web dir
+        > cd /usr/share/keepass4web/
+
+    - Follow [MODULE INSTALLATION](#module-installation)
+
+    - Make changes to `/etc/keepass4web/config_local.yml`
+
+- From deb package (Debian/Ubuntu/...):
+    - Install dependencies (also for module installation further below)
+        > sudo apt-get install build-essential libkeyutils-dev libkeyutils1 libmagic1 libmagic-dev libapache2-mod-perl2 cpanminus
+
+    - Grab the deb from github: https://github.com/lixmal/keepass4web/releases
+
+    - Install the package
+        > dpkg -i keepass4web_*.deb
+
+    - Move to keepass4web dir
+        > cd /usr/share/keepass4web/
+
+    - Follow [MODULE INSTALLATION](#module-installation)
+
+    - Make changes to `/etc/keepass4web/config_local.yml`
+
 - From source:
     - Clone the repo to some dir
         > git clone https://github.com/lixmal/keepass4web.git /opt/keepass4web/
@@ -167,8 +198,11 @@ To build the JavaScript part you will also need npm (version 3+ recommended, els
 
 - From dist tar:
     - Grab the latest tar from github: https://github.com/lixmal/keepass4web/releases
-    - Untar it to some directory, e.g. /opt
+
+    - Untar it to some directory, e.g. `/opt`
+
     - Optionally rename it to keepass4web (for consistency with this README)
+
     - Follow [MODULE INSTALLATION](#module-installation), [CONFIGURATION](#configuration), [DEPLOYMENT](#deployment) in that order
 
 
@@ -210,7 +244,7 @@ Output will be a `KeePass4Web-{VERSION}.tar.gz` file, which includes all files r
 
 E.g. for Ubuntu 14.04 with mod_perl2:
 
-- Install distro packages
+- Install distro packages, if you haven't already
     > sudo apt-get install build-essential libkeyutils-dev libkeyutils1 libmagic1 libmagic-dev libapache2-mod-perl2 cpanminus
 
 - Install dependencies with all backends, the recommended modules (for performance) and the suggested session engine (`Cookie`)
