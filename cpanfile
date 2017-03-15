@@ -34,11 +34,10 @@ requires   'Crypt::Mode::CBC',          0;
 requires   'Crypt::Rijndael',           0;
 
 on 'test', sub {
+    requires 'Dancer2',               0;
     requires 'Test::More',            0;
     requires 'Plack::Test',           0;
     requires 'HTTP::Request::Common', 0;
-    requires 'Crypt::URandom',        0;
-    requires 'Encode',                0;
     requires 'MIME::Base64',          0;
     requires 'JSON',                  0;
 };
