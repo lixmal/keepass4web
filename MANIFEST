@@ -110,3 +110,4 @@ t/001_base.t
 t/002_routes_no_session.t
 t/003_routes_no_csrf.t
 t/004_routes.t
+t/env/test.yml

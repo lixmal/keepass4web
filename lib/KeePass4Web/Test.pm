@@ -1,5 +1,10 @@
 package KeePass4Web::Test;
 
+BEGIN {
+    $ENV{DANCER_ENVDIR}      = 't/env';
+    $ENV{DANCER_ENVIRONMENT} = 'test';
+}
+
 use HTTP::Request::Common ();
 use Plack::Test;
 use KeePass4Web;
@@ -62,3 +67,5 @@ sub ajax {
 }
 
 sub csrf_token { $csrf_token = shift }
+
+1;

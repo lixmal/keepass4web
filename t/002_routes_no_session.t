@@ -1,8 +1,8 @@
 use strict;
 use warnings;
 
-use KeePass4Web;
 use KeePass4Web::Test;
+use KeePass4Web;
 use KeePass4Web::Constant;
 use Test::More tests => 23;
 use JSON ();
