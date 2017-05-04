@@ -35,11 +35,11 @@ hook before => sub {
 
     my $session = session SESSION_USERNAME;
     # check session
-    if (!$session and request->dispatch_path !~ m{^(?:/|/user_login|/authenticated)$}) {
+    if (!$session and request->path !~ m{^(?:/|/user_login|/authenticated)$}) {
         halt failure 'Not logged in', UNAUTHORIZED;
     }
     # check CSRF token, with some exceptions
-    elsif ($session and request->dispatch_path !~ m{^(?:/|/csrf_token)$|^/img/icon/}) {
+    elsif ($session and request->path !~ m{^(?:/|/csrf_token)$|^/img/icon/}) {
         my $token = session(SESSION_CSRF) || '';
         my $csrf_param = KeePass4Web::Backend::credentials_tpl;
         my $param_token = request_header('X-CSRF-Token') || param($csrf_param && $csrf_param->{csrf_param} || '') || '' ;
