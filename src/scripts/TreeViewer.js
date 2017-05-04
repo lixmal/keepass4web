@@ -32,12 +32,15 @@ export default class TreeViewer extends React.Component {
 
         return (
             <div className="panel panel-default">
-                <div className="panel-heading">
+                <div
+                    className="treeview-header panel-heading"
+                    onClick={this.props.nodeClick.bind(this, root)}
+                >
                     {nodeIcon}
                     {root.name}
                 </div>
 
-                <ul className='treeview list-group'>
+                <ul className="treeview-body list-group">
                     {children}
                 </ul>
             </div>

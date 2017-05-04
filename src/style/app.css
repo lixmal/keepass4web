@@ -170,22 +170,34 @@ body {
     z-index: 2000;
 }
 
-.treeview .list-group-item {
+.treeview-header {
+    cursor: pointer;
+}
+
+.treeview-header:hover {
+    background-color: #F9F9F9;
+}
+
+.treeview-body {
+    background-color: #EEEEEE;
+}
+
+.treeview-body .list-group-item {
     cursor: pointer;
     padding: 3px 10px;
     background-color: #EEEEEE;
 }
 
-.treeview .list-group-item:hover {
+.treeview-body .list-group-item:hover {
     background-color: #F5F5F5;
 }
 
-.treeview span.indent {
+.treeview-body span.indent {
     margin-left: 10px;
     margin-right: 10px;
 }
 
-.treeview img {
+.treeview-body img {
     margin-left: 10px;
 }
 
