@@ -201,6 +201,10 @@ body {
     margin-left: 10px;
 }
 
+.groupview-body tr {
+    cursor: pointer;
+}
+
 .glyphicon-none:before {
     content: "\2122";
     color: transparent !important;

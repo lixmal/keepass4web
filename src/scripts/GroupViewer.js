@@ -62,7 +62,7 @@ export default class GroupViewer extends React.Component {
                                 </th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody className="groupview-body">
                             {entries}
                         </tbody>
                     </table>
