@@ -72,6 +72,8 @@ Written in Perl and JavaScript.
 ## PREREQUISITES
 
 This will probably only run under some flavour of Linux. The instructions assume a Linux environment.
+Below is a list of required packages and modules to run the application.
+For installation follow [INSTALL](#install).
 
 ##### Libraries / Packages
 
@@ -157,6 +159,8 @@ To build the JavaScript part you will also need npm (version 3+ recommended, els
 
 ## INSTALL
 
+Choose one of the following installation methods (from easiest to most difficult):
+
 - From Ubuntu PPA:
     - Add the repository, update and install the package
         > sudo add-apt-repository ppa:lixmal/keepass4web
@@ -165,12 +169,7 @@ To build the JavaScript part you will also need npm (version 3+ recommended, els
 
         > sudo apt-get install keepass4web
 
-    - Move to keepass4web dir
-        > cd /usr/share/keepass4web/
-
-    - Follow [MODULE INSTALLATION](#module-installation)
-
-    - Make changes to `/etc/keepass4web/config_local.yml`
+    - Make config changes to `/etc/keepass4web/config_local.yml`
 
 - From deb package (Debian/Ubuntu/...):
     - Install dependencies (also for module installation further below)
@@ -188,14 +187,6 @@ To build the JavaScript part you will also need npm (version 3+ recommended, els
 
     - Make changes to `/etc/keepass4web/config_local.yml`
 
-- From source:
-    - Clone the repo to some dir
-        > git clone https://github.com/lixmal/keepass4web.git /opt/keepass4web/
-
-        > cd /opt/keepass4web/
-
-    - Follow [BUILDING](#building), [MODULE INSTALLATION](#module-installation), [CONFIGURATION](#configuration), [DEPLOYMENT](#deployment) in that order
-
 - From dist tar:
     - Grab the latest tar from github: https://github.com/lixmal/keepass4web/releases
 
@@ -204,6 +195,14 @@ To build the JavaScript part you will also need npm (version 3+ recommended, els
     - Optionally rename it to keepass4web (for consistency with this README)
 
     - Follow [MODULE INSTALLATION](#module-installation), [CONFIGURATION](#configuration), [DEPLOYMENT](#deployment) in that order
+
+- From source:
+    - Clone the repo to some dir
+        > git clone https://github.com/lixmal/keepass4web.git /opt/keepass4web/
+
+        > cd /opt/keepass4web/
+
+    - Follow [BUILDING](#building), [MODULE INSTALLATION](#module-installation), [CONFIGURATION](#configuration), [DEPLOYMENT](#deployment) in that order
 
 
 ## BUILDING
