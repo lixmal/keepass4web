@@ -167,7 +167,7 @@ Choose one of the following installation methods (from easiest to most difficult
 
         > sudo apt-get update
 
-        > sudo apt-get install keepass4web
+        > sudo apt-get install keepass4web --install-suggests
 
     - Make config changes to `/etc/keepass4web/config_local.yml`
 
