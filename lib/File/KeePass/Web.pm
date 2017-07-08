@@ -108,48 +108,12 @@ sub lock {
             # encrypt history string pws
             encrypt_strings $crypt, \$key, $hist_e;
 
-            # encrypt history string pws
+            # encrypt history files
             encrypt_files $crypt, \$key, $hist_e;
         }
     }
 
     return \$key;
-}
-
-sub unlock {
-    my ($self, $key, $groups, $cipher) = @_;
-    $groups //= $self->groups;
-
-    foreach my $e ($self->find_entries({}, $groups)) {
-        my ($iv, $ciphertext) = unpack 'a16a*', $e->{password};
-        my $crypt = get_crypt($key, \$iv, $cipher);
-        $e->{password} = $crypt->decrypt($ciphertext);
-        foreach my $key (keys %{$e->{strings}}) {
-            ($iv, $ciphertext) = unpack 'a16a*', $e->{strings}->{$key};
-            $crypt->iv($iv);
-            $e->{strings}->{$key} = $crypt->decrypt($ciphertext) if $e->{protected}->{$key};
-        }
-    }
-    return 1;
-}
-
-sub locked_entry_password {
-    my ($self, $entry, $name, $key, $cipher) = @_;
-    $entry = $self->find_entry({id => $entry}) if !ref $entry;
-    return if !$entry;
-    my $pass;
-    if (!defined $name || $name eq 'password') {
-        my ($iv, $ciphertext) = unpack 'a16a*', $entry->{password};
-        $pass = \get_crypt($key, \$iv, $cipher)->decrypt($ciphertext);
-    }
-    else {
-        my ($iv, $ciphertext) = unpack 'a16a*', $entry->{strings}->{$name};
-        $pass = \get_crypt($key, \$iv, $cipher)->decrypt($ciphertext) if $entry->{protected}->{$name};
-    }
-    $entry->{accessed} = $self->now;
-
-    # returning a reference to avoid copying the password around in memory
-    return $pass;
 }
 
 sub _master_key {
