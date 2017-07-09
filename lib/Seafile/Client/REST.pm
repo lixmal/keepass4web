@@ -22,7 +22,7 @@ use constant OPERATION_FAILED            => 520;
 
 use constant API                         => 'api2/';
 
-our $VERSION = 0.1.0;
+our $VERSION = '0.1.0';
 
 BEGIN {
     require Exporter;
