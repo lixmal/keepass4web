@@ -241,7 +241,7 @@ sub clear_db {
     session SESSION_DB_IV, undef;
 
     # delete db
-    ipc_store undef;
+    ipc_store;
 }
 
 
