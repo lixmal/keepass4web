@@ -403,7 +403,7 @@ ajax '/get_password' => sub {
     if ($entry->{protected}->{$name}) {
         # TODO: update timestamp and usecount, but requires saving back to backend
          my ($iv, $ciphertext) = unpack 'a16a*', $name eq 'password' ? $entry->{password} : $entry->{strings}->{$name};
-         return success undef, Encode::decode_utf8 get_crypt(config->{pw_cipher})->decrypt($ciphertext, retrieve_pw_key, $iv);
+         return success undef, Encode::decode 'UTF-8', get_crypt(config->{pw_cipher})->decrypt($ciphertext, retrieve_pw_key, $iv);
     }
     return failure 'Field is not encrypted';
 };
