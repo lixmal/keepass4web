@@ -134,8 +134,7 @@ sub _master_key {
             : ($pass && $file) ? sha256($pass, $file) : $pass ? $pass : $file;
     $head->{'enc_iv'}     ||= Crypt::URandom::urandom(16);
     $head->{'seed_rand'}  ||= Crypt::URandom::urandom($head->{'version'} && $head->{'version'} eq '2' ? 32 : 16);
-    $head->{'seed_key'}   ||= sha256 Crypt::URandom::urandom(32);
-    #$head->{'seed_key'}   ||= sha256 time.rand(2**32-1).$$;
+    $head->{'seed_key'}   ||= Crypt::URandom::urandom(32);
     $head->{'rounds'} ||= $self->{'rounds'} || ($head->{'version'} && $head->{'version'} eq '2' ? 6_000 : 50_000);
 
     my $cipher = Crypt::Rijndael->new($head->{'seed_key'}, Crypt::Rijndael::MODE_ECB());
@@ -144,7 +143,6 @@ sub _master_key {
     $key = sha256 $head->{'seed_rand'}, $key;
     return $key;
 }
-
 
 sub clear {
     my $self = shift;
