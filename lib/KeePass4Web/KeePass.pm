@@ -7,6 +7,7 @@ use Dancer2::Plugin::Ajax;
 use IPC::ShareLite;
 use Dancer2::Core::Time;
 use Crypt::Mode::CBC;
+use Crypt::Mac::HMAC 'hmac';
 use Crypt::URandom;
 use Sereal::Encoder qw/encode_sereal/;
 use Sereal::Decoder qw/decode_sereal/;
@@ -21,16 +22,22 @@ use Kernel::Keyring;
 use KeePass4Web::Backend;
 use KeePass4Web::Constant;
 
-use constant DB_TIMEOUT      => Dancer2::Core::Time->new(expression => config->{db_session_timeout})->seconds;
-use constant IPC_ID          => config->{ipc_id};
-use constant IPC_SIZE        => config->{ipc_segment_size} * 1024;
-use constant SESSION_PW_KEY  => 'kp:pw_key_';
-use constant SESSION_DB_KEY  => 'kp:db_key_';
-use constant SESSION_DB_IV   => 'kp:db_iv_';
-use constant KEYRING_TYPE    => 'user';
-use constant KEYRING_SESSION => config->{keyring_session};
+use constant DB_TIMEOUT          => Dancer2::Core::Time->new(expression => config->{db_session_timeout})->seconds;
+use constant IPC_ID              => config->{ipc_id};
+use constant IPC_SIZE            => config->{ipc_segment_size} * 1024;
+use constant SESSION_PW_ENC_KEY  => 'kp:pw_enc_key_';
+use constant SESSION_PW_MAC_KEY  => 'kp:pw_mac_key_';
+use constant SESSION_DB_ENC_KEY  => 'kp:db_enc_key_';
+use constant SESSION_DB_MAC_KEY  => 'kp:db_mac_key_';
+use constant KEYRING_TYPE        => 'user';
+use constant KEYRING_SESSION     => config->{keyring_session};
 # all to possessor, none to everyone else
-use constant KEYRING_PERM    => 0x3f000000;
+use constant KEYRING_PERM        => 0x3f000000;
+use constant IPC_UPDATE_WAIT     => 1;
+use constant KEY_SIZE            => 32;
+use constant IV_SIZE             => 16;
+
+my $MAC_SIZE;
 
 BEGIN {
     # preload cipher module, so we don't get any surprises later
@@ -41,6 +48,13 @@ BEGIN {
     $module = 'Crypt::Cipher::' . config->{pw_cipher} . '.pm';
     $module =~ s/::/\//g;
     require $module;
+
+    my $hmac = 'Crypt::Digest::' . config->{hmac_cipher};
+    $module =  "$hmac.pm";
+    $module =~ s/::/\//g;
+    require $module;
+
+    $MAC_SIZE = $hmac->hashsize;
 
     # start keyring session if running standalone
     if (!$ENV{DANCER_APPHANDLER} || $ENV{DANCER_APPHANDLER} eq 'Standalone') {
@@ -64,16 +78,17 @@ sub success {
 }
 
 sub store_keys {
-    my ($pw_key, $db_key, $db_iv) = @_;
+    my ($pw_enc_key, $pw_mac_key, $db_enc_key, $db_mac_key) = @_;
 
     my $user = session SESSION_USERNAME;
 
     # add keys to kernel keyring
-    my $key_id_pw_key = key_add KEYRING_TYPE, SESSION_PW_KEY . $user, $$pw_key, KEYRING_SESSION;
-    my $key_id_db_key = key_add KEYRING_TYPE, SESSION_DB_KEY . $user, $$db_key, KEYRING_SESSION;
-    my $key_id_db_iv  = key_add KEYRING_TYPE, SESSION_DB_IV  . $user, $$db_iv,  KEYRING_SESSION;
+    my $key_id_pw_enc_key  = key_add KEYRING_TYPE, SESSION_PW_ENC_KEY . $user, $$pw_enc_key,  KEYRING_SESSION;
+    my $key_id_pw_mac_key  = key_add KEYRING_TYPE, SESSION_PW_MAC_KEY . $user, $$pw_mac_key,  KEYRING_SESSION;
+    my $key_id_db_enc_key  = key_add KEYRING_TYPE, SESSION_DB_ENC_KEY . $user, $$db_enc_key,  KEYRING_SESSION;
+    my $key_id_db_mac_key  = key_add KEYRING_TYPE, SESSION_DB_MAC_KEY . $user, $$db_mac_key,  KEYRING_SESSION;
 
-    foreach my $key_id (($key_id_pw_key, $key_id_db_key, $key_id_db_iv)) {
+    foreach my $key_id ($key_id_pw_enc_key, $key_id_pw_mac_key, $key_id_db_enc_key, $key_id_db_mac_key) {
         # set timeout on key for security
         key_timeout $key_id, DB_TIMEOUT;
 
@@ -82,33 +97,35 @@ sub store_keys {
     }
 
     # add key ids to user session
-    session SESSION_PW_KEY, $key_id_pw_key;
-    session SESSION_DB_KEY, $key_id_db_key;
-    session SESSION_DB_IV,  $key_id_db_iv;
+    session SESSION_PW_ENC_KEY, $key_id_pw_enc_key;
+    session SESSION_PW_MAC_KEY, $key_id_pw_mac_key;
+    session SESSION_DB_ENC_KEY, $key_id_db_enc_key;
+    session SESSION_DB_MAC_KEY, $key_id_db_mac_key;
 
     return;
 }
 
 sub update_key_timeout {
-    key_timeout session(SESSION_PW_KEY), DB_TIMEOUT;
+    key_timeout session(SESSION_PW_ENC_KEY), DB_TIMEOUT;
+    key_timeout session(SESSION_PW_MAC_KEY), DB_TIMEOUT;
 
-    key_timeout session(SESSION_DB_KEY), DB_TIMEOUT;
-    key_timeout session(SESSION_DB_IV),  DB_TIMEOUT;
+    key_timeout session(SESSION_DB_ENC_KEY), DB_TIMEOUT;
+    key_timeout session(SESSION_DB_MAC_KEY), DB_TIMEOUT;
 
     return;
 }
 
-sub retrieve_pw_key () {
-    return key_get_by_id session SESSION_PW_KEY;
+sub retrieve_pw_keys () {
+    return key_get_by_id(session SESSION_PW_ENC_KEY), key_get_by_id(session SESSION_PW_MAC_KEY);
 }
 
-sub retrieve_db_key () {
+sub retrieve_db_keys () {
     # update key timeout on access
     # database becomes inaccessible after user idled for some time
     # need to update from db keys only since it is always called first
     update_key_timeout;
 
-    return key_get_by_id(session SESSION_DB_KEY), key_get_by_id(session SESSION_DB_IV);
+    return key_get_by_id(session SESSION_DB_ENC_KEY), key_get_by_id(session SESSION_DB_MAC_KEY);
 }
 
 sub get_crypt {
@@ -156,7 +173,7 @@ sub ipc_store {
         };
     }
     else {
-        delete $shared->{session SESSION_USERNAME};
+        delete $shared->{$session};
     }
     $ipc->store(encode_sereal $shared);
 }
@@ -180,18 +197,32 @@ sub fetch_and_decrypt {
     my $kp = File::KeePass::Web->new;
     # keyfile is a ref to a scalar
     # returns key and IV for newly encrypted entry passwords
-    my $pw_key = $kp->parse_db($db, [$password, $keyfile_ref], undef, config->{pw_cipher}, config->{hist_and_bin});
-    my ($db_key, $db_iv) = (Crypt::URandom::urandom(32), Crypt::URandom::urandom(16));
+    my ($pw_enc_key, $pw_mac_key) = $kp->parse_db(
+        $db,
+        [$password, $keyfile_ref],
+        undef, # args
+        config->{pw_cipher},
+        config->{hmac_cipher},
+        config->{hist_and_bin}
+    );
+    my ($db_enc_key, $db_mac_key, $db_iv) = (Crypt::URandom::urandom(KEY_SIZE), Crypt::URandom::urandom(KEY_SIZE), Crypt::URandom::urandom(IV_SIZE));
 
     my $header = $kp->header;
-    delete $header->{custom_icons} if !config->{custom_icons};
+    if (config->{custom_icons}) {
+        $header->{custom_icons_by_uuid} = { map { $_->{UUID} => decode_base64 $_->{Data} } @{$header->{custom_icons}->{Icon}} };
+    }
+    else {
+        delete $header->{custom_icons};
+    }
 
     # reencrypt db and store in shared memory
     # add expiry date in front
-    ipc_store get_crypt->encrypt(encode_sereal($kp->groups), $db_key, $db_iv), $header;
+    my $ciphertext = get_crypt->encrypt(encode_sereal($kp->groups), $db_enc_key, $db_iv);
+    my $mac = hmac config->{hmac_cipher}, $db_mac_key, $db_iv, $ciphertext;
+    ipc_store $db_iv . $mac . $ciphertext, $header;
 
-    # pw key is already a ref
-    store_keys $pw_key, \$db_key, \$db_iv;
+    # pw keys already a ref
+    store_keys $pw_enc_key, $pw_mac_key, \$db_enc_key, \$db_mac_key;
 }
 
 sub ipc_retrieve {
@@ -209,8 +240,8 @@ sub ipc_retrieve {
         # don't update if no less than 1 second passed
         # improves performance, e.g. while fetching icons
         my $diff = $time - $user->{expires};
-        debug "Time diff from last request: $diff";
-        if ($diff > 1) {
+        debug "Time diff to last request: $diff";
+        if ($diff > IPC_UPDATE_WAIT) {
             $user->{expires} = $time;
             $ipc->store(encode_sereal $shared);
         }
@@ -220,25 +251,34 @@ sub ipc_retrieve {
     }
 
     return $user->{header} if $get_header;
-    return decode_sereal get_crypt->decrypt($user->{groups}, retrieve_db_key);
+
+    my ($iv, $mac, $ciphertext) = unpack 'a' . IV_SIZE . "a${MAC_SIZE}a*", $user->{groups};
+
+    my ($enc_key, $mac_key) = retrieve_db_keys;
+    my $calced_mac = hmac config->{hmac_cipher}, $mac_key, $iv, $ciphertext;
+    die "Failed to verify database MAC\n" if $mac ne $calced_mac;
+
+    return decode_sereal get_crypt->decrypt($ciphertext, $enc_key, $iv);
 }
 
 # remove database from shared memory
 sub clear_db {
     # invalidate all key ids
     eval {
-        key_revoke session SESSION_PW_KEY if session SESSION_PW_KEY;
-        key_revoke session SESSION_DB_KEY if session SESSION_DB_KEY;
-        key_revoke session SESSION_DB_IV  if session SESSION_DB_IV;
+        key_revoke session SESSION_PW_ENC_KEY if session SESSION_PW_ENC_KEY;
+        key_revoke session SESSION_PW_MAC_KEY if session SESSION_PW_MAC_KEY;
+        key_revoke session SESSION_DB_ENC_KEY if session SESSION_DB_ENC_KEY;
+        key_revoke session SESSION_DB_MAC_KEY if session SESSION_DB_MAC_KEY;
     };
     if ($@) {
         debug session(SESSION_USERNAME) . ": $@";
     }
 
     # remove keys from user session
-    session SESSION_PW_KEY, undef;
-    session SESSION_DB_KEY, undef;
-    session SESSION_DB_IV, undef;
+    session SESSION_PW_ENC_KEY, undef;
+    session SESSION_PW_MAC_KEY, undef;
+    session SESSION_DB_ENC_KEY, undef;
+    session SESSION_DB_MAC_KEY, undef;
 
     # delete db
     ipc_store;
@@ -402,8 +442,16 @@ ajax '/get_password' => sub {
 
     if ($entry->{protected}->{$name}) {
         # TODO: update timestamp and usecount, but requires saving back to backend
-         my ($iv, $ciphertext) = unpack 'a16a*', $name eq 'password' ? $entry->{password} : $entry->{strings}->{$name};
-         return success undef, Encode::decode 'UTF-8', get_crypt(config->{pw_cipher})->decrypt($ciphertext, retrieve_pw_key, $iv);
+        my ($iv, $mac, $ciphertext) = unpack 'a' . File::KeePass::Web::IV_SIZE . "a${MAC_SIZE}a*",
+            $name eq 'password' ? $entry->{password} : $entry->{strings}->{$name};
+
+        my $aad = $name eq 'password' ? File::KeePass::Web::PASSWORD : File::KeePass::Web::STRING . " $name";
+
+        my ($enc_key, $mac_key) = retrieve_pw_keys;
+        my $calced_mac = hmac config->{hmac_cipher}, $mac_key, $iv, $ciphertext, Encode::encode 'UTF-8', $aad;
+        return failure 'Failed to verify password MAC' if $mac ne $calced_mac;
+
+        return success undef, Encode::decode 'UTF-8', get_crypt(config->{pw_cipher})->decrypt($ciphertext, $enc_key, $iv);
     }
     return failure 'Field is not encrypted';
 };
@@ -428,19 +476,23 @@ ajax '/get_file' => sub {
 
     my $binary = $entry->{binary};
     if (ref $binary eq 'HASH' && exists $binary->{$filename}) {
-         my ($iv, $ciphertext) = unpack 'a16a*', $binary->{$filename};
-         my $file = get_crypt(config->{pw_cipher})->decrypt($ciphertext, retrieve_pw_key, $iv);
+        my ($iv, $mac, $ciphertext) = unpack 'a' . File::KeePass::Web::IV_SIZE . "a${MAC_SIZE}a*", $binary->{$filename};
+        my ($enc_key, $mac_key) = retrieve_pw_keys;
 
-         # set header for download and proper file name, according to rfc5987
-         header 'Content-Disposition' => "attachment; filename*=UTF-8''" . uri_escape_utf8($filename);
-         # guess and set content type
-         # Dancer will convert text/* types to UTF-8 here
-         # TODO: make the module optional
-         my $type = File::LibMagic->new->info_from_string(\$file);
-         # TODO: find out encoding stored in database instead of guessing
-         content_type($type->{mime_with_encoding});
+        my $calced_mac = hmac config->{hmac_cipher}, $mac_key, $iv, $ciphertext, Encode::encode 'UTF-8', File::KeePass::Web::FILE . " $filename";
+        return failure 'Failed to verify file MAC' if $mac ne $calced_mac;
+        my $file = get_crypt(config->{pw_cipher})->decrypt($ciphertext, $enc_key, $iv);
 
-         return eval { Encode::decode $type->{encoding}, $file } || $file;
+        # set header for download and proper file name, according to rfc5987
+        header 'Content-Disposition' => "attachment; filename*=UTF-8''" . uri_escape_utf8 $filename;
+        # guess and set content type
+        # Dancer will convert text/* types to UTF-8 here
+        # TODO: make the module optional
+        my $type = File::LibMagic->new->info_from_string(\$file);
+        # TODO: find out encoding stored in database instead of guessing
+        content_type($type->{mime_with_encoding});
+
+        return eval { Encode::decode $type->{encoding}, $file } // $file;
     }
     return failure 'File not found', NOT_FOUND;
 };
@@ -539,14 +591,7 @@ get '/img/icon/:icon_id' => sub {
         return failure 'Failed to load database', UNAUTHORIZED;
     }
 
-    # TODO: turn icon array into hash on database first load to increase perf
-    my $file;
-    foreach my $icon (@{$header->{custom_icons}->{Icon}}) {
-        if ($icon->{UUID} eq $icon_id) {
-            $file = decode_base64 $icon->{Data};
-            last;
-        }
-    }
+    my $file = $header->{custom_icons_by_uuid}->{$icon_id};
 
     return failure 'Icon not found', NOT_FOUND if !$file;
 

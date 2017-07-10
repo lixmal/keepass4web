@@ -114,6 +114,8 @@ ipc_cipher: 'AES'
 ipc_segment_size: 64
 # cipher used for encryption of all password fields and files
 pw_cipher: 'AES'
+# cipher used for hmac authentication of ciphertext ("encrypt then mac"), requires Crypt::Digest::<Name> module
+hmac_cipher: 'SHA256'
 # SysV IPC key, usually only needs change if it clashes with another application
 ipc_id: 3294967296
 # type of keyring used for Kernel::Keyring

@@ -8,8 +8,18 @@ use Digest::SHA 'sha256';
 use MIME::Base64 ();
 use Crypt::Mode::CBC;
 use Crypt::Rijndael;
+use Crypt::Mac::HMAC 'hmac';
+use Encode ();
 
-our $VERSION = '0.1.1';
+use constant PASSWORD         => '0';
+use constant HISTORY_PASSWORD => '1';
+use constant FILE             => '2';
+use constant STRING           => '3';
+use constant IV_SIZE          => 16;
+use constant KEY_SIZE         => 32;
+
+
+our $VERSION = '0.2.0';
 
 ### Differences to File::KeePass ###
 # Subclassing of methods to support the following:
@@ -18,19 +28,30 @@ our $VERSION = '0.1.1';
 # - Configurable cipher for passwords
 # - Encryption of password in protected fields
 # - Encryption of passwords and protected fields in history
-# - Encryption files in entry and history
+# - Encryption of files in entry and history
 
 
 # TODO: encrypt salsa20 protected stuff after load (decrypt on demand)
 # so no unencrypted passwords ever linger in memory after opening of the db (except for viewing)
 
 sub get_crypt {
-    my ($cipher) = @_;
-    return Crypt::Mode::CBC->new($cipher);
+    my ($enc_cipher, $mac_cipher, $enc_key, $mac_key) = @_;
+
+    my $crypt = Crypt::Mode::CBC->new($enc_cipher);
+    return sub {
+        my ($plaintext, @adata) = @_;
+
+        my $iv = Crypt::URandom::urandom(IV_SIZE);
+
+        my $ciphertext = $crypt->encrypt($plaintext, $$enc_key, $iv);
+        my $mac = hmac $mac_cipher, $$mac_key, $iv, $ciphertext, map { Encode::encode 'UTF-8', $_ } @adata;
+
+        return $iv . $mac . $ciphertext;
+    }
 }
 
 sub parse_db {
-    my ($self, $buffer, $pass, $args, $cipher, $hist_and_bin) = @_;
+    my ($self, $buffer, $pass, $args, $enc_cipher, $mac_cipher, $hist_and_bin) = @_;
     $self = $self->new($args || {}) if !ref $self;
     $buffer = $$buffer if ref $buffer;
 
@@ -46,47 +67,46 @@ sub parse_db {
     $self->{header} = {%$head, %$meta};
     $self->auto_lock($args->{auto_lock}) if exists $args->{auto_lock};
 
-    my $key;
-    $key = $self->lock(undef, $cipher, $hist_and_bin) if $self->auto_lock;
-    return $key;
+    my ($enc_key, $mac_key);
+    ($enc_key, $mac_key) = $self->lock(undef, $enc_cipher, $mac_cipher, $hist_and_bin) if $self->auto_lock;
+    return $enc_key, $mac_key;
 }
 
 sub encrypt_strings {
-    my ($crypt, $key, $entry) = @_;
+    my ($crypt, $entry) = @_;
     my $strings = $entry->{strings};
     my $protected = $entry->{protected};
     foreach my $string (keys %$strings) {
         if ($protected->{$string}) {
-            my $iv = Crypt::URandom::urandom(16);
-            $strings->{$string} = $iv . $crypt->encrypt($strings->{$string}, $$key, $iv);
+            $strings->{$string} = $crypt->($strings->{$string}, STRING . " $string");
         }
     }
 }
 
 sub encrypt_files {
-    my ($crypt, $key, $entry) = @_;
+    my ($crypt, $entry) = @_;
     my $files = $entry->{binary};
-    foreach my $file (keys %$files) {
-        my $iv = Crypt::URandom::urandom(16);
-        $files->{$file} = $iv . $crypt->encrypt($files->{$file}, $$key, $iv);
+    foreach my $filename (keys %$files) {
+        $files->{$filename} = $crypt->($files->{$filename}, FILE . " $filename");
     }
 }
 
 sub lock {
-    my ($self, $groups, $cipher, $hist_and_bin) = @_;
+    my ($self, $groups, $enc_cipher, $mac_cipher, $hist_and_bin) = @_;
     $groups //= $self->groups;
 
-    my $key = Crypt::URandom::urandom(32);
-    my $iv  = Crypt::URandom::urandom(16);
+    my $enc_key = Crypt::URandom::urandom(KEY_SIZE);
+    my $mac_key = Crypt::URandom::urandom(KEY_SIZE);
 
-    my $crypt = get_crypt($cipher);
+    my $crypt = get_crypt $enc_cipher, $mac_cipher, \$enc_key, \$mac_key;
+
     foreach my $e ($self->find_entries({}, $groups)) {
         # encrypt main pw
         $e->{password} //= '';
-        $e->{password} = $iv . $crypt->encrypt($e->{password}, $key, $iv);
+        $e->{password} = $crypt->($e->{password}, PASSWORD);
 
         # encrypt string pws
-        encrypt_strings $crypt, \$key, $e;
+        encrypt_strings $crypt, $e;
 
         # don't include history and files if requested
         unless ($hist_and_bin) {
@@ -96,24 +116,24 @@ sub lock {
         }
 
         # encrypt files
-        encrypt_files $crypt, \$key, $e;
+        encrypt_files $crypt, $e;
 
         # encrypt all history pws, so we don't leak any data
         foreach my $hist_e (@{$e->{history}}) {
             # encrypt history main pw
             $hist_e->{password} //= '';
-            $iv = Crypt::URandom::urandom(16);
-            $hist_e->{password} = $iv . $crypt->encrypt($hist_e->{password}, $key, $iv);
+            # TODO: use unique string per history entry
+            $hist_e->{password} = $crypt->($hist_e->{password}, PASSWORD);
 
             # encrypt history string pws
-            encrypt_strings $crypt, \$key, $hist_e;
+            encrypt_strings $crypt, $hist_e;
 
             # encrypt history files
-            encrypt_files $crypt, \$key, $hist_e;
+            encrypt_files $crypt, $hist_e;
         }
     }
 
-    return \$key;
+    return \$enc_key, \$mac_key;
 }
 
 sub _master_key {
@@ -132,9 +152,9 @@ sub _master_key {
     my $key = (!$pass && !$file) ? die "One or both of password or key file must be passed\n"
             : ($head->{'version'} && $head->{'version'} eq '2') ? sha256(grep {$_} $pass, $file)
             : ($pass && $file) ? sha256($pass, $file) : $pass ? $pass : $file;
-    $head->{'enc_iv'}     ||= Crypt::URandom::urandom(16);
+    $head->{'enc_iv'}     ||= Crypt::URandom::urandom(IV_SIZE);
     $head->{'seed_rand'}  ||= Crypt::URandom::urandom($head->{'version'} && $head->{'version'} eq '2' ? 32 : 16);
-    $head->{'seed_key'}   ||= Crypt::URandom::urandom(32);
+    $head->{'seed_key'}   ||= Crypt::URandom::urandom(KEY_SIZE);
     $head->{'rounds'} ||= $self->{'rounds'} || ($head->{'version'} && $head->{'version'} eq '2' ? 6_000 : 50_000);
 
     my $cipher = Crypt::Rijndael->new($head->{'seed_key'}, Crypt::Rijndael::MODE_ECB());
