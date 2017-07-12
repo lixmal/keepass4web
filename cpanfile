@@ -15,7 +15,9 @@ requires 'File::LibMagic',              '1.07';
 requires 'Sereal::Encoder',             0;
 requires 'Sereal::Decoder',             0;
 requires 'Crypt::Mode::CBC',            0;
+requires 'Crypt::Mac::HMAC',            0;
 recommends 'Crypt::Cipher::AES',        0;
+recommends 'Crypt::Digest::SHA256',     0;
 requires 'URI::Escape',                 0;
 requires 'MIME::Base64',                0;
 requires 'Encode',                      0;
@@ -30,7 +32,6 @@ recommends 'HTTP::XSHeaders',           0;
 
 # explicit requirements of File::KeePass::Web
 requires   'Digest::SHA',               0;
-requires   'Crypt::Mode::CBC',          0;
 requires   'Crypt::Rijndael',           0;
 
 on 'test', sub {
