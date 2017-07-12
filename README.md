@@ -162,12 +162,12 @@ To build the JavaScript part you will also need npm (version 3+ recommended, els
 Choose one of the following installation methods (from easiest to most difficult):
 
 - From Ubuntu PPA:
-    - Add the repository, update and install the package
+    - Add the repository, update and install the package (and packages for default backends)
         > sudo add-apt-repository ppa:lixmal/keepass4web
 
         > sudo apt-get update
 
-        > sudo apt-get install keepass4web --install-suggests
+        > sudo apt-get install libapache2-mod-perl2 libnet-ldap-perl libdancer2-session-cookie-perl keepass4web
 
     - Make config changes to `/etc/keepass4web/config_local.yml`
 
@@ -362,7 +362,7 @@ Useful when the database backend server uses the same auth backend internally.
 
 ##### LDAP
 
-Attempts to authenticate the user against an LDAP server (Microsoft AD, 389 Directory Server, OpenLDAP, ...)
+Attempts to authenticate the user against an (external, not built-in) LDAP server (Microsoft AD, 389 Directory Server, OpenLDAP, ...)
 
 ##### Htpasswd
 
