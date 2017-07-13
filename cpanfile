@@ -1,16 +1,11 @@
 requires 'Kernel::Keyring',             '0.04';
-requires 'YAML',                        0;
-recommends 'YAML::XS',                  0;
 requires 'Dancer2',                     0;
 requires 'Dancer2::Plugin::Ajax',       0;
 requires 'Dancer2::Core::Time',         0;
 suggests 'Dancer2::Session::Cookie',    0;
 requires 'IPC::ShareLite',              0;
-requires 'JSON',                        0;
-recommends 'JSON::XS',                  0;
 requires 'File::KeePass',               0;
 requires 'Crypt::URandom',              0;
-recommends 'Math::Random::ISAAC::XS',   0;
 requires 'File::LibMagic',              '1.07';
 requires 'Sereal::Encoder',             0;
 requires 'Sereal::Decoder',             0;
@@ -21,14 +16,6 @@ recommends 'Crypt::Digest::SHA256',     0;
 requires 'URI::Escape',                 0;
 requires 'MIME::Base64',                0;
 requires 'Encode',                      0;
-recommends 'Class::Load::XS',           0;
-recommends 'URL::Encode::XS',           0;
-recommends 'CGI::Deurl::XS',            0;
-recommends 'HTTP::Parser::XS',          0;
-recommends 'Scope::Upper',              0;
-recommends 'Class::XSAccessor',         0;
-recommends 'HTTP::XSCookies',           0;
-recommends 'HTTP::XSHeaders',           0;
 
 # explicit requirements of File::KeePass::Web
 requires   'Digest::SHA',               0;
@@ -54,6 +41,7 @@ feature 'Htpasswd', 'Htpasswd authentication backend' => sub {
 };
 
 feature 'Seafile', 'Seafile database backend' => sub {
+    requires 'JSON',         0;
     requires 'REST::Client', 0;
     requires 'URI::Escape',  0;
 };

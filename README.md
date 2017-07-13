@@ -83,7 +83,7 @@ For installation follow [INSTALL](#install).
 - libapache2-mod-perl2 *(if running mod_perl2 with apache2)*
 - libmagic1
 - libmagic-dev
-- cpanminus
+- cpanminus *(module installation)*
 
 ##### Perl modules
 
@@ -93,14 +93,14 @@ For installation follow [INSTALL](#install).
 - Dancer2::Plugin::Ajax
 - Dancer2::Session::Cookie *(default session engine, `Cookie` in config)*
 - IPC::ShareLite
-- JSON
 - File::KeePass
-- Crypt::URandom *(cryptographically secure PRNG)*
-- Math::Random::ISAAC::XS
+- Crypt::URandom
 - File::LibMagic
 - Sereal::Encoder
 - Sereal::Decoder
 - Crypt::Mode::CBC
+- Crypt::Mac::HMAC
+- URI::Escape
 
 ###### Backend LDAP
 - Net::LDAP
@@ -110,49 +110,23 @@ For installation follow [INSTALL](#install).
 - Authen::Htpasswd  *(md5, sha1, crypt, plain)*
 
 ###### Backend Seafile
+- JSON
 - REST::Client
+- URI::Escape
 
 ###### Backend LWP
 - LWP::UserAgent
+- HTTP::Request::Common
+- URI::Escape
 
 ###### Backend Dropbox
 - WebService::Dropbox
-
-###### Performance
-- JSON::XS
-- Class::Load::XS
-- URL::Encode::XS
-- CGI::Deurl::XS
-- HTTP::Parser::XS
-- Scope::Upper
-- Class::XSAccessor
-- HTTP::XSCookies
-- HTTP::XSHeaders
-- YAML::XS
 
 ###### Bundled modules, may become external
 - File::KeePass::Web
 - Auth::LDAP
 - Seafile::Client::REST
 
-
-For best compatibility, the perl module dependencies should be installed from CPAN. Although this will take some time.
-Alternatively, some modules can be installed from distro packages to save time, e.g. for Ubuntu:
-
-- libdancer2-perl
-- libipc-sharelite-perl
-- libfile-keepass-perl
-- libcrypt-urandom-perl
-- libmath-random-isaac-xs-perl
-- libsereal-encoder-perl
-- libsereal-decoder-perl
-- libplack-perl
-- libjson-perl
-- libnet-ldap-perl
-- libwww-perl
-- libjson-xs-perl
-- libhttp-parser-xs-perl
-- libclass-load-xs-perl
 
 To build the JavaScript part you will also need npm (version 3+ recommended, else your node_modules directory will explode!) and therefore `Node.js`
 
