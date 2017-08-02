@@ -6,6 +6,7 @@ use parent 'KeePass4Web::Auth::Abstract';
 use Dancer2 appname => 'KeePass4Web';
 
 use KeePass4Web::Constant;
+use KeePass4Web::KeePass;
 
 sub BEGIN {
     my $hash_algo = config->{Htpasswd}->{hash};
@@ -86,23 +87,6 @@ sub _other {
     return ($pwhash, $storedhash);
 }
 
-# constant time comparison to mitigate timing attack
-sub equal {
-    my ($string1, $string2) = @_;
-
-    # split characters of string
-    my @chars1 = split //, $string1;
-    my @chars2 = split //, $string2;
-
-    # result stays 0 as long as characters match
-    my $result = 0;
-    for (my $i = 0; $i < length $string1; $i++) {
-        $result |= $chars1[$i] ^ $chars2[$i];
-    }
-
-    return !$result;
-}
-
 sub auth {
     my ($self, $username, $password) = @_;
     my $hash_algo = config->{Htpasswd}->{hash};
@@ -122,10 +106,7 @@ sub auth {
     die "Failed to generate hash for supplied password\n" if !defined $pwhash;
     die "Failed to get stored hash\n" if !defined $storedhash;
 
-    # in case hash lengths don't match, which would be odd
-    die "Password length does not match\n" if length $pwhash != length $storedhash;
-
-    die "Passwords do not match\n" if !equal $pwhash, $storedhash;
+    die "Passwords do not match\n" if !KeePass4Web::KeePass::equal $pwhash, $storedhash;
 
     return 1;
 }

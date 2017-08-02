@@ -65,6 +65,18 @@ BEGIN {
     }
 }
 
+sub equal {
+	my ($string1, $string2) = @_;
+
+	return if !defined $string1 or !defined $string2;
+
+	my $diff = length $string1 ^ length $string2;
+	for (my $i = 0; $i < length $string1 && $i < length $string2; $i++) {
+		$diff |= ord(substr $string1, $i) ^ ord(substr $string2, $i);
+	}
+	return !$diff;
+}
+
 sub failure {
     status $_[1] || BAD_REQUEST;
     content_type 'application/json';
@@ -256,7 +268,7 @@ sub ipc_retrieve {
 
     my ($enc_key, $mac_key) = retrieve_db_keys;
     my $calced_mac = hmac config->{hmac_cipher}, $mac_key, $iv, $ciphertext;
-    die "Failed to verify database MAC\n" if $mac ne $calced_mac;
+    die "Failed to verify database MAC\n" if !equal $mac, $calced_mac;
 
     return decode_sereal get_crypt->decrypt($ciphertext, $enc_key, $iv);
 }
@@ -449,7 +461,7 @@ ajax '/get_password' => sub {
 
         my ($enc_key, $mac_key) = retrieve_pw_keys;
         my $calced_mac = hmac config->{hmac_cipher}, $mac_key, $iv, $ciphertext, Encode::encode 'UTF-8', $aad;
-        return failure 'Failed to verify password MAC' if $mac ne $calced_mac;
+        return failure 'Failed to verify password MAC' if !equal $mac, $calced_mac;
 
         return success undef, Encode::decode 'UTF-8', get_crypt(config->{pw_cipher})->decrypt($ciphertext, $enc_key, $iv);
     }
@@ -480,7 +492,7 @@ ajax '/get_file' => sub {
         my ($enc_key, $mac_key) = retrieve_pw_keys;
 
         my $calced_mac = hmac config->{hmac_cipher}, $mac_key, $iv, $ciphertext, Encode::encode 'UTF-8', File::KeePass::Web::FILE . " $filename";
-        return failure 'Failed to verify file MAC' if $mac ne $calced_mac;
+        return failure 'Failed to verify file MAC' if !equal $mac, $calced_mac;
         my $file = get_crypt(config->{pw_cipher})->decrypt($ciphertext, $enc_key, $iv);
 
         # set header for download and proper file name, according to rfc5987
