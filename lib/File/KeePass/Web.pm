@@ -44,7 +44,7 @@ sub get_crypt {
         my $iv = Crypt::URandom::urandom(IV_SIZE);
 
         my $ciphertext = $crypt->encrypt($plaintext, $$enc_key, $iv);
-        my $mac = hmac $mac_cipher, $$mac_key, $iv, $ciphertext, map { Encode::encode 'UTF-8', $_ } @adata;
+        my $mac = hmac $mac_cipher, $$mac_key, $enc_cipher, $iv, $ciphertext, map { Encode::encode 'UTF-8', $_ } @adata;
 
         return $iv . $mac . $ciphertext;
     }

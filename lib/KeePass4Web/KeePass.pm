@@ -230,7 +230,7 @@ sub fetch_and_decrypt {
     # reencrypt db and store in shared memory
     # add expiry date in front
     my $ciphertext = get_crypt->encrypt(encode_sereal($kp->groups), $db_enc_key, $db_iv);
-    my $mac = hmac config->{hmac_cipher}, $db_mac_key, $db_iv, $ciphertext;
+    my $mac = hmac config->{hmac_cipher}, $db_mac_key, config->{ipc_cipher}, $db_iv, $ciphertext;
     ipc_store $db_iv . $mac . $ciphertext, $header;
 
     # pw keys already a ref
@@ -267,7 +267,7 @@ sub ipc_retrieve {
     my ($iv, $mac, $ciphertext) = unpack 'a' . IV_SIZE . "a${MAC_SIZE}a*", $user->{groups};
 
     my ($enc_key, $mac_key) = retrieve_db_keys;
-    my $calced_mac = hmac config->{hmac_cipher}, $mac_key, $iv, $ciphertext;
+    my $calced_mac = hmac config->{hmac_cipher}, $mac_key, config->{ipc_cipher}, $iv, $ciphertext;
     die "Failed to verify database MAC\n" if !equal $mac, $calced_mac;
 
     return decode_sereal get_crypt->decrypt($ciphertext, $enc_key, $iv);
@@ -460,7 +460,7 @@ ajax '/get_password' => sub {
         my $aad = $name eq 'password' ? File::KeePass::Web::PASSWORD : File::KeePass::Web::STRING . " $name";
 
         my ($enc_key, $mac_key) = retrieve_pw_keys;
-        my $calced_mac = hmac config->{hmac_cipher}, $mac_key, $iv, $ciphertext, Encode::encode 'UTF-8', $aad;
+        my $calced_mac = hmac config->{hmac_cipher}, $mac_key, config->{pw_cipher}, $iv, $ciphertext, Encode::encode 'UTF-8', $aad;
         return failure 'Failed to verify password MAC' if !equal $mac, $calced_mac;
 
         return success undef, Encode::decode 'UTF-8', get_crypt(config->{pw_cipher})->decrypt($ciphertext, $enc_key, $iv);
@@ -491,7 +491,7 @@ ajax '/get_file' => sub {
         my ($iv, $mac, $ciphertext) = unpack 'a' . File::KeePass::Web::IV_SIZE . "a${MAC_SIZE}a*", $binary->{$filename};
         my ($enc_key, $mac_key) = retrieve_pw_keys;
 
-        my $calced_mac = hmac config->{hmac_cipher}, $mac_key, $iv, $ciphertext, Encode::encode 'UTF-8', File::KeePass::Web::FILE . " $filename";
+        my $calced_mac = hmac config->{hmac_cipher}, $mac_key, config->{pw_cipher}, $iv, $ciphertext, Encode::encode 'UTF-8', File::KeePass::Web::FILE . " $filename";
         return failure 'Failed to verify file MAC' if !equal $mac, $calced_mac;
         my $file = get_crypt(config->{pw_cipher})->decrypt($ciphertext, $enc_key, $iv);
 
