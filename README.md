@@ -141,7 +141,7 @@ Choose one of the following installation methods (from easiest to most difficult
 
         > sudo apt-get update
 
-        > sudo apt-get install libapache2-mod-perl2 libnet-ldap-perl libdancer2-session-cookie-perl keepass4web
+        > sudo apt-get install apache2 libapache2-mod-perl2 libnet-ldap-perl libdancer2-session-cookie-perl keepass4web
 
     - Make config changes to `/etc/keepass4web/config_local.yml`
 
