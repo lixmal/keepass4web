@@ -1,5 +1,5 @@
 import React from 'react'
-import Clipboard from 'clipboard-js'
+import Clipboard from 'clipboard-polyfill'
 import Classnames from 'classnames'
 
 export default class NodeViewer extends React.Component {
@@ -61,7 +61,7 @@ export default class NodeViewer extends React.Component {
             // need same thread here, else copy won't work by browser restrictions
             async: false,
             success: function (data) {
-                Clipboard.copy(data.data)
+                Clipboard.writeText(data.data)
             }.bind(this),
             error: KeePass4Web.error.bind(this),
         })

@@ -34,7 +34,7 @@
     "dependencies": {
         "bootstrap": "^3.3.7",
         "classnames": "^2.2.5",
-        "clipboard-js": "^0.3.3",
+        "clipboard-polyfill": "^2.1.4",
         "jquery": "^3.1.1",
         "react": "~15.4.2",
         "react-dom": "~15.4.2",
