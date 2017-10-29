@@ -14,7 +14,7 @@ export default class NavBar extends React.Component {
 
     onLogout() {
         this.serverRequest = KeePass4Web.ajax('logout', {
-            success: function() {
+            success: function () {
                 KeePass4Web.clearStorage()
                 this.props.router.replace('/user_login')
             }.bind(this),
@@ -24,7 +24,7 @@ export default class NavBar extends React.Component {
 
     onCloseDB(event, state) {
         this.serverRequest = KeePass4Web.ajax('close_db', {
-            success: function() {
+            success: function () {
                 // redirect to home, so checks for proper login can be made
 
                 var router = this.props.router

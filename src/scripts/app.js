@@ -26,9 +26,9 @@ const appHistory = useRouterHistory(createHashHistory)()
 // global namespace
 window.KeePass4Web = {}
 
-KeePass4Web.checkAuth = function(nextState, replace, callback) {
+KeePass4Web.checkAuth = function (nextState, replace, callback) {
     return KeePass4Web.ajax('authenticated', {
-        error: function(r, s, e) {
+        error: function (r, s, e) {
             var auth
 
             if (r.status == 401 && r.responseJSON)
@@ -74,7 +74,7 @@ KeePass4Web.checkAuth = function(nextState, replace, callback) {
 }
 
 // simple wrapper for ajax calls, in case implementation changes
-KeePass4Web.ajax = function(url, conf) {
+KeePass4Web.ajax = function (url, conf) {
     conf.url  = url
 
     // set defaults
@@ -91,20 +91,20 @@ KeePass4Web.ajax = function(url, conf) {
 }
 
 // leave room for implementation changes
-KeePass4Web.clearStorage = function() {
+KeePass4Web.clearStorage = function () {
     localStorage.removeItem('settings')
     localStorage.removeItem('CSRFToken')
 }
 
-KeePass4Web.setCSRFToken = function(CSRFToken) {
+KeePass4Web.setCSRFToken = function (CSRFToken) {
     localStorage.setItem('CSRFToken', CSRFToken || '')
 }
 
-KeePass4Web.getCSRFToken = function() {
+KeePass4Web.getCSRFToken = function () {
     return localStorage.getItem('CSRFToken') || null
 }
 
-KeePass4Web.setSettings = function(settings) {
+KeePass4Web.setSettings = function (settings) {
     var stored = KeePass4Web.getSettings()
     for (var k in settings) {
         stored[k] = settings[k]
@@ -112,7 +112,7 @@ KeePass4Web.setSettings = function(settings) {
     localStorage.setItem('settings', JSON.stringify(stored))
 }
 
-KeePass4Web.getSettings = function() {
+KeePass4Web.getSettings = function () {
     var settings = localStorage.getItem('settings')
     if (settings)
         return JSON.parse(settings)
@@ -120,12 +120,12 @@ KeePass4Web.getSettings = function() {
 }
 
 KeePass4Web.timer = false
-KeePass4Web.restartTimer = function(val) {
+KeePass4Web.restartTimer = function (val) {
     if (typeof val !== 'undefined' ) KeePass4Web.timer = val
     return KeePass4Web.timer
 }
 
-KeePass4Web.error = function(r, s, e) {
+KeePass4Web.error = function (r, s, e) {
     // ignore aborted requests
     if (e === 'abort')
         return

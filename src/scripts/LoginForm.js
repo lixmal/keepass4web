@@ -50,7 +50,7 @@ export default class LoginForm extends React.Component {
             mask: true
         })
         this.serverRequest = KeePass4Web.ajax(this.url, {
-            success: function(data) {
+            success: function (data) {
                 if (data && data.data) {
                     KeePass4Web.setCSRFToken(data.data.csrf_token)
                     KeePass4Web.setSettings(data.data.settings)
@@ -61,7 +61,7 @@ export default class LoginForm extends React.Component {
                 })
             }.bind(this),
             data: this.transformRefs(this.refs),
-            error: function(r, s, e) {
+            error: function (r, s, e) {
                 var errmsg = s
 
                 // error code sent by server
@@ -74,7 +74,7 @@ export default class LoginForm extends React.Component {
                     mask: false
                 })
             }.bind(this),
-            complete: function() {
+            complete: function () {
                 this.serverRequest = null
 
                 // even on fail this will redirect to root and check which authentication is required
@@ -87,7 +87,7 @@ export default class LoginForm extends React.Component {
 
     componentDidMount() {
         // default 10 minutes
-        this.timerId = setInterval(function() {
+        this.timerId = setInterval(function () {
             // don't interfere with ongoing login process
             if (this.serverRequest) return
 
