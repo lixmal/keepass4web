@@ -26,6 +26,7 @@ export default class Viewport extends React.Component {
     }
 
     onGroupSelect(group) {
+        if (!group || !group.id) return
         if (this.state.group && this.state.group.id && group.id === this.state.group.id) return
 
         if (this.serverRequest)
@@ -53,6 +54,7 @@ export default class Viewport extends React.Component {
     }
 
     onSelect(entry) {
+        if (!entry || !entry.id) return
         // ignore already selected
         if (this.state.entry && this.state.entry.id && entry.id === this.state.entry.id) return
 
