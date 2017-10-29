@@ -270,7 +270,8 @@ sub ipc_retrieve {
     my $calced_mac = hmac config->{hmac_cipher}, $mac_key, config->{ipc_cipher}, $iv, $ciphertext;
     die "Failed to verify database MAC\n" if !equal $mac, $calced_mac;
 
-    return decode_sereal get_crypt->decrypt($ciphertext, $enc_key, $iv);
+    my $kp = decode_sereal get_crypt->decrypt($ciphertext, $enc_key, $iv);
+    return wantarray ? ($user->{header}, $kp) : $kp;
 }
 
 # remove database from shared memory
@@ -343,12 +344,14 @@ sub debloat {
 }
 
 ajax '/get_tree' => sub {
-    my $kp = eval { ipc_retrieve->[0] };
+    my ($header, $kp) = eval { ipc_retrieve };
     if ($@) {
         debug session(SESSION_USERNAME), ": $@";
         clear_db;
         return failure 'Failed to load database', UNAUTHORIZED;
     }
+    # get keepass root
+    $kp = $kp->[0];
 
     my $children = [];
     my $tree = {
@@ -358,6 +361,7 @@ ajax '/get_tree' => sub {
         custom_icon_uuid => $kp->{custom_icon_uuid},
         children         => $children,
         expanded         => $kp->{expanded} ? \1 : \0,
+        last_selected    => $header->{last_selected_group},
     };
 
     my $counter = 0;
