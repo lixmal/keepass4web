@@ -66,7 +66,6 @@ export default class NavBar extends React.Component {
                     <li><a id="logout">Logout</a></li>
                     <li role="separator" className="divider"></li>
                     <li><a id="closeDB">Close Database</a></li>
-                    <li><a id="saveDB">Save Database</a></li>
                 </ul>
             )
         }
