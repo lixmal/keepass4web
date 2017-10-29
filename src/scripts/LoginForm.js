@@ -56,9 +56,6 @@ export default class LoginForm extends React.Component {
                     KeePass4Web.setSettings(data.data.settings)
                 }
 
-                this.setState({
-                    mask: false
-                })
             }.bind(this),
             data: this.transformRefs(this.refs),
             error: function (r, s, e) {
@@ -77,6 +74,12 @@ export default class LoginForm extends React.Component {
             complete: function () {
                 this.serverRequest = null
 
+                var router = this.props.router
+                router.setRouteLeaveHook(router.getCurrentLocation(), function () {
+                    this.setState({
+                        mask: false
+                    })
+                })
                 // even on fail this will redirect to root and check which authentication is required
                 // in case some previous auth expired while the user took too much time
                 this.props.router.replace('/')
