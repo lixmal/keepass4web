@@ -9,13 +9,14 @@ export default class NodeViewer extends React.Component {
     }
 
     setHide(target, hide, name, data) {
-        if (!this.props.entry) return
+        var entry = this.props.entry
+        if (!entry) return
         if (typeof data === 'undefined')
             data = null
         if (!name || name === 'password')
-            this.props.entry.password = data
-        else
-            this.props.entry.strings[name] = data
+            entry.password = data
+        else if (entry.strings)
+            entry.strings[name] = data
 
         if (hide === true)
             target.childNodes[0].className = 'glyphicon glyphicon-eye-open'
