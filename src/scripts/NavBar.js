@@ -92,12 +92,17 @@ export default class NavBar extends React.Component {
             let timeout = KeePass4Web.getSettings().timeout
             if (timeout) {
                 timer = (
-                    <Timer
-                        format='{hh}:{mm}:{ss}'
-                        timeout={timeout}
-                        onTimeUp={this.onTimeUp}
-                        restart={KeePass4Web.restartTimer}
-                    />
+                    <div className="navbar-text">
+                        <Timer
+                            format='{hh}:{mm}:{ss}'
+                            timeout={timeout}
+                            onTimeUp={this.onTimeUp}
+                            restart={KeePass4Web.restartTimer}
+                        />
+                        <label type="button" className="btn btn-secondary btn-xs" onClick={KeePass4Web.restartTimer.bind(this, true)}>
+                            <span className="glyphicon glyphicon-repeat"></span>
+                        </label>
+                    </div>
                 )
             }
         }
@@ -112,7 +117,7 @@ export default class NavBar extends React.Component {
                         <span className="icon-bar"></span>
                     </button>
                     <a className="navbar-brand" href="#">KeePass 4 Web</a>
-                    <div className="navbar-text">{timer}</div>
+                    {timer}
                 </div>
                 <div className="collapse navbar-collapse" id="navbar-collapse-1">
                     {search}
