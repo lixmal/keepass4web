@@ -175,14 +175,14 @@ export default class NodeViewer extends React.Component {
                                     <button
                                         onClick={this.PWHandler.bind(this, string)}
                                         type="button"
-                                        className="btn btn-default"
+                                        className="btn btn-default btn-sm"
                                     >
                                         <span className="glyphicon glyphicon-eye-open"></span>
                                     </button>
                                     <button
                                         onClick={this.copyHandler.bind(this, string)}
                                         type="button"
-                                        className="btn btn-default"
+                                        className="btn btn-default btn-sm"
                                     >
                                         <span className="glyphicon glyphicon-copy"></span>
                                     </button>
@@ -215,7 +215,7 @@ export default class NodeViewer extends React.Component {
                                 <button
                                     onClick={this.downloadHandler.bind(this, file)}
                                     type="button"
-                                    className="btn btn-default"
+                                    className="btn btn-default btn-sm"
                                 >
                                     <span className="glyphicon glyphicon-download-alt"></span>
                                 </button>
@@ -269,14 +269,14 @@ export default class NodeViewer extends React.Component {
                                         <button
                                             onClick={this.PWHandler.bind(this, 'password')}
                                             type="button"
-                                            className="btn btn-default"
+                                            className="btn btn-default btn-sm"
                                         >
                                             <span className="glyphicon glyphicon-eye-open"></span>
                                         </button>
                                         <button
                                             onClick={this.copyHandler.bind(this, 'password')}
                                             type="button"
-                                            className="btn btn-default"
+                                            className="btn btn-default btn-sm"
                                         >
                                             <span className="glyphicon glyphicon-copy"></span>
                                         </button>
