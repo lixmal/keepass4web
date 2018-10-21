@@ -1,5 +1,5 @@
 import React from 'react'
-import Clipboard from 'clipboard-polyfill'
+import Clipboard from 'clipboard-polyfill/build/clipboard-polyfill.promise'
 import Classnames from 'classnames'
 
 export default class NodeViewer extends React.Component {
