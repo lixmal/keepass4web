@@ -322,7 +322,7 @@ export default class NodeViewer extends React.Component {
                             </tr>
                             <tr>
                                 <td className="kp-wrap">
-                                    Comments
+                                    Notes
                                 </td>
                                 <td className="kp-wrap">
                                     {entry.comment}
