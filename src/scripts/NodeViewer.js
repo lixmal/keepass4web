@@ -8,6 +8,15 @@ export default class NodeViewer extends React.Component {
         this.setHide = this.setHide.bind(this)
     }
 
+    showTooltip(btn, message) {
+        $(btn).tooltip('hide')
+            .attr('data-original-title', message)
+            .tooltip('show')
+        setTimeout(function() {
+            $(btn).tooltip('destroy');
+        }, 1000);
+    }
+
     setHide(target, hide, name, data) {
         var entry = this.props.entry
         if (!entry) return
@@ -52,6 +61,7 @@ export default class NodeViewer extends React.Component {
     }
 
     copyHandler(name, event) {
+        var btn = event.currentTarget
         var target = event.currentTarget.previousSibling
 
         this.serverRequest = KeePass4Web.ajax('get_password', {
@@ -62,7 +72,14 @@ export default class NodeViewer extends React.Component {
             // need same thread here, else copy won't work by browser restrictions
             async: false,
             success: function (data) {
-                Clipboard.writeText(data.data)
+                Clipboard.writeText(data.data).then(
+                    function () {
+                        this.showTooltip(btn, 'Copied')
+                    }.bind(this),
+                    function () {
+                        this.showTooltip(btn, 'Failed to copy')
+                    }.bind(this),
+                )
             }.bind(this),
             error: KeePass4Web.error.bind(this),
         })
