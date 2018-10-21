@@ -60,8 +60,19 @@ export default class NodeViewer extends React.Component {
 
     }
 
-    copyHandler(name, event) {
+    copyHandler(value, event) {
         var btn = event.currentTarget
+        Clipboard.writeText(value).then(
+            function () {
+                this.showTooltip(btn, 'Copied')
+            }.bind(this),
+            function () {
+                this.showTooltip(btn, 'Failed to copy')
+            }.bind(this),
+        )
+    }
+
+    copyPWHandler(name, event) {
         var target = event.currentTarget.previousSibling
 
         this.serverRequest = KeePass4Web.ajax('get_password', {
@@ -72,14 +83,7 @@ export default class NodeViewer extends React.Component {
             // need same thread here, else copy won't work by browser restrictions
             async: false,
             success: function (data) {
-                Clipboard.writeText(data.data).then(
-                    function () {
-                        this.showTooltip(btn, 'Copied')
-                    }.bind(this),
-                    function () {
-                        this.showTooltip(btn, 'Failed to copy')
-                    }.bind(this),
-                )
+                this.copyHandler(data.data, event)
             }.bind(this),
             error: KeePass4Web.error.bind(this),
         })
@@ -198,7 +202,7 @@ export default class NodeViewer extends React.Component {
                                         <span className="glyphicon glyphicon-eye-open"></span>
                                     </button>
                                     <button
-                                        onClick={this.copyHandler.bind(this, string)}
+                                        onClick={this.copyPWHandler.bind(this, string)}
                                         type="button"
                                         className="btn btn-default btn-sm"
                                     >
@@ -229,15 +233,13 @@ export default class NodeViewer extends React.Component {
                             {file}
                         </td>
                         <td>
-                            <div className="btn-group" role="group">
-                                <button
-                                    onClick={this.downloadHandler.bind(this, file)}
-                                    type="button"
-                                    className="btn btn-default btn-sm"
-                                >
-                                    <span className="glyphicon glyphicon-download-alt"></span>
-                                </button>
-                            </div>
+                            <button
+                                onClick={this.downloadHandler.bind(this, file)}
+                                type="button"
+                                className="btn btn-default btn-sm"
+                            >
+                                <span className="glyphicon glyphicon-download-alt"></span>
+                            </button>
                         </td>
                     </tr>
                 )
@@ -273,6 +275,13 @@ export default class NodeViewer extends React.Component {
                                     {entry.username}
                                 </td>
                                 <td>
+                                    <button
+                                        onClick={this.copyHandler.bind(this, entry.username)}
+                                        type="button"
+                                        className="btn btn-default btn-sm"
+                                    >
+                                        <span className="glyphicon glyphicon-copy"></span>
+                                    </button>
                                 </td>
                             </tr>
                             <tr>
@@ -292,7 +301,7 @@ export default class NodeViewer extends React.Component {
                                             <span className="glyphicon glyphicon-eye-open"></span>
                                         </button>
                                         <button
-                                            onClick={this.copyHandler.bind(this, 'password')}
+                                            onClick={this.copyPWHandler.bind(this, 'password')}
                                             type="button"
                                             className="btn btn-default btn-sm"
                                         >
