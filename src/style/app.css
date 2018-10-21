@@ -106,14 +106,18 @@ body {
 
 .kp-wrap:hover {
     text-overflow: clip;
-    white-space: normal;
+    white-space: pre-wrap;
     word-break: break-all;
 }
 
 .kp-wrap:active {
     text-overflow: clip;
-    white-space: normal;
+    white-space: pre-wrap;
     word-break: break-all;
+}
+
+.kp-wrap-comment {
+    white-space: pre-wrap;
 }
 
 .kp-table {
