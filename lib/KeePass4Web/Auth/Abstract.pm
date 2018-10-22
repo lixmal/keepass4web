@@ -6,6 +6,7 @@ use warnings;
 
 my @methods = qw/
     auth
+    case_sensitive
 /;
 
 sub new {

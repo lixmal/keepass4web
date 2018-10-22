@@ -72,6 +72,20 @@ ajax '/user_login' => sub {
         return failure 'User authentication failed', UNAUTHORIZED;
     }
 
+    my $case_sensitive = KeePass4Web::Auth::case_sensitive;
+    # default: case sensitive
+    if (defined $case_sensitive && $case_sensitive ne 0) {
+        # something else than 1: look into userinfo
+        my $attr = $case_sensitive;
+        if ($case_sensitive ne 1 && ref $userinfo eq 'HASH' && $userinfo->{$attr}) {
+            $username = $userinfo->{$attr}->[0];
+        }
+        # case_sensitive is 1 or can't find proper userinfo: case insensitive
+        else{
+            $username = lc $username
+        }
+    }
+
     debug 'User info: ', $userinfo;
 
     if (config->{auth_reuse_cred}) {
@@ -92,9 +106,8 @@ ajax '/user_login' => sub {
     session SESSION_CSRF, $csrf_token;
 
     # set a CN to display on the web interface
-    my $cn = ref $userinfo eq 'HASH' && $userinfo->{CN} ? $userinfo->{CN}->[0] : lc $username;
-    $cn //= lc $username;
-
+    my $cn = ref $userinfo eq 'HASH' && $userinfo->{CN} ? $userinfo->{CN}->[0] : undef;
+    $cn //= $username;
     session SESSION_CN, $cn;
 
     return success 'Login successful', {

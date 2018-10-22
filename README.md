@@ -408,7 +408,7 @@ For the format to use in `config_local.yml`/`db_location` or the auth backend se
 - Show kernel keyrings in use (as root)
     > sudo cat /proc/keys
 
-    > sudo cat/proc/key-users
+    > sudo cat /proc/key-users
 
 - Adding users to .htpasswd, using bcrypt (needs apache2-utils)
     > touch .htpasswd               # create file

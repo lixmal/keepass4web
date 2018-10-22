@@ -24,4 +24,6 @@ if (!$auth->DOES(__PACKAGE__ . '::Abstract')) {
 # MAY return HoA with more info on the authenticated user
 sub auth { defined($auth) and $auth->auth(@_) }
 
+sub case_sensitive { defined($auth) and $auth->case_sensitive(@_) }
+
 1;

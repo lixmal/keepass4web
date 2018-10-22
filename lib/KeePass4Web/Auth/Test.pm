@@ -23,4 +23,6 @@ sub auth {
     }
 }
 
+sub case_sensitive { 1 }
+
 1;

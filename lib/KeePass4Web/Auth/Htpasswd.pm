@@ -111,4 +111,6 @@ sub auth {
     return 1;
 }
 
+sub case_sensitive { 1 }
+
 1;

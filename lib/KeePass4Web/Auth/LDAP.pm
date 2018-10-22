@@ -53,4 +53,8 @@ sub auth {
     return $user;
 }
 
+sub case_sensitive {
+    return config->{LDAP}->{login_attribute};
+}
+
 1;
