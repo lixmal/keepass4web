@@ -1,6 +1,6 @@
 {
     "name": "KeePass4Web",
-    "version": "0.7.0",
+    "version": "0.8.0",
     "description": "Web KeePass application",
     "main": "src/scripts/app.js",
     "scripts": {
