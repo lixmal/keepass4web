@@ -21,10 +21,10 @@ export default class TreeViewer extends React.Component {
 
         var srcurl
         if (root.custom_icon_uuid) {
-            srcurl = 'img/icon/' + root.custom_icon_uuid.replace(/\//g, '_')
+            srcurl = 'img/icon/' + encodeURIComponent(root.custom_icon_uuid.replace(/\//g, '_'))
         }
         else {
-            srcurl = 'img/icons/' + (root.icon || this.props.nodeIcon || '0') + '.png'
+            srcurl = 'img/icons/' + encodeURIComponent(root.icon || this.props.nodeIcon || '49') + '.png'
         }
         var nodeIcon = (
             <img src={srcurl} className="kp-icon icon" />

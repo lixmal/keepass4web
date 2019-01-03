@@ -74,10 +74,10 @@ export default class TreeNode extends React.Component {
 
         var srcurl
         if (node.custom_icon_uuid) {
-            srcurl = 'img/icon/' + node.custom_icon_uuid.replace(/\//g, '_')
+            srcurl = 'img/icon/' + encodeURIComponent(node.custom_icon_uuid.replace(/\//g, '_'))
         }
         else {
-            srcurl = 'img/icons/' + (node.icon || options.nodeIcon || '0') + '.png'
+            srcurl = 'img/icons/' + encodeURIComponent(node.icon || options.nodeIcon || '48') + '.png'
         }
         var nodeIcon = (
             <img src={srcurl} className="kp-icon icon" />
