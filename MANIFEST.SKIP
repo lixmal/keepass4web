@@ -28,3 +28,4 @@ MYMETA.yml
 ^KeePass4Web-
 ^doc\/
 ^.travis.yml$
+^public/scripts/bundle.js.tmp-browserify-
