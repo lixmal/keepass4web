@@ -14,7 +14,6 @@
           - [Backend Seafile](#backend-seafile)
           - [Backend LWP](#backend-lwp)
           - [Backend Dropbox](#backend-dropbox)
-          - [Performance](#performance)
           - [Bundled modules, may become external](#bundled-modules-may-become-external)
   - [INSTALL](#install)
   - [BUILDING](#building)
@@ -134,6 +133,9 @@ To build the JavaScript part you will also need npm (version 3+ recommended, els
 ## INSTALL
 
 Choose one of the following installation methods (from easiest to most difficult):
+
+- From docker image (also works on non-Ubuntu):
+  See https://hub.docker.com/r/nijo89/keepass4web contributed by @NiJOvanOstow
 
 - From Ubuntu PPA:
     - Add the repository, update and install the package (and packages for default backends)
@@ -410,7 +412,7 @@ For the format to use in `config_local.yml`/`db_location` or the auth backend se
 
     > sudo cat /proc/key-users
 
-- Adding users to .htpasswd, using bcrypt (needs apache2-utils)
+- Adding users to .htpasswd, using bcrypt (needs apache2-utils/httpd-tools)
     > touch .htpasswd               # create file
 
     > htpasswd -B .htpasswd <username>
