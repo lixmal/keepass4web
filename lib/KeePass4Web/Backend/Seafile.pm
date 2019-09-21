@@ -72,7 +72,8 @@ sub _init_repo {
 
     my $seafile = _new;
 
-    my $location = _location $get_key;
+    # return if no key available
+    my $location = _location $get_key or return;
     debug 'Seafile location: ', $location;
 
     my ($repo_id, $dir) = split /\//, $location, 2;
@@ -87,10 +88,11 @@ sub _init_repo {
 sub _get {
     my ($self, $get_key, %args) = @_;
 
-    my ($seafile, $repo_id, $dir) = _init_repo $get_key, \%args;
+    # return if no key available
+    my ($seafile, $repo_id, $dir) = _init_repo $get_key, \%args or return;
 
     # get download link
-    my $db = eval {
+    my $file = eval {
         $seafile->download_file(
             'repo-id' => $repo_id,
             p         => "/$dir",
@@ -98,15 +100,16 @@ sub _get {
         );
     };
     if ($@) {
+        my $err = $@;
         error $seafile->code, $seafile->error;
 
         debug 'Database URL to download from Seafile: ', $seafile->location;
         # clear session token if library decryption expired, so user gets redirected to backend login screen
         session SESSION_SF_TOKEN, undef if $seafile->code == BAD_REQUEST;
-        die $@;
+        die $err;
     }
 
-    return $db;
+    return $file;
 }
 
 sub get_key {

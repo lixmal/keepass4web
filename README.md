@@ -439,7 +439,7 @@ For the format to use in `config_local.yml`/`db_location` or the auth backend se
 
 - Log may have 'Key has been revoked' messages: happens when session keyring gets revoked once user (who (re)started the server) logs out. Please file a bug report in this case.
 
-- Tests
+- More tests
 
 
 ## SCREENSHOTS
