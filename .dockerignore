@@ -11,6 +11,7 @@ MYMETA.yml
 src
 node_modules
 package.json
+package-lock.json
 npm-debug.log
 gulpfile.js
 *.kdbx
