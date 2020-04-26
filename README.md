@@ -134,10 +134,10 @@ To build the JavaScript part you will also need npm (version 3+ recommended, els
 
 Choose one of the following installation methods (from easiest to most difficult):
 
-- From docker image (also works on non-Ubuntu):
-  See https://hub.docker.com/r/nijo89/keepass4web contributed by @NiJOvanOstow
+- From docker image:
+See [DockerHub](https://hub.docker.com/repository/docker/lixmal/keepass4web)
 
-- From Ubuntu PPA:
+- From Ubuntu PPA (14.04, 16.04, 18.04):
     - Add the repository, update and install the package (and packages for default backends)
         > sudo add-apt-repository ppa:lixmal/keepass4web
 
