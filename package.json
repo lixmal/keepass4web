@@ -29,7 +29,6 @@
         "browserify": "^16.1.1",
         "browserify-css": "^0.10.1",
         "core-js": "^2.4.1",
-        "gulp": "^3.9.1",
         "minifyify": "^7.3.5"
     },
     "dependencies": {

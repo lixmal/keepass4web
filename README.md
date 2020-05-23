@@ -192,7 +192,7 @@ The minified, bundled file will be written to public/scripts/bundle.js
     > npm install
 
 - Copy bootstrap font files
-    > node_modules/.bin/gulp fonts
+    > cp node_modules/bootstrap/fonts/* public/fonts/
 
 - Build js bundle
     > npm run build

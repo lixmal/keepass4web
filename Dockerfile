@@ -53,7 +53,7 @@ RUN apk add --update --no-cache --virtual .build-deps \
     && cpanm --no-wget --installdeps . --with-all-features --with-recommends --with-suggests --notest --self-contained \
     # install js dependencies
     && npm install \
-    && node_modules/.bin/gulp fonts \
+    && cp node_modules/bootstrap/fonts/* public/fonts/ \
     # build bundle.js
     && npm run build \
     && rm -rf node_modules \
