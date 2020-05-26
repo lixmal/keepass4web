@@ -171,6 +171,9 @@ environment:      'production'
 engines:
     # https://metacpan.org/pod/Dancer2::Core::Role::Logger
     logger:
+        Console:
+            log_level:  'info'
+            log_format: '%T [%L] %m (in %f l. %l)'
         File:
             log_level:  'info'
             log_dir:    '/var/log/keepass4web/'

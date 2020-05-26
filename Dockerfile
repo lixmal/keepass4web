@@ -1,13 +1,34 @@
+FROM alpine AS build
+
+WORKDIR /workspace
+
+COPY src src
+COPY package*.json config.yml ./
+COPY public public
+
+RUN apk add --no-cache npm \
+    && npm install \
+    && cp node_modules/bootstrap/fonts/* public/fonts/ \
+    && rm public/dispatch* \
+    # build bundle.js
+    && npm run build
+
+
 FROM alpine
 
-WORKDIR /opt/keepass4web/
-RUN apk add --update --no-cache --virtual .build-deps \
+WORKDIR /keepass4web
+
+COPY cpanfile .
+COPY bin bin
+COPY lib lib
+COPY --from=build /workspace/public /keepass4web/public
+COPY --from=build /workspace/config.yml /conf/
+
+RUN apk add --no-cache --virtual .build-deps \
     # install build tools
-        npm \
         alpine-sdk \
         perl-app-cpanminus \
         perl-dev \
-        git \
         # Kernel::Keyring
         keyutils-dev \
         # File::Magic
@@ -45,33 +66,17 @@ RUN apk add --update --no-cache --virtual .build-deps \
         ncurses-libs \
         # Term::ReadLine::Gnu
         readline \
-    # get source
-    && cd .. \
-    && git clone https://github.com/lixmal/keepass4web \
-    && cd keepass4web \
     # install perl dependencies
     && cpanm --no-wget --installdeps . --with-all-features --with-recommends --with-suggests --notest --self-contained \
-    # install js dependencies
-    && npm install \
-    && cp node_modules/bootstrap/fonts/* public/fonts/ \
-    # build bundle.js
-    && npm run build \
-    && rm -rf node_modules \
     # remove build tools
     && apk del --purge .build-deps \
-    && rm -rf ~/.cpan* \
-    # create dirs
-    && mkdir /conf /var/log/keepass4web \
-    && chmod o+w /var/log/keepass4web \
+    && rm -rf ~/.cpan* cpanfile \
     # redirect logs to stdout
-    && ln -s /dev/stdout /var/log/keepass4web/ \
-    && sed -i 's/info.log/stdout/' config.yml \
-    # move config to volume
-    && mv config.yml /conf/
+    && sed -i "s/logger: 'File'/logger: 'Console'/" /conf/config.yml
 
 EXPOSE 8080
 
-VOLUME ["/conf"]
+VOLUME /conf
 
 STOPSIGNAL SIGTERM
 
