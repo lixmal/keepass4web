@@ -27,7 +27,7 @@
         "babel-preset-react": "^6.23.0",
         "babelify": "^8.0.0",
         "browserify": "^16.5.2",
-        "browserify-css": "^0.10.1",
+        "browserify-css": "^0.15.0",
         "core-js": "^2.4.1",
         "minifyify": "^7.3.5"
     },
