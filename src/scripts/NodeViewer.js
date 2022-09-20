@@ -315,7 +315,7 @@ export default class NodeViewer extends React.Component {
                                     URL
                                 </td>
                                 <td className="kp-wrap">
-                                    <a href={entry.url} target="_blank">{entry.url}</a>
+                                    <a href={entry.url} target="_blank" rel="noopener noreferrer">{entry.url}</a>
                                 </td>
                                 <td>
                                 </td>
