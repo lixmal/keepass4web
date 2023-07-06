@@ -36,7 +36,7 @@
         "classnames": "^2.2.5",
         "clipboard-polyfill": "^2.5.4",
         "jquery": "^3.3.1",
-        "react": "~15.4.2",
+        "react": "~15.7.0",
         "react-dom": "~15.4.2",
         "react-router": "3.0.0"
     },
