@@ -22,9 +22,9 @@
         "url": "https://github.com/lixmal/keepass4web/issues"
     },
     "devDependencies": {
-        "babel-core": "^6.26.0",
-        "babel-preset-env": "^1.6.1",
-        "babel-preset-react": "^6.23.0",
+        "babel-core": "^6.26.3",
+        "babel-preset-env": "^1.7.0",
+        "babel-preset-react": "^6.24.1",
         "babelify": "^8.0.0",
         "browserify": "^17.0.0",
         "browserify-css": "^0.15.0",
@@ -32,9 +32,9 @@
         "minifyify": "^7.3.5"
     },
     "dependencies": {
-        "bootstrap": "^3.3.7",
+        "bootstrap": "^3.4.1",
         "classnames": "^2.3.2",
-        "clipboard-polyfill": "^2.5.4",
+        "clipboard-polyfill": "^2.8.6",
         "jquery": "^3.7.1",
         "react": "~15.7.0",
         "react-dom": "~15.7.0",
