@@ -1,4 +1,4 @@
-FROM alpine AS build
+FROM alpine:3 AS build
 
 WORKDIR /workspace
 
@@ -14,7 +14,7 @@ RUN apk add --no-cache npm \
     && npm run build
 
 
-FROM alpine
+FROM alpine:3
 
 WORKDIR /keepass4web
 
@@ -24,9 +24,11 @@ COPY lib lib
 COPY --from=build /workspace/public /keepass4web/public
 COPY --from=build /workspace/config.yml /conf/
 
-RUN apk add --no-cache --virtual .build-deps \
+RUN \
+
     # install build tools
-        alpine-sdk \
+    apk add --no-cache --virtual .build-deps \
+        build-base \
         perl-app-cpanminus \
         perl-dev \
         # Kernel::Keyring
@@ -47,6 +49,7 @@ RUN apk add --no-cache --virtual .build-deps \
         readline-dev \
         # fixing some circular dependency problem
         perl-libwww \
+
     # install libs
     && apk add --no-cache \
         perl \
@@ -66,11 +69,18 @@ RUN apk add --no-cache --virtual .build-deps \
         ncurses-libs \
         # Term::ReadLine::Gnu
         readline \
+
     # install perl dependencies
+    # Net::SSLeay's Makefile.PL requires a /usr/bin/openssl
+    && ln -s /usr/bin/libressl-openssl /usr/bin/openssl \
+    # we need the dev version here to support alpine's libressl version
+    && cpanm --no-wget --notest --self-contained CHRISN/Net-SSLeay-1.93_02.tar.gz \
     && cpanm --no-wget --installdeps . --with-all-features --with-recommends --with-suggests --notest --self-contained \
+
     # remove build tools
     && apk del --purge .build-deps \
     && rm -rf ~/.cpan* cpanfile \
+
     # redirect logs to stdout
     && sed -i "s/logger: 'File'/logger: 'Console'/" /conf/config.yml
 
