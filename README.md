@@ -127,56 +127,18 @@ For installation follow [INSTALL](#install).
 - Seafile::Client::REST
 
 
-To build the JavaScript part you will also need npm (version 3+ recommended, else your node_modules directory will explode!) and therefore `Node.js`
-
+To build the JavaScript part you will need npm.
 
 ## INSTALL
 
-Choose one of the following installation methods (from easiest to most difficult):
-
 - From container image:
-See [GitHub Packages](https://ghcr.io/lixmal/keepass4web)
-
-- From Ubuntu PPA (14.04, 16.04, 18.04):
-    - Add the repository, update and install the package (and packages for default backends)
-        > sudo add-apt-repository ppa:lixmal/keepass4web
-
-        > sudo apt-get update
-
-        > sudo apt-get install apache2 libapache2-mod-perl2 libnet-ldap-perl libdancer2-session-cookie-perl keepass4web
-
-    - Make config changes to `/etc/keepass4web/config_local.yml`
-
-- From deb package (Debian/Ubuntu/...):
-    - Install dependencies (also for module installation further below)
-        > sudo apt-get install build-essential libkeyutils-dev libkeyutils1 libmagic1 libmagic-dev libapache2-mod-perl2 cpanminus
-
-    - Grab the deb from github: https://github.com/lixmal/keepass4web/releases
-
-    - Install the package
-        > dpkg -i keepass4web_*.deb
-
-    - Move to keepass4web dir
-        > cd /usr/share/keepass4web/
-
-    - Follow [MODULE INSTALLATION](#module-installation)
-
-    - Make changes to `/etc/keepass4web/config_local.yml`
-
-- From dist tar:
-    - Grab the latest tar from github: https://github.com/lixmal/keepass4web/releases
-
-    - Untar it to some directory, e.g. `/opt`
-
-    - Optionally rename it to keepass4web (for consistency with this README)
-
-    - Follow [MODULE INSTALLATION](#module-installation), [CONFIGURATION](#configuration), [DEPLOYMENT](#deployment) in that order
+See [DEPLOYMENT](#deployment)
 
 - From source:
     - Clone the repo to some dir
-        > git clone https://github.com/lixmal/keepass4web.git /opt/keepass4web/
+        > git clone https://github.com/lixmal/keepass4web.git
 
-        > cd /opt/keepass4web/
+        > cd keepass4web
 
     - Follow [BUILDING](#building), [MODULE INSTALLATION](#module-installation), [CONFIGURATION](#configuration), [DEPLOYMENT](#deployment) in that order
 
@@ -217,9 +179,9 @@ Output will be a `KeePass4Web-{VERSION}.tar.gz` file, which includes all files r
 
 ## MODULE INSTALLATION
 
-E.g. for Ubuntu 14.04 with mod_perl2:
+E.g. for Ubuntu 22.04 with mod_perl2:
 
-- Install distro packages, if you haven't already
+- Install distro packages
     > sudo apt-get install build-essential libkeyutils-dev libkeyutils1 libmagic1 libmagic-dev libapache2-mod-perl2 cpanminus
 
 - Install dependencies with all backends, the recommended modules (for performance) and the suggested session engine (`Cookie`)
@@ -234,13 +196,48 @@ E.g. for Ubuntu 14.04 with mod_perl2:
 - Copy or rename `config.yml` to `config_local.yml`
     > cp config.yml config_local.yml
 
-- Do changes in `config_local.yml`. Settings in `config_local.yml` override those in `config.yml`
+- Make changes in `config_local.yml`. Settings in `config_local.yml` override those in `config.yml`
 
 - Change `session_cookie_key` to a **long** and **random** value if using `Cookie` in `session`, e.g.
     > pwgen -ysN1 128
 
 
 ## DEPLOYMENT
+
+### Container
+
+See [GitHub Packages](https://ghcr.io/lixmal/keepass4web)
+
+The image creates the default config in /conf/config.yml, which should be overwritten with a mount/volume.
+
+The app makes use of the [Linux kernel keyring](https://man7.org/linux/man-pages/man7/keyrings.7.html).
+
+The keyring is currently not namespaced, hence container tooling deactivate the specific syscalls by default.
+To make the app run you will need to activate the syscalls by creating a custom seccomp profile and passing the path to the container runtime:
+
+- [Docker](https://docs.docker.com/engine/security/seccomp/).
+- [podman](https://docs.podman.io/en/v4.6.0/markdown/options/seccomp-policy.html)
+
+A base file for extension can be found [here](https://github.com/moby/moby/blob/master/profiles/seccomp/default.json), see the `syscalls` section.
+
+The required syscalls are:
+
+- keyctl
+- add_key
+- request_key
+
+
+**Make sure no other containers are running under the same user, or they will be able to access keys stored for keepass4web**.
+
+This is best achieved by running rootless containers with a dedicated user for keepass4web.
+
+- [Docker](https://docs.docker.com/engine/security/rootless/)
+- [podman](https://github.com/containers/podman/blob/main/docs/tutorials/rootless_tutorial.md)
+
+
+
+
+### Other
 
 Running this app on a web server with mod_perl2 or fcgi is **recommended** but running as standalone app is possible as well (with Dancer2's capabilities).
 
@@ -256,7 +253,7 @@ Running this app on a web server with mod_perl2 or fcgi is **recommended** but r
     > chmod g+w /var/log/keepass4web/
 
 - Remove permissions on sensitive data for everyone else
-    > chmod o-rwx /opt/keepass4web/config*.yml /var/log/keepass4web/
+    > chmod o= /opt/keepass4web/config*.yml /var/log/keepass4web/
 
 - For apache, enable the perl mod and ssl
     > sudo a2enmod perl
