@@ -21,6 +21,8 @@
   - [MODULE INSTALLATION](#module-installation)
   - [CONFIGURATION](#configuration)
   - [DEPLOYMENT](#deployment)
+    - [Container](#container)
+    - [Other](#other)
         - [Running apache2 using mod_perl2/Plack with TLS:](#running-apache2-using-mod_perl2plack-with-tls)
         - [Using the standalone server](#using-the-standalone-server)
         - [Open `https://<domain>/keepass/` (notice the trailing slash)](#open-httpsdomainkeepass-notice-the-trailing-slash)
