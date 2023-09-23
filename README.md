@@ -424,7 +424,8 @@ For the format to use in `config_local.yml`/`db_location` or the auth backend se
 
 ## LIMITATIONS
 
-- KeePass databases are read only for now
+- Doesn't support [kdbx 4](https://keepass.info/help/kb/kdbx_4.html) yet
+- KeePass databases are read-only for now
 - Caching of KeePass databases happens in SysV IPC shared memory, whose maximum size depends on the OS. Defined by `shmall` and `shmmni` kernel variables
     > sudo cat /proc/sys/kernel/shmmni
 
