@@ -82,7 +82,7 @@ RUN \
     && rm -rf ~/.cpan* cpanfile \
 
     # redirect logs to stdout
-    && sed -i "s/logger: 'File'/logger: 'Console'/" /conf/config.yml
+    && sed -i "s/logger:  'File'/logger: 'Console'/" /conf/config.yml
 
 EXPOSE 8080
 
