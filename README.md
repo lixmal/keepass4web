@@ -5,28 +5,18 @@
 
 - [KeePass4Web](#keepass4web)
   - [FEATURES](#features)
-  - [PREREQUISITES](#prerequisites)
-        - [Libraries / Packages](#libraries--packages)
-        - [Perl modules](#perl-modules)
-          - [Core](#core)
-          - [Backend LDAP](#backend-ldap)
-          - [Backend Htpasswd](#backend-htpasswd)
-          - [Backend Seafile](#backend-seafile)
-          - [Backend LWP](#backend-lwp)
-          - [Backend Dropbox](#backend-dropbox)
-          - [Bundled modules, may become external](#bundled-modules-may-become-external)
   - [INSTALL](#install)
-  - [BUILDING](#building)
-  - [BUNDLING](#bundling)
+  - [BUILD FRONTEND](#build-frontend)
   - [MODULE INSTALLATION](#module-installation)
   - [CONFIGURATION](#configuration)
   - [DEPLOYMENT](#deployment)
     - [Container](#container)
-    - [Other](#other)
+    - [Classic](#classic)
         - [Running apache2 using mod_perl2/Plack with TLS:](#running-apache2-using-mod_perl2plack-with-tls)
         - [Using the standalone server](#using-the-standalone-server)
         - [Open `https://<domain>/keepass/` (notice the trailing slash)](#open-httpsdomainkeepass-notice-the-trailing-slash)
         - [Refer to Dancer2::Manual::Deployment for more options.](#refer-to-dancer2manualdeployment-for-more-options)
+  - [BUNDLING](#bundling)
   - [BACKENDS](#backends)
     - [Authentication](#authentication)
         - [LDAP](#ldap)
@@ -42,9 +32,18 @@
   - [MISCELLANEOUS](#miscellaneous)
   - [LIMITATIONS](#limitations)
   - [BUGS / CAVEATS / TODO](#bugs--caveats--todo)
-  - [SCREENSHOTS](#screenshots)
   - [APP DETAILS / BACKGROUND](#app-details--background)
     - [Sequence of client/server operations](#sequence-of-clientserver-operations)
+    - [Packages used](#packages-used)
+        - [Libraries / Packages](#libraries--packages)
+        - [Perl modules](#perl-modules)
+          - [Core](#core)
+          - [Backend LDAP](#backend-ldap)
+          - [Backend Htpasswd](#backend-htpasswd)
+          - [Backend Seafile](#backend-seafile)
+          - [Backend LWP](#backend-lwp)
+          - [Backend Dropbox](#backend-dropbox)
+          - [Bundled modules, may become external](#bundled-modules-may-become-external)
   - [COPYRIGHT AND LICENSING](#copyright-and-licensing)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -70,66 +69,10 @@ Written in Perl and JavaScript.
 - Highly configurable
 
 
-## PREREQUISITES
+![Login](doc/img/login.png)
 
-This will probably only run under some flavour of Linux. The instructions assume a Linux environment.
-Below is a list of required packages and modules to run the application.
-For installation follow [INSTALL](#install).
+![App](doc/img/app.png)
 
-##### Libraries / Packages
-
-- build-essential *(building XS modules)*
-- libkeyutils-dev
-- libkeyutils1
-- libapache2-mod-perl2 *(if running mod_perl2 with apache2)*
-- libmagic1
-- libmagic-dev
-- cpanminus *(module installation)*
-
-##### Perl modules
-
-###### Core
-- Kernel::Keyring
-- Dancer2
-- Dancer2::Plugin::Ajax
-- Dancer2::Session::Cookie *(default session engine, `Cookie` in config)*
-- IPC::ShareLite
-- File::KeePass
-- Crypt::URandom
-- File::LibMagic
-- Sereal::Encoder
-- Sereal::Decoder
-- Crypt::Mode::CBC
-- Crypt::Mac::HMAC
-- URI::Escape
-
-###### Backend LDAP
-- Net::LDAP
-
-###### Backend Htpasswd
-- Crypt::Eksblowfish::Bcrypt *(bcrypt)*
-- Authen::Htpasswd  *(md5, sha1, crypt, plain)*
-
-###### Backend Seafile
-- JSON
-- REST::Client
-- URI::Escape
-
-###### Backend LWP
-- LWP::UserAgent
-- HTTP::Request::Common
-- URI::Escape
-
-###### Backend Dropbox
-- WebService::Dropbox
-
-###### Bundled modules, may become external
-- File::KeePass::Web
-- Auth::LDAP
-- Seafile::Client::REST
-
-
-To build the JavaScript part you will need npm.
 
 ## INSTALL
 
@@ -142,10 +85,10 @@ See [DEPLOYMENT](#deployment)
 
         > cd keepass4web
 
-    - Follow [BUILDING](#building), [MODULE INSTALLATION](#module-installation), [CONFIGURATION](#configuration), [DEPLOYMENT](#deployment) in that order
+    - Follow [BUILD FRONTEND](#build-frontend), [MODULE INSTALLATION](#module-installation), [CONFIGURATION](#configuration), [DEPLOYMENT](#deployment) in that order
 
 
-## BUILDING
+## BUILD FRONTEND
 
 The minified, bundled file will be written to public/scripts/bundle.js
 
@@ -163,21 +106,6 @@ The minified, bundled file will be written to public/scripts/bundle.js
 
 - For a non-uglified version you can run
     > npm run dev
-
-
-## BUNDLING
-
-Output will be a `KeePass4Web-{VERSION}.tar.gz` file, which includes all files required to run the app but without the development/build files
-
-- Follow `BUILDING` first, then run the perl make file
-    > perl Makefile.PL
-
-- Bundle the app to a tar
-    > make dist
-
-- Clean up afterwards
-    > make clean
-
 
 ## MODULE INSTALLATION
 
@@ -210,14 +138,14 @@ E.g. for Ubuntu 22.04 with mod_perl2:
 
 See [GitHub Packages](https://ghcr.io/lixmal/keepass4web)
 
-The image creates the default config in /conf/config.yml, which should be overwritten with a mount/volume.
+The image ships with the default config in `/conf/config.yml`, which should be overwritten with a mount/volume.
 
 The app makes use of the [Linux kernel keyring](https://man7.org/linux/man-pages/man7/keyrings.7.html).
 
 The keyring is currently not namespaced, hence container tooling deactivate the specific syscalls by default.
 To make the app run you will need to activate the syscalls by creating a custom seccomp profile and passing the path to the container runtime:
 
-- [Docker](https://docs.docker.com/engine/security/seccomp/).
+- [Docker](https://docs.docker.com/engine/security/seccomp/)
 - [podman](https://docs.podman.io/en/v4.6.0/markdown/options/seccomp-policy.html)
 
 A base file for extension can be found [here](https://github.com/moby/moby/blob/master/profiles/seccomp/default.json), see the `syscalls` section.
@@ -237,9 +165,7 @@ This is best achieved by running rootless containers with a dedicated user for k
 - [podman](https://github.com/containers/podman/blob/main/docs/tutorials/rootless_tutorial.md)
 
 
-
-
-### Other
+### Classic
 
 Running this app on a web server with mod_perl2 or fcgi is **recommended** but running as standalone app is possible as well (with Dancer2's capabilities).
 
@@ -325,6 +251,20 @@ PerlPostConfigHandler KeePass4Web::Apache2::post_config
 ##### Open `https://<domain>/keepass/` (notice the trailing slash)
 
 ##### Refer to [Dancer2::Manual::Deployment](https://metacpan.org/pod/Dancer2::Manual::Deployment) for more options.
+
+## BUNDLING
+
+Output will be a `KeePass4Web-{VERSION}.tar.gz` file, which includes all files required to run the app but without the development/build files
+
+- Follow `BUILDING` first, then run the perl make file
+    > perl Makefile.PL
+
+- Bundle the app to a tar
+    > make dist
+
+- Clean up afterwards
+    > make clean
+
 
 
 ## BACKENDS
@@ -442,13 +382,6 @@ For the format to use in `config_local.yml`/`db_location` or the auth backend se
 - More tests
 
 
-## SCREENSHOTS
-
-![Login](doc/img/login.png)
-
-![App](doc/img/app.png)
-
-
 ## APP DETAILS / BACKGROUND
 ### Sequence of client/server operations
 
@@ -547,6 +480,61 @@ Page reload
 Show KeePass tree
 
 ```
+
+### Packages used
+
+##### Libraries / Packages
+
+- build-essential *(building XS modules)*
+- libkeyutils-dev
+- libkeyutils1
+- libapache2-mod-perl2 *(if running mod_perl2 with apache2)*
+- libmagic1
+- libmagic-dev
+- cpanminus *(module installation)*
+
+##### Perl modules
+
+###### Core
+- Kernel::Keyring
+- Dancer2
+- Dancer2::Plugin::Ajax
+- Dancer2::Session::Cookie *(default session engine, `Cookie` in config)*
+- IPC::ShareLite
+- File::KeePass
+- Crypt::URandom
+- File::LibMagic
+- Sereal::Encoder
+- Sereal::Decoder
+- Crypt::Mode::CBC
+- Crypt::Mac::HMAC
+- URI::Escape
+
+###### Backend LDAP
+- Net::LDAP
+
+###### Backend Htpasswd
+- Crypt::Eksblowfish::Bcrypt *(bcrypt)*
+- Authen::Htpasswd  *(md5, sha1, crypt, plain)*
+
+###### Backend Seafile
+- JSON
+- REST::Client
+- URI::Escape
+
+###### Backend LWP
+- LWP::UserAgent
+- HTTP::Request::Common
+- URI::Escape
+
+###### Backend Dropbox
+- WebService::Dropbox
+
+###### Bundled modules, may become external
+- File::KeePass::Web
+- Auth::LDAP
+- Seafile::Client::REST
+
 
 
 ## COPYRIGHT AND LICENSING
