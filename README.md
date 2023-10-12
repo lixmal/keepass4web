@@ -1,4 +1,14 @@
-![Build](https://travis-ci.org/lixmal/keepass4web.svg?branch=master)
+# ⚠ [DEPRECATED]
+
+*This repo is not maintained anymore.*
+
+**Please see the (not yet feature-complete) [rewrite in Rust](https://github.com/lixmal/keepass4web-rs).
+The rewrite has better security and supports kdbx4 databases.**
+
+
+#
+#
+#
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
